@@ -173,23 +173,23 @@ const development_workflow_and_debugging = {
         highlight2: ['Nodemon for Autorestarts'],
       },
       tooltips: [
-        `<pre>
-      {
-        "name": "js-project-1", 
-        "version": "1.0.0",
-        "description": "",
-        "main": "app.js",
-        "scripts": {
-          "test": "echo \"Error: no test specified\" && exit 1",
-          <i>"start": "nodemon app.js"</i>
-        },
-        "author": "",
-        "license": "ISC",
-        "devDependencies": {
-          "nodemon": "^3.1.0"
+        `<pre><code> 
+        {
+          "name": "js-project-1", 
+          "version": "1.0.0",
+          "description": "",
+          "main": "app.js",
+          "scripts": {
+              "test": "echo "Error: no test specified" &amp;&amp; exit 1",
+              <i>"start": "nodemon app.js"</i>
+          },
+          "author": "",
+          "license": "ISC",
+          "devDependencies": {
+              <i>"nodemon": "^3.1.0"</i>
+          }
         }
-      }
-      </pre>`,
+       </code></pre>`,
       ],
     },
     {

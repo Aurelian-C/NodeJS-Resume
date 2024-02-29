@@ -349,6 +349,25 @@ b code {
   cursor: pointer;
 }
 
+pre {
+  display: block;
+  font-family: monospace;
+  white-space: pre;
+  margin: 1em 0px;
+}
+
+pre code {
+  -webkit-locale: 'json';
+  font-family: monospace;
+  white-space: pre;
+
+  font-size: 1.5rem;
+  background: none;
+  padding: 0;
+  border: none;
+  color: white;
+}
+
 @media only screen and (max-width: 1300px) {
   .tooltip {
     max-width: 100%;
