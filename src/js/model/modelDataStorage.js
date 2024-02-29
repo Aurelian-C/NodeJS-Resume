@@ -315,7 +315,7 @@ const working_with_ExpressJS = {
       },
       sectionSource: '',
       tooltips: [
-        `<h3>Working with only Node.js can be a pain</h3>
+        `<h3>Working only with Node.js can be a pain</h3>
         <p>With Node.js alone, you have to <i>write a lot of code to deal with basic things</i> like, for example, extracting the body of an incoming request. Now typically you don't want to do that, you want to focus on your business logic, the code that makes up your specific application, you don't want to work or you don't want to care about standard tasks like handling incoming requests or routing, and therefore we'll now have a look at Express.js.</p>`,
         `<h3>What is Express.js and why do we use it?</h3>
         <p>Express.js is a <i>framework</i> you can install as a third party package into your node project and as such, it basically <i>helps you outsource some of that nitty-gritty work</i>, some of these details you don't want to care about, it gives you a rule set in which you work and a lot of utility functions that help you write cleaner code and focus on your core business.</p>`,
