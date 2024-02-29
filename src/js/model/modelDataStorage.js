@@ -342,6 +342,11 @@ const working_with_ExpressJS = {
       sectionSource: '',
       tooltips: [``],
     },
+    {
+      sectionTitle: 'Useful Resources & Links',
+      sectionSource: '',
+      tooltips: [``],
+    },
   ],
 };
 
@@ -425,16 +430,6 @@ const dynamic_content_and_adding_templating_engines = {
     },
     {
       sectionTitle: 'Wrap Up',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Assignment 4: Time to Practice - Templating Engines',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: '[OPTIONAL] Assignment Solution',
       sectionSource: '',
       tooltips: [``],
     },
