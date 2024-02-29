@@ -2,17 +2,21 @@ const introduction = {
   title: 'Introduction',
   sections: [
     {
-      sectionTitle: 'What is Node.js?',
+      sectionTitle: 'What is Node.js? What it is used for?',
       sectionSource: '',
-      tooltips: [``],
+      tooltips: [
+        `<h3>What is Node.js?</h3>
+        <p>Node.js is a <i>runtime environment</i> that <i>allows you to run JavaScript code outside of a web browser</i>. It's built on the Chrome V8 JavaScript engine and provides a set of libraries and tools for <i>building server-side and networking applications</i>.</p>`,
+        `<h3>What is it used for?</h3>
+        <p>Node.js is commonly used for building web servers, APIs (Application Programming Interfaces), real-time chat applications, streaming applications, and other networked applications.</p>
+        `,
+        `<h3>Node.js characteristics</h3>
+        <p>Its <i>non-blocking</i>, <i>event-driven architecture</i> makes it particularly well-suited for building scalable and high-performance applications that <i>can handle a large number of simultaneous connections</i>. Additionally, it has a vibrant ecosystem of libraries and frameworks, such as Express.js, that make it easy to develop web applications with Node.js.</p>
+        `,
+      ],
     },
     {
-      sectionTitle: 'Installing Node.js and creating our first app',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Understanding the role & usage of Node.js',
+      sectionTitle: 'Installing Node.js',
       sectionSource: '',
       tooltips: [``],
     },
@@ -31,9 +35,28 @@ const understanding_the_basics = {
   title: 'Understanding the Basics',
   sections: [
     {
-      sectionTitle: 'How The Web works',
+      sectionTitle: 'How the Web works',
       sectionSource: '',
-      tooltips: [``],
+      tooltips: [
+        `<p>The web works through a combination of <i>client-server architecture</i>, <i>protocols</i>, and various technologies.</p>`,
+        `<h3>Client-Server Model</h3>
+        The web operates on a client-server model. Clients, such as web browsers (e.g., Chrome, Firefox), request resources (e.g., web pages, images, videos) from servers, which store and provide those resources.`,
+        `<h3>Domain Name System (DNS)</h3>
+        <p>When you type a URL (Uniform Resource Locator) into your browser, the first step is translating the human-readable domain name (e.g., www.example.com) into an IP address using DNS servers. This <i>IP address points to the server where the website is hosted</i>.</p>`,
+        `<h3>HTTP/HTTPS Protocol</h3>
+        <p>Hypertext Transfer Protocol (HTTP) and its secure variant HTTPS are <i><u>communication protocols</u> used for <u>transferring data</u> on the web</i>. When you request a web page by entering a URL or clicking a link, your browser sends an HTTP request to the server, which responds with the requested content.</p>`,
+        `<h3>Request-Response Cycle</h3>
+        <p>The client sends an <i>HTTP request</i> to the server, specifying the resource it wants (e.g., a web page). The server processes the request and sends back an <i>HTTP response</i> containing the requested resource. This cycle forms the basis of how information is exchanged on the web.</p>`,
+        `<h3>HTML, CSS, JavaScript</h3>
+        <p>The content of web pages is typically created using HTML (Hypertext Markup Language) for structure, CSS (Cascading Style Sheets) for styling, and JavaScript for interactivity. When your browser receives the HTML content from the server, it parses and renders it, fetching additional resources like stylesheets and scripts as needed.</p>`,
+        `<h3>Web Servers and Hosting</h3>
+        <p>Web servers are software applications that serve web content to clients upon request. <i>Websites are hosted on web servers, which store the website files and respond to requests from clients.</i> Common web server software includes Apache, Nginx, and Microsoft Internet Information Services (IIS).</p>`,
+        `<h3>Client-Side and Server-Side Processing</h3>
+        <p>Client-side processing refers to actions performed by the user's browser, such as rendering HTML and executing JavaScript. Server-side processing occurs on the server, where dynamic content is generated before being sent to the client. Server-side scripting languages like PHP, Python, Ruby, and Node.js are often used for this purpose.</p>`,
+        `<h3>Cookies, Sessions, and Authentication</h3>
+        <p><i>Cookies are small <u>pieces of data stored by the browser</u> and sent with each request</i>, enabling websites to track user sessions and store user preferences. <i>Sessions allow servers to maintain stateful interactions with clients across multiple requests.</i> Authentication mechanisms such as username/password or token-based authentication are used to verify the identity of users accessing restricted resources.</p>`,
+        `<p>This overview covers the fundamental concepts behind how the web works, though the actual implementation can be more complex due to factors like caching, content delivery networks (CDNs), and web application frameworks.</p>`,
+      ],
     },
     {
       sectionTitle: 'Creating a Node Server',
@@ -41,7 +64,18 @@ const understanding_the_basics = {
       highlights: {
         highlight1: ['Node Server'],
       },
-      tooltips: [``],
+      tooltips: [
+        `<pre><code>
+        const http = require('http');
+
+        const server = http.createServer((req, res) => {
+          // Your server side code here
+        });
+
+        server.listen(3000);
+      </code></pre>
+      `,
+      ],
     },
     {
       sectionTitle: 'The Node Lifecycle & Event Loop',
@@ -49,12 +83,52 @@ const understanding_the_basics = {
       highlights: {
         highlight1: ['Event Loop'],
       },
-      tooltips: [``],
+      tooltips: [
+        `<ul>The lifecycle of a Node.js application revolves around its <i>event-driven</i>, <i>non-blocking architecture</i>, which is facilitated by the event loop. Here's an overview:
+          <li><h3>1. Initialization</h3>
+            <p>When you run a Node.js application, it initializes by loading the main script file (typically index.js or app.js) and any modules it requires.</p>
+          </li>
+      
+          <li><h3>2. Execution of Synchronous Code</h3>
+            <p><i>Node.js starts executing the synchronous code in the main script file.</i> This includes tasks like loading configuration files, setting up database connections, and defining functions.</p>
+          </li>
+      
+          <li><h3>3. Event Loop</h3>
+            <p><i>The event loop is at the core of Node.js's asynchronous nature. It continuously checks for events in the event queue and executes their associated callback functions. The event loop keeps the Node.js process running and responsive, even when handling I/O operations.</i></p>
+          </li>
+      
+          <li><h3>4. Non-Blocking I/O Operations</h3>
+            <p><i>Node.js uses non-blocking I/O operations, which means that it can perform I/O tasks (like reading from files or making network requests) without waiting for the operation to complete.</i> Instead, it delegates these tasks to the operating system and continues executing other code.</p>
+          </li>
+      
+          <li><h3>5. Event-Driven Architecture</h3>
+            <p><i>Node.js is event-driven, meaning that it relies heavily on <u>events and callbacks to handle asynchronous operations</u>.</i> When an asynchronous operation completes or a certain condition is met, it triggers an event, which is then processed by the event loop.</p>
+          </li>
+      
+          <li><h3>6. Event Queue and Callbacks</h3>
+            <p>Asynchronous operations in Node.js typically <i>use callbacks to handle the results of the operation</i>. When an asynchronous operation completes, its callback function is pushed onto the event queue. The event loop picks up these callback functions from the queue and executes them one by one.</p>
+          </li>
+      
+          <li><h3>7. Concurrency and Scalability</h3>
+            <p>Because <i>Node.js applications can handle multiple concurrent operations without blocking the event loop</i>, they are highly scalable and efficient, making them suitable for building real-time applications, APIs, and microservices.</p>
+          </li>
+      
+          <li><h3>8. Termination</h3>
+            <p>Node.js applications terminate either when all event listeners have been removed and there are no more callbacks to execute, or when explicitly terminated by the user or the operating system.</p>
+          </li>
+      </ul>`,
+        `<p>Understanding the Node.js event loop and its lifecycle is crucial for writing efficient, scalable, and responsive applications. It allows developers to leverage asynchronous programming paradigms effectively and build high-performance applications that can handle large numbers of simultaneous connections.<p>`,
+      ],
     },
     {
       sectionTitle: 'Controlling the Node.js process',
       sectionSource: '',
-      tooltips: [``],
+      tooltips: [
+        `<p>In Node.js, <code>process.exit()</code> is a method used to terminate the Node.js process.</p>
+        <p>When <code>process.exit()</code> is called, the Node.js <i>event loop is stopped immediately</i>, and no further asynchronous operations are performed. It's often used to forcefully terminate the application under certain conditions, like critical errors or when a specific condition is met.</p>
+        <p>However, it's important to <i>use <code>process.exit()</code> with caution, especially in production code</i>, as it doesn't allow graceful shutdown and can leave resources in an inconsistent state. It's generally recommended to handle errors and shutdown gracefully whenever possible.</p>
+        `,
+      ],
     },
     {
       sectionTitle: 'Understanding Requests',
@@ -111,11 +185,6 @@ const understanding_the_basics = {
     },
     {
       sectionTitle: 'Blocking and Non-Blocking code',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Node.js - looking behind the scenes',
       sectionSource: '',
       tooltips: [``],
     },
