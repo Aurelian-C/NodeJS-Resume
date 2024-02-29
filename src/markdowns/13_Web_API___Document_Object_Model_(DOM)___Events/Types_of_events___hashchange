@@ -1,0 +1,21 @@
+# Window: hashchange event
+
+The `hashchange` event is ==fired when the fragment identifier of the URL has changed (the part of the URL beginning with and following the `#` symbol)==.
+
+## Syntax
+
+Use the event name in methods like [`addEventListener()`](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener), or set an _event handler property_:
+
+```js
+addEventListener('hashchange', (event) => {});
+// or
+onhashchange = (event) => {};
+```
+
+## Event type
+
+A [`HashChangeEvent`](https://developer.mozilla.org/en-US/docs/Web/API/HashChangeEvent). Inherits from [`Event`](https://developer.mozilla.org/en-US/docs/Web/API/Event).
+
+## References
+
+1. [Window: hashchange event - MDN](https://developer.mozilla.org/en-US/docs/Web/API/Window/hashchange_event)

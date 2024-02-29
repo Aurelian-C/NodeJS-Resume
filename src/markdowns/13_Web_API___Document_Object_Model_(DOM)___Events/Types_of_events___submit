@@ -1,0 +1,27 @@
+# HTMLFormElement: submit event
+
+The `submit` event ==fires when a [`<form>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form) is submitted==.
+
+==Note that the `submit` event fires on the `<form>` element itself, and not on any [`<button type="submit">`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button) or [`<input type="submit">`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/submit) inside it==. However, the [`SubmitEvent`](https://developer.mozilla.org/en-US/docs/Web/API/SubmitEvent) which is sent to indicate the form's submit action has been triggered includes a [`submitter`](https://developer.mozilla.org/en-US/docs/Web/API/SubmitEvent/submitter) property, which is the button that was invoked to trigger the submit request.
+
+The `submit` event fires when the user clicks a submit button ([`<button type="submit">`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button) or [`<input type="submit">`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/submit)) or presses `Enter` while editing a field (e.g. [`<input type="text">`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/text)) in a form.
+
+> **Note:** Trying to submit a form that does not pass [validation](https://developer.mozilla.org/en-US/docs/Learn/Forms/Form_validation) triggers an [`invalid`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/invalid_event) event. In this case, the validation prevents form submission, and thus there is no `submit` event.
+
+## Syntax
+
+Use the event name in methods like [`addEventListener()`](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener), or set an _event handler property_:
+
+```js
+addEventListener('submit', (event) => {});
+// or
+onsubmit = (event) => { };
+```
+
+## Event type
+
+A [`SubmitEvent`](https://developer.mozilla.org/en-US/docs/Web/API/SubmitEvent). Inherits from [`Event`](https://developer.mozilla.org/en-US/docs/Web/API/Event).
+
+## References
+
+1. [HTMLFormElement: submit event - MDN](https://developer.mozilla.org/en-US/docs/Web/API/HTMLFormElement/submit_event)
