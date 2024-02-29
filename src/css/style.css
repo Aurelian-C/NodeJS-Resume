@@ -37,6 +37,10 @@ h1 {
   letter-spacing: 3px;
 }
 
+h2 {
+  font-size: 1.9rem;
+}
+
 body {
   color: rgb(245, 245, 245);
   background-color: #1e1e1e;

@@ -7,18 +7,21 @@ const introduction = {
       tooltips: [``],
     },
     {
-      sectionTitle: 'Installing Node.js and Creating our First App',
+      sectionTitle: 'Installing Node.js and creating our first app',
       sectionSource: '',
       tooltips: [``],
     },
     {
-      sectionTitle: 'Understanding the Role & Usage of Node.js',
+      sectionTitle: 'Understanding the role & usage of Node.js',
       sectionSource: '',
       tooltips: [``],
     },
     {
-      sectionTitle: 'Working with the REPL vs Using Files',
+      sectionTitle: 'Working with the REPL vs using files',
       sectionSource: '',
+      highlights: {
+        highlight1: ['REPL vs using files'],
+      },
       tooltips: [``],
     },
   ],
@@ -28,7 +31,7 @@ const understanding_the_basics = {
   title: 'Understanding the Basics',
   sections: [
     {
-      sectionTitle: 'How The Web Works',
+      sectionTitle: 'How The Web works',
       sectionSource: '',
       tooltips: [``],
     },
@@ -49,7 +52,7 @@ const understanding_the_basics = {
       tooltips: [``],
     },
     {
-      sectionTitle: 'Controlling the Node.js Process',
+      sectionTitle: 'Controlling the Node.js process',
       sectionSource: '',
       tooltips: [``],
     },
@@ -107,17 +110,17 @@ const understanding_the_basics = {
       tooltips: [``],
     },
     {
-      sectionTitle: 'Blocking and Non-Blocking Code',
+      sectionTitle: 'Blocking and Non-Blocking code',
       sectionSource: '',
       tooltips: [``],
     },
     {
-      sectionTitle: 'Node.js - Looking Behind the Scenes',
+      sectionTitle: 'Node.js - looking behind the scenes',
       sectionSource: '',
       tooltips: [``],
     },
     {
-      sectionTitle: 'Using the Node Modules System',
+      sectionTitle: 'Using the Node Modules system',
       sectionSource: '',
       highlights: {
         highlight1: ['Node Modules'],
@@ -145,20 +148,20 @@ const development_workflow_and_debugging = {
         highlight1: ['3rd Party Packages'],
       },
       tooltips: [
-        `<p>Node projects typically don't just use core modules and custom code, but also third-party packages.</p>
+        `<h3>Node.js core modules, custom code and third-party packages</h3>
+        <p>Node projects typically don't just use core modules and custom code, but also third-party packages.</p>
         <p>You install them via npm.</p>
-        <p>You can differentiate between <u>production</u> dependecies (<code>--save</code>), <u>development</u> dependencies (<code>--save-dev</code>) and <u>global</u> dependencies (<code>-g</code>).</p>
-        <p><code>--save</code> and -<code>--save-dev</code> allow you to differentiate between production and development dependencies.</p>
         `,
-        `
-      <ul>Packages which you install can be divided into:
-        <li>- <i>development</i> packages, so packages which mostly help you during development;</li>
-        <li>- <i>production</i> dependencies, so packages that helps you for the app as it's running on a server.</li>
+        `<h3>Third-party packages: development vs production vs global packages</h3>
+      <ul>Third-party packages which you install can be divided into:
+        <li>- <i>development</i> dependencies (<code>--save-dev</code>), so packages which mostly help you during development;</li>
+        <li>- <i>production</i> dependencies (<code>--save</code>), so packages that helps you for the app as it's running on a server.</li>
       </ul>
+      <p>NOTE: You can basically tell npm which kind of dependency you will install. This does not make a huge difference and you can omit the setting, but it helps you understand which package is used for what. <code>--save</code> and <code>--save-dev</code> allow you to differentiate between production and development dependencies.</p>
       <p>For example nodemon package would be a development dependency, because we only use it during the development process, once we install our app on a real server we don't need it there. The real server which is running somewhere in the Internet of course shouldn't restart and it also doesn't have to because we'll not change its code dynamically.</p>
-      <p>You can basically tell npm which kind of dependency you will install. This does not make a huge difference and you can omit the setting, but it helps you understand which package is used for what.</p>
-      <p><i>You do add a package that is used in development by adding <code>--save-dev</code>, if you had just install it without <code>--save-dev</code>, this would install it as a production dependency.</i></p>
-      <p>There also is a third option by the way, <i><code>-g</code> we'll not install a package on a specific project, but globally on your machine so that you can use it anywhere</i>.</p>`,
+      <p>There also is a third option by the way, <i><code>-g</code> we'll not install a package on a specific project, but globally on your machine so that you can use it anywhere</i>.</p>
+      <p>NOTE: You can differentiate between <u>production</u> dependecies (<code>--save</code>), <u>development</u> dependencies (<code>--save-dev</code>) and <u>global</u> dependencies (<code>-g</code>).</p>
+      `,
       ],
     },
     {
@@ -167,10 +170,10 @@ const development_workflow_and_debugging = {
       tooltips: [``],
     },
     {
-      sectionTitle: 'Using Nodemon for Autorestarts',
+      sectionTitle: 'Using Nodemon for autorestarts',
       sectionSource: '',
       highlights: {
-        highlight2: ['Nodemon for Autorestarts'],
+        highlight2: ['Nodemon for autorestarts'],
       },
       tooltips: [
         `<pre><code> 
@@ -238,11 +241,14 @@ const working_with_ExpressJS = {
   sections: [
     {
       sectionTitle: 'What is Express.js?',
+      highlights: {
+        highlight2: ['Express.js'],
+      },
       sectionSource: '',
       tooltips: [
         `<h3>Working with only Node.js can be a pain</h3>
         <p>With Node.js alone, you have to <i>write a lot of code to deal with basic things</i> like, for example, extracting the body of an incoming request. Now typically you don't want to do that, you want to focus on your business logic, the code that makes up your specific application, you don't want to work or you don't want to care about standard tasks like handling incoming requests or routing, and therefore we'll now have a look at Express.js.</p>`,
-        `<h3>What is Express.js?</h3>
+        `<h3>What is Express.js and why do we use it?</h3>
         <p>Express.js is a <i>framework</i> you can install as a third party package into your node project and as such, it basically <i>helps you outsource some of that nitty-gritty work</i>, some of these details you don't want to care about, it gives you a rule set in which you work and a lot of utility functions that help you write cleaner code and focus on your core business.</p>`,
       ],
     },
@@ -268,11 +274,6 @@ const working_with_ExpressJS = {
     },
     {
       sectionTitle: 'Handling Different Routes',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Assignment 2: Time to Practice - Express.js',
       sectionSource: '',
       tooltips: [``],
     },
@@ -337,17 +338,7 @@ const working_with_ExpressJS = {
       tooltips: [``],
     },
     {
-      sectionTitle: 'Assignment 3: Time to Practice - Navigation',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
       sectionTitle: 'Wrap Up',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Useful Resources & Links',
       sectionSource: '',
       tooltips: [``],
     },
