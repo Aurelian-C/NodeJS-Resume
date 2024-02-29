@@ -239,10 +239,10 @@ const development_workflow_and_debugging = {
       tooltips: [``],
     },
     {
-      sectionTitle: 'Using Nodemon for autorestarts',
+      sectionTitle: 'Using nodemon package for autorestarts',
       sectionSource: '',
       highlights: {
-        highlight2: ['Nodemon for autorestarts'],
+        highlight2: ['nodemon package'],
       },
       tooltips: [
         `<pre><code> 
