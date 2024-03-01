@@ -428,7 +428,30 @@ const working_with_ExpressJS = {
     {
       sectionTitle: 'Handling Different Routes',
       sectionSource: '',
-      tooltips: [``],
+      tooltips: [
+        `<pre><code>
+        const express = require('express');
+
+        const app = express();
+        
+        app.use(<b>'/'</b>, (req, res, next) => {
+          console.log('This middleware ALWAYS RUNS!');
+          <i>next();</i>
+        });
+        
+        app.use(<b>'/add-product'</b>, (req, res, next) => {
+          console.log('First middleware!');
+          <i>res.send('Add Products Page');</i>
+        });
+        
+        app.use(<b>'/'</b>, (req, res, next) => {
+          console.log('Second middleware!');
+          <i>res.send('Hello from the other side!');</i>
+        });
+        
+        app.listen(3000);
+      </code></pre>`,
+      ],
     },
     {
       sectionTitle: 'Parsing Incoming Requests',
