@@ -353,11 +353,12 @@ b code {
   cursor: pointer;
 }
 
+/* Styling code blocks */
 pre {
   display: block;
   font-family: monospace;
   white-space: pre;
-  margin: 1em 0px;
+  margin: 0px;
 }
 
 pre code {
