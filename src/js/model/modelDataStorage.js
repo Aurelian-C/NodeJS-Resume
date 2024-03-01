@@ -66,13 +66,13 @@ const understanding_the_basics = {
       },
       tooltips: [
         `<pre><code>
-        const http = require('http');
+const http = require('http');
 
-        const server = http.createServer((req, res) => {
-          // Your server side code here
-        });
+const server = http.createServer((req, res) => {
+    // Your server side code here
+});
 
-        server.listen(3000);
+server.listen(3000);
       </code></pre>
       `,
       ],
@@ -246,21 +246,21 @@ const development_workflow_and_debugging = {
       },
       tooltips: [
         `<pre><code> 
-        {
-          "name": "js-project-1", 
-          "version": "1.0.0",
-          "description": "",
-          "main": "app.js",
-          "scripts": {
-              "test": "echo "Error: no test specified" &amp;&amp; exit 1",
-              <i>"start": "nodemon app.js"</i>
-          },
-          "author": "",
-          "license": "ISC",
-          "devDependencies": {
-              <i>"nodemon": "^3.1.0"</i>
-          }
-        }
+{
+  "name": "js-project-1", 
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+      "test": "echo "Error: no test specified" &amp;&amp; exit 1",
+      <i>"start": "nodemon app.js"</i>
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+      <i>"nodemon": "^3.1.0"</i>
+  }
+}
        </code></pre>`,
       ],
     },
@@ -339,29 +339,29 @@ const working_with_ExpressJS = {
         `<h3>Middleware example</h3>
         <p>Here's a simple example of a middleware function in Express.js:</p>
         <pre><code>
-        const express = require('express');
-        const app = express();
+const express = require('express');
+const app = express();
 
-        // Middleware function
-        app.use(<i>(req, res, next) => {
-            console.log('Time:', Date.now());
-            next();
-        }</i>);
+// Middleware function
+app.use(<i>(req, res, next) => {
+    console.log('Time:', Date.now());
+    next();
+}</i>);
 
-        // Another middleware function
-        app.use(<i>(req, res, next) => {
-            console.log('Text:', 'Some text to print!');
-            next();
-        }</i>);
+// Another middleware function
+app.use(<i>(req, res, next) => {
+    console.log('Text:', 'Some text to print!');
+    next();
+}</i>);
 
-        // Route handler
-        app.get('/', (req, res) => {
-            res.send('Hello World!');
-        });
+// Route handler
+app.get('/', (req, res) => {
+    res.send('Hello World!');
+});
 
-        app.listen(3000, () => {
-            console.log('Server is running on port 3000');
-        });
+app.listen(3000, () => {
+    console.log('Server is running on port 3000');
+});
         </code></pre>
         `,
         `<p>In this example, <i><code>app.use()</code> is used to register a middleware function</i>. This middleware function logs the current timestamp to the console <u>every time a request is received</u>. <i>The <code>next()</code> function is called to pass control to the next middleware function in the stack.</i></p>
@@ -373,35 +373,35 @@ const working_with_ExpressJS = {
         <ul>The <code>app.use()</code> function takes two arguments:
           <li>1. <code>path</code> (optional): specifies the path for which the middleware function should be executed. If no path is specified, the middleware function will be executed for every incoming request. This is useful for setting up middleware that needs to be applied globally, such as logging, parsing request bodies, or handling authentication.
           <pre><code>
-          app.use((req, res, next) => {
-              // Middleware logic here
-              next();
-          });
+app.use((req, res, next) => {
+    // Middleware logic here
+    next();
+});
           </code></pre>
           <pre><code>
-          // In this example, the middleware function will only be executed for requests that start with /api
-          app.use('/api', (req, res, next) => {
-              // Middleware logic for requests to /api/
-              next();
-          });
+// In this example, the middleware function will only be executed for requests that start with /api
+app.use('/api', (req, res, next) => {
+    // Middleware logic for requests to /api/
+    next();
+});
           </code></pre>
           </li>
           <li>2. <code>callback</code>: the middleware function or an array of middleware functions to be executed. These functions have access to the request (req), response (res), and the next middleware function (next) in the stack.
           <pre><code>
-          // You can also chain multiple middleware functions together by passing an array of middleware functions to app.use():
-          function middleware1(req, res, next) {
-            // Middleware 1 logic
-            next();
-          }
+// You can also chain multiple middleware functions together by passing an array of middleware functions to app.use():
+function middleware1(req, res, next) {
+  // Middleware 1 logic
+  next();
+}
           
-          function middleware2(req, res, next) {
-            // Middleware 2 logic
-            next();
-          }
+function middleware2(req, res, next) {
+  // Middleware 2 logic
+  next();
+}
           
-          app.use('/api', [middleware1, middleware2]);
+app.use('/api', [middleware1, middleware2]);
 
-          // This will execute middleware1 and middleware2 in sequence for requests to the specified path.
+// This will execute middleware1 and middleware2 in sequence for requests to the specified path.
           </code></pre>
           </li>
         </ul>
@@ -425,26 +425,26 @@ const working_with_ExpressJS = {
       sectionSource: '',
       tooltips: [
         `<pre><code>
-        const express = require('express');
+const express = require('express');
 
-        const app = express();
+const app = express();
         
-        app.use(<b>'/'</b>, (req, res, next) => {
-          console.log('This middleware ALWAYS RUNS!');
-          <i>next();</i>
-        });
+app.use(<b>'/'</b>, (req, res, next) => {
+  console.log('This middleware ALWAYS RUNS!');
+  <i>next();</i>
+});
         
-        app.use(<b>'/add-product'</b>, (req, res, next) => {
-          console.log('First middleware!');
-          <i>res.send('Add Products Page');</i>
-        });
+app.use(<b>'/add-product'</b>, (req, res, next) => {
+  console.log('First middleware!');
+  <i>res.send('Add Products Page');</i>
+});
         
-        app.use(<b>'/'</b>, (req, res, next) => {
-          console.log('Second middleware!');
-          <i>res.send('Hello from the other side!');</i>
-        });
+app.use(<b>'/'</b>, (req, res, next) => {
+  console.log('Second middleware!');
+  <i>res.send('Hello from the other side!');</i>
+});
         
-        app.listen(3000);
+app.listen(3000);
       </code></pre>`,
       ],
     },
@@ -463,31 +463,31 @@ const working_with_ExpressJS = {
         `,
         `<h3>An example of parsing an incoming request body</h3>
         <pre><code>
-        const express = require('express');
-        <i>const bodyParser = require('body-parser');</i>
+const express = require('express');
+<i>const bodyParser = require('body-parser');</i>
 
-        const app = express();
+const app = express();
 
-        app.use(<i>bodyParser.urlencoded({ extended: false })</i>);
+app.use(<i>bodyParser.urlencoded({ extended: false })</i>);
 
-        app.use('/', (req, res, next) => {
-            next();
-        });
+app.use('/', (req, res, next) => {
+    next();
+});
 
-        app.get('/add-product', (req, res, next) => {
-             res.send('Form html markup for submiting!');
-        });
+app.get('/add-product', (req, res, next) => {
+     res.send('Form html markup for submiting!');
+});
 
-        app.post('/product', (req, res, next) => {
-            console.log(<i>req.body</i>); // <i>by default, request doesn't try to parse the incoming request body</i>
-            res.redirect('/');
-        });
+app.post('/product', (req, res, next) => {
+    console.log(<i>req.body</i>); // <i>by default, request doesn't try to parse the incoming request body</i>
+    res.redirect('/');
+});
 
-        app.use('/', (req, res, next) => {
-            res.send('Go to add products page!');
-        });
+app.use('/', (req, res, next) => {
+    res.send('Go to add products page!');
+});
 
-        app.listen(3000);
+app.listen(3000);
       </code></pre>`,
       ],
     },
@@ -496,34 +496,34 @@ const working_with_ExpressJS = {
       sectionSource: '',
       tooltips: [
         `<pre><code>
-        const express = require('express');
-        const bodyParser = require('body-parser');
+const express = require('express');
+const bodyParser = require('body-parser');
         
-        const app = express();
+const app = express();
         
-        app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: false }));
         
-        <i>// app.use() will work with all http methods (GET, POST, PATCH, etc.)</i>
-        app<b>.use</b>('/', (req, res, next) => {
-          next();
-        });
+<i>// app.use() will work with all http methods (GET, POST, PATCH, etc.)</i>
+app<b>.use</b>('/', (req, res, next) => {
+  next();
+});
         
-        <i>// app.get() will work only with GET method</i>
-        app<b>.get</b>('/add-product', (req, res, next) => {
-          res.send();
-        });
+<i>// app.get() will work only with GET method</i>
+app<b>.get</b>('/add-product', (req, res, next) => {
+  res.send();
+});
         
-        <i>// app.post() will work only with POST method</i>
-        app<b>.post</b>('/product', (req, res, next) => {
-          res.redirect('/');
-        });
+<i>// app.post() will work only with POST method</i>
+app<b>.post</b>('/product', (req, res, next) => {
+  res.redirect('/');
+});
         
-        app.use('/', (req, res, next) => {
-          res.send();
-        });
+app.use('/', (req, res, next) => {
+  res.send();
+});
         
-        app.listen(3000);
-      </code><pre>`,
+app.listen(3000);
+      </code></pre>`,
         `<ul>There are also:
         <li>- <code>app.put()</code>;</li>
         <li>- <code>app.delete()</code>.</li>

@@ -20,6 +20,7 @@ class TooltipView {
       const obj = data.find(el => el.sectionTitle === title);
 
       if (!obj.tooltips) return;
+      // if (!obj.tooltips[0].length) return;
 
       const markup = obj.tooltips
         .map(paragraph => `<div class="tooltip_paragraph">${paragraph}</div>`)
