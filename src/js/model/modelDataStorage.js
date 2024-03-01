@@ -421,11 +421,6 @@ const working_with_ExpressJS = {
       ],
     },
     {
-      sectionTitle: 'Express.js - Looking Behind the Scenes',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
       sectionTitle: 'Handling Different Routes',
       sectionSource: '',
       tooltips: [
@@ -454,7 +449,7 @@ const working_with_ExpressJS = {
       ],
     },
     {
-      sectionTitle: 'Parsing Incoming Requests With body-parser Package',
+      sectionTitle: 'Parsing Incoming Requests with body-parser Package',
       sectionSource: '',
       highlights: {
         highlight1: ['Parsing Incoming Requests'],
