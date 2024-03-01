@@ -454,14 +454,87 @@ const working_with_ExpressJS = {
       ],
     },
     {
-      sectionTitle: 'Parsing Incoming Requests',
+      sectionTitle: 'Parsing Incoming Requests With body-parser Package',
       sectionSource: '',
-      tooltips: [``],
+      highlights: {
+        highlight1: ['Parsing Incoming Requests'],
+        highlight2: ['body-parser'],
+      },
+      tooltips: [
+        `<p><i>By default, request doesn't try to parse the incoming request.</i> For that, we need to install a 3rd party packages.</p>
+        <p><code>body-parser</code> package is a npm package for Node.js body parsing middleware. You install it with <i><code>npm install body-parser</code></i> command.</p>
+        <p><code>body-parser</code> parse incoming request bodies in a middleware before your handlers, available under the <code>req.body</code> property.</p>
+        <p><i><code>bodyParser.urlencoded()</code> will not parse all kinds of possible bodies</i>, files, json and so on, but will parse bodies like sent through a form. If we have other bodies like files, we'll use different parsers and this makes Express.js so extensible. If we need something, we can plug it in.</p>
+        `,
+        `<h3>An example of parsing an incoming request body</h3>
+        <pre><code>
+        const express = require('express');
+        <i>const bodyParser = require('body-parser');</i>
+
+        const app = express();
+
+        app.use(<i>bodyParser.urlencoded({ extended: false })</i>);
+
+        app.use('/', (req, res, next) => {
+            next();
+        });
+
+        app.get('/add-product', (req, res, next) => {
+             res.send('Form html markup for submiting!');
+        });
+
+        app.post('/product', (req, res, next) => {
+            console.log(<i>req.body</i>); // <i>by default, request doesn't try to parse the incoming request body</i>
+            res.redirect('/');
+        });
+
+        app.use('/', (req, res, next) => {
+            res.send('Go to add products page!');
+        });
+
+        app.listen(3000);
+      </code></pre>`,
+      ],
     },
     {
       sectionTitle: 'Limiting Middleware Execution to POST Requests',
       sectionSource: '',
-      tooltips: [``],
+      tooltips: [
+        `<pre><code>
+        const express = require('express');
+        const bodyParser = require('body-parser');
+        
+        const app = express();
+        
+        app.use(bodyParser.urlencoded({ extended: false }));
+        
+        <i>// app.use() will work with all http methods (GET, POST, PATCH, etc.)</i>
+        app<b>.use</b>('/', (req, res, next) => {
+          next();
+        });
+        
+        <i>// app.get() will work only with GET method</i>
+        app<b>.get</b>('/add-product', (req, res, next) => {
+          res.send();
+        });
+        
+        <i>// app.post() will work only with POST method</i>
+        app<b>.post</b>('/product', (req, res, next) => {
+          res.redirect('/');
+        });
+        
+        app.use('/', (req, res, next) => {
+          res.send();
+        });
+        
+        app.listen(3000);
+      </code><pre>`,
+        `<ul>There are also:
+        <li>- <code>app.put()</code>;</li>
+        <li>- <code>app.delete()</code>.</li>
+      </ul>
+      `,
+      ],
     },
     {
       sectionTitle: 'Using Express Router',

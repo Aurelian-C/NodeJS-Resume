@@ -359,6 +359,18 @@ pre {
   font-family: monospace;
   white-space: pre;
   margin: 0px;
+  overflow-x: auto;
+}
+
+pre::-webkit-scrollbar {
+  /* width: 8px; */
+  height: 6px;
+}
+
+pre::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.5);
+  background: rgb(26, 26, 26);
 }
 
 pre code {
