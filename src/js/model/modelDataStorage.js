@@ -456,7 +456,7 @@ const express = require('express');
 const app = express();
         
 app.use(<b>'/'</b>, (req, res, next) => {
-  console.log('This middleware ALWAYS RUNS even if you access "/add-product" path! app.use() that has the "/" path will run for ALL PATHS after "/", including "/".');
+  console.log('This middleware ALWAYS RUNS even if you access "/add-product" path! app.use() that has the "/" path will run for ALL PATHS starting with "/", including "/".');
   <i>next();</i>
 });
         
