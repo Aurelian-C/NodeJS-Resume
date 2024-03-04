@@ -280,6 +280,10 @@ code {
   font-size: inherit;
 }
 
+.fa-xmark {
+  color: inherit;
+}
+
 .card__title .tooltip {
   left: -30%;
   min-width: 50rem;
