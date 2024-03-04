@@ -316,25 +316,51 @@ const working_with_ExpressJS = {
       sectionSource: '',
       tooltips: [
         `<h3>Working only with Node.js can be a pain</h3>
-        <p>With Node.js alone, you have to <i>write a lot of code to deal with basic things</i> like, for example, extracting the body of an incoming request. Now typically you don't want to do that, you want to focus on your business logic, the code that makes up your specific application, you don't want to work or you don't want to care about standard tasks like handling incoming requests or routing, and therefore we'll now have a look at Express.js.</p>`,
+        <p>With Node.js alone, you have to <i>write a lot of code to deal with basic things</i> like, for example, extracting the body of an incoming request. Now typically you don't want to do that, you want to focus on your business logic, the code that makes up your specific application, you don't want to work or you don't want to care about standard tasks like handling incoming requests or routing, and therefore we'll now have a look at Express.js.</p>
+        <p>NOTE: Express.js is a package/framework you can use for Node.js that will help you write better Node.js code and focus on your business logic. Now, of course you could stick to Vanilla Node.js and that works, and depending on the complexity of your application or the level of challenges you are seeking, you can absolutely stick to Vanilla Node.js, you can theoretically write everything on your own just with Vanilla Node.js.</p>
+        `,
         `<h3>What is Express.js and why do we use it?</h3>
-        <p>Express.js is a <i>framework</i> you can install as a third party package into your node project and as such, it basically <i>helps you outsource some of that nitty-gritty work</i>, some of these details you don't want to care about, it gives you a rule set in which you work and a lot of utility functions that help you write cleaner code and focus on your core business.</p>`,
+        <p>Express.js is a <i>framework</i> you can install as a third party package into your node project and as such, it basically <i>helps you outsource some of that nitty-gritty work</i>, some of these details you don't want to care about, it gives you a rule set in which you work and a lot of utility functions that help you write cleaner code and focus on your core business.</p>
+        <p>A framework is basically a set of helper functions, tools & rules that help you build your applicatiion.</p>`,
       ],
     },
     {
       sectionTitle: 'Installing Express.js',
       sectionSource: '',
-      tooltips: [`<code>npm i express</code>`],
+      tooltips: [
+        `<p>You install Express.js by typing in your VS Code terminal the <code>npm i express</code> command. This command will install Express.js as a dependency to your project.</p>`,
+        `<p>Once you install Express.js, you need to import it in your app.js file and create your Node.js server. You do this like the example below:</p>
+        <pre><code>
+const express = require('express');
+
+const app = express();
+
+app.use((req, res, next) => {
+  // Middleware function code
+})
+
+app.listen(3000);
+        </code></pre>`,
+        `<p>Express.js handling incoming requests in a certain way called middleware functions. Middleware functions are a key characteristic of Express framework.</p>`,
+      ],
     },
     {
-      sectionTitle: 'Express.js Middleware',
+      sectionTitle:
+        'Middleware Functions, <code>next()</code> Function & Sending a Response with <code>res.send()</code> function',
       sectionSource: '',
       highlights: {
-        highlight2: ['Middleware'],
+        highlight2: [
+          'Middleware',
+          '<code>next()</code>',
+          '<code>res.send()</code>',
+        ],
       },
       tooltips: [
-        `<h3>Middlewares are a crucial aspect of Express.js</h3>
-        <p><i>Express.js Middleware is a crucial aspect of Express.js</i>, a popular web application framework for Node.js. Middleware functions are <i>functions that have access to the <u>request object</u> (req), the <u>response object</u> (res), and <u>the next middleware function</u> in the application's request-response cycle</i>. These functions can execute any code, modify request and response objects, end the request-response cycle, and call the next middleware function in the stack.</p>
+        `<h3>Middleware functions are a crucial aspect of Express.js</h3>
+        <p><i>Express.js is all about middleware functions</i>.</p>
+        <p>In Express.js <i>an incoming request is automatically funneled through a bunch of functions</i>, so instead of just having one request handler, you will actually have a possibility of hooking in multiple functions which the request will go through until you send a response.</p>
+        <p>This allows you to split your code into multiple blocks or pieces, instead of having one huge function that does everything, and this is the pluggable nature of Express.js, where you can easily add other third party packages which simply happen to give you such middleware functions that you can plug into Express.js and add certain functionalities.</p>
+        <p>Middleware functions are <i>functions that have access to the <u>request object</u> (req), the <u>response object</u> (res), and <u>the next middleware function</u> in the application's request-response cycle</i>. These functions can execute any code, modify request and response objects, end the request-response cycle, and call the next middleware function in the stack.</p>
         <p><i>Middleware functions are used to perform tasks</i> like authentication, logging, parsing request bodies, and error handling. They allow you to modularize your application's logic and make it easier to manage and maintain.</p>`,
         `<h3>Middleware example</h3>
         <p>Here's a simple example of a middleware function in Express.js:</p>
@@ -345,18 +371,18 @@ const app = express();
 // Middleware function
 app.use(<i>(req, res, next) => {
     console.log('Time:', Date.now());
-    next();
+    next(); //allows the request to continue to the next middleware in line (next middleware function in the stack)
 }</i>);
 
 // Another middleware function
 app.use(<i>(req, res, next) => {
     console.log('Text:', 'Some text to print!');
-    next();
+    next(); //allows the request to continue to the next middleware in line (next middleware function in the stack)
 }</i>);
 
 // Route handler
 app.get('/', (req, res) => {
-    res.send('Hello World!');
+    <i>res.send('Hello World!');</i>
 });
 
 app.listen(3000, () => {
@@ -408,8 +434,8 @@ app.use('/api', [middleware1, middleware2]);
         <p>Overall, <code>app.use()</code> is a powerful function in Express.js that allows you to <i>set up middleware for your application</i>, making it easy to <i>handle common tasks</i> and <i>modularize your code</i>.</p>
         `,
         `<h3>More details about <code>next()</code> function</h3>
-        <p>In Express.js, the <code>next()</code> function is a callback function that is <i><u>used within middleware functions</u> to pass control to the next middleware function in the stack</i>. It is often <i>used to chain multiple middleware functions together</i>, allowing each middleware function to perform its specific tasks before passing control to the next one.</p>
-        <p>NOTE: We have to call <code>next()</code> to allow an incoming request to travel on to the next middleware in line. If we don't call <code>next()</code> middleware just dies, so we should actually send back a response because otherwise the request can't continue its journey to the next middleware function, so it will never reach a place where we might send a response.</p>
+        <p>In Express.js, the <code>next()</code> function is a callback function that is <i><u>used within middleware functions</u> to pass control to the next middleware function <u>in the stack</u></i>. It is often <i>used to chain multiple middleware functions together</i>, allowing each middleware function to perform its specific tasks before passing control to the next one.</p>
+        <p>NOTE: We have to call <code>next()</code> to allow an incoming request to continue to the next middleware in line. If we don't call <code>next()</code>, middleware just dies, so we should actually send back a response because otherwise the request can't continue its journey to the next middleware function, so it will never reach a place where we might send a response. <i>Express.js doesn't send a default response</i> or anything like that.</p>
         <ul>Here's how the <code>next()</code> function works:
           <li>1. When a middleware function is invoked, it receives three arguments: req (the request object), res (the response object), and next (the callback function).</li>
           <li>2. By calling <code>next()</code>, the current middleware function signals to Express.js that it has completed its tasks and that the control should be passed to the next middleware function.</li>
@@ -430,7 +456,7 @@ const express = require('express');
 const app = express();
         
 app.use(<b>'/'</b>, (req, res, next) => {
-  console.log('This middleware ALWAYS RUNS!');
+  console.log('This middleware ALWAYS RUNS even if you access "/add-product" path! app.use() that has the "/" path will run for ALL PATHS after "/", including "/".');
   <i>next();</i>
 });
         
@@ -479,7 +505,7 @@ app.get('/add-product', (req, res, next) => {
 });
 
 app.post('/product', (req, res, next) => {
-    console.log(<i>req.body</i>); // <i>by default, request doesn't try to parse the incoming request body</i>
+    console.log(<i>req.body</i>); //<i>by default, request doesn't try to parse the incoming request body</i>
     res.redirect('/');
 });
 
@@ -503,7 +529,7 @@ const app = express();
         
 app.use(bodyParser.urlencoded({ extended: false }));
         
-<i>// app.use() will work with all http methods (GET, POST, PATCH, etc.)</i>
+<i>// app.use() will work with all HTTP methods (GET, POST, PATCH, etc.)</i>
 app<b>.use</b>('/', (req, res, next) => {
   next();
 });
@@ -534,7 +560,9 @@ app.listen(3000);
     {
       sectionTitle: 'Using Express Router',
       sectionSource: '',
-      tooltips: [``],
+      tooltips: [
+        `<p>With Express.js routing we can execute different code for different incoming requests and paths or urls without having to write a bunch of <code>if</code> statements.</p>`,
+      ],
     },
     {
       sectionTitle: 'Adding a 404 Error Page',
@@ -554,17 +582,9 @@ app.listen(3000);
     {
       sectionTitle: 'Serving HTML Pages',
       sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Returning a 404 Page',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'A Hint!',
-      sectionSource: '',
-      tooltips: [``],
+      tooltips: [
+        `<p>I'll show you how we can return HTML pages (files), more specific HTML files we prepared to our client, instead of writing HTML code in Node.js as we did us far, which wasn't really that great.</p>`,
+      ],
     },
     {
       sectionTitle: 'Using a Helper Function for Navigation',
@@ -572,17 +592,7 @@ app.listen(3000);
       tooltips: [``],
     },
     {
-      sectionTitle: 'Styling our Pages',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
       sectionTitle: 'Serving Files Statically',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Wrap Up',
       sectionSource: '',
       tooltips: [``],
     },

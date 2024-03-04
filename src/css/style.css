@@ -358,12 +358,13 @@ b code {
 pre {
   display: block;
   font-family: monospace;
-  white-space: pre;
-  margin: 0px;
+  white-space: pre-wrap;
+  margin: 0 0 10px 0;
   overflow-x: auto;
   background-color: rgb(31, 31, 31);
   padding: 0 12px;
   width: fit-content;
+  /* max-width: 95%; */
 }
 
 pre::-webkit-scrollbar {
@@ -373,12 +374,13 @@ pre::-webkit-scrollbar {
 
 pre::-webkit-scrollbar-thumb {
   border-radius: 5px;
-  box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.5);
+  box-shadow: inset 1px 1px 3px rgba(255, 255, 255);
   background: rgb(26, 26, 26);
 }
 
 .tooltip_paragraph > pre {
   margin-left: 20px;
+  white-space: pre-wrap;
 }
 
 li > pre {
@@ -388,7 +390,7 @@ li > pre {
 pre code {
   -webkit-locale: 'json';
   font-family: monospace;
-  white-space: pre;
+  white-space: pre-wrap;
 
   font-size: 1.5rem;
   background: none;
