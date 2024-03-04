@@ -563,17 +563,102 @@ app.listen(3000);
       sectionSource: '',
       tooltips: [
         `<p>With Express.js routing we can execute different code for different incoming requests and paths or urls without having to write a bunch of <code>if</code> statements.</p>`,
+        `<pre><code>
+const express = require('express');
+
+<i>const router = express.Router();</i>
+        
+<i>router.get</i>('/add-product', (req, res, next) => {
+  res.send('Add Product Form');
+});
+        
+<i>router.post</i>('/product', (req, res, next) => {
+  res.redirect('/');
+});
+        
+<i>module.exports = router;</i>
+        </code></pre>
+
+        <pre><code>
+const express = require('express');
+
+const app = express();
+
+<i>const adminRoutes = require('./routes/admin');</i>
+
+<i>app.use(adminRoutes);</i>
+
+app.listen(3000);
+        </code></pre>
+        `,
       ],
     },
     {
       sectionTitle: 'Adding a 404 Error Page',
       sectionSource: '',
-      tooltips: [``],
+      tooltips: [
+        `<pre><code>
+const express = require('express');
+      
+const app = express();
+      
+const adminRoutes = require('./routes/admin');
+      
+app.use(adminRoutes);
+
+<i>app.use((req, res, next) => {
+  res.send('Page Not Found!');
+})</i>
+      
+app.listen(3000);
+              </code></pre>`,
+      ],
     },
     {
       sectionTitle: 'Filtering Paths',
       sectionSource: '',
-      tooltips: [``],
+      tooltips: [
+        `<pre><code>
+const express = require("express");
+
+const router = express.Router();
+        
+// The same path (/add-product) can be used if the method is different (.get)
+// /admin/add-product => GET
+router.get("/add-product", (req, res, next) => {
+  res.send('Form submision!');
+});
+        
+// The same path (/add-product) can be used if the method is different (.post)
+// /admin/add-product => POST
+router.post("/add-product", (req, res, next) => {
+   res.redirect("/");
+});
+
+module.exports = router;
+        </code></pre>
+        
+        <pre><code>
+const express = require('express');
+const bodyParser = require('body-parser');
+
+const app = express();
+
+const adminRoutes = require('./routes/admin');
+const shopRoutes = require('./routes/shop');
+
+app.use(bodyParser.urlencoded({extended: false}));
+
+<i>app.use('/admin', adminRoutes);</i>
+app.use(shopRoutes);
+
+app.use((req, res, next) => {
+    res.status(404).send('Page not found!');
+});
+
+app.listen(3000);
+      </code></pre>`,
+      ],
     },
     {
       sectionTitle: 'Creating HTML Pages',
@@ -585,22 +670,111 @@ app.listen(3000);
       sectionSource: '',
       tooltips: [
         `<p>I'll show you how we can return HTML pages (files), more specific HTML files we prepared to our client, instead of writing HTML code in Node.js as we did us far, which wasn't really that great.</p>`,
+        `<pre><code>
+const path = require('path');
+
+const express = require('express');
+
+const router = express.Router();
+
+router.get('/add-product', (req, res, next) => {
+  <i>res.sendFile(path.join(__dirname, '../', 'views', 'add-product.html'));</i>
+});
+
+router.post('/add-product', (req, res, next) => {
+  console.log(req.body);
+  res.redirect('/');
+});
+
+module.exports = router;
+        </code></pre>
+        `,
       ],
     },
     {
       sectionTitle: 'Using a Helper Function for Navigation',
       sectionSource: '',
-      tooltips: [``],
+      tooltips: [
+        `<pre><code>
+const path = require("path");
+
+<i>module.exports = path.dirname(process.mainModule.filename);</i>
+
+// If you get a deprecation warning for above code - in that case, you can simply switch to the code below:
+// module.exports = path.dirname(require.main.filename);      
+      </code></pre>
+const path = require('path');
+
+const express = require('express');
+
+const rootDir = require('../util/path');
+
+const router = express.Router();
+
+// /admin/add-product => GET
+router.get('/add-product', (req, res, next) => {
+  res.sendFile(path.join(rootDir, 'views', 'add-product.html'));
+});
+
+// /admin/add-product => POST
+router.post('/add-product', (req, res, next) => {
+  console.log(req.body);
+  res.redirect('/');
+});
+
+module.exports = router;
+
+      <pre><code>
+const path = require('path');
+
+const express = require('express');
+      
+<i>const rootDir = require('../util/path');</i>
+      
+const router = express.Router();
+      
+
+router.get('/add-product', (req, res, next) => {
+  <i>res.sendFile(path.join(rootDir, 'views', 'add-product.html'));</i>
+});
+      
+router.post('/add-product', (req, res, next) => {
+  res.redirect('/');
+});
+      
+module.exports = router;
+      </code></pre>
+      `,
+      ],
     },
     {
       sectionTitle: 'Serving Files Statically',
       sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Useful Resources & Links',
-      sectionSource: '',
-      tooltips: [``],
+      tooltips: [
+        `<pre><code>
+const path = require('path');
+
+const express = require('express');
+const bodyParser = require('body-parser');
+
+const app = express();
+
+const adminRoutes = require('./routes/admin');
+const shopRoutes = require('./routes/shop');
+
+app.use(bodyParser.urlencoded({extended: false}));
+<i>app.use(express.static(path.join(__dirname, 'public')));</i>
+
+app.use('/admin', adminRoutes);
+app.use(shopRoutes);
+
+app.use((req, res, next) => {
+    res.status(404).sendFile(path.join(__dirname, 'views', '404.html'));
+});
+
+app.listen(3000);      
+      </code></pre>`,
+      ],
     },
   ],
 };
