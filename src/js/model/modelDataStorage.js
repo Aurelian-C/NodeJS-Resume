@@ -482,7 +482,7 @@ app.listen(3000);
         highlight2: ['body-parser'],
       },
       tooltips: [
-        `<p><i>By default, request doesn't try to parse the incoming request.</i> For that, we need to install a 3rd party packages.</p>
+        `<p><i>By default, <code>req.body</code> doesn't try to parse the incoming request.</i> For that, we need to install a 3rd party packages.</p>
         <p><code>body-parser</code> package is a npm package for Node.js body parsing middleware. You install it with <i><code>npm install body-parser</code></i> command.</p>
         <p><code>body-parser</code> parse incoming request bodies in a middleware before your handlers, available under the <code>req.body</code> property.</p>
         <p><i><code>bodyParser.urlencoded()</code> will not parse all kinds of possible bodies</i>, files, json and so on, but will parse bodies like sent through a form. If we have other bodies like files, we'll use different parsers and this makes Express.js so extensible. If we need something, we can plug it in.</p>
