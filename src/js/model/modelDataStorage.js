@@ -552,6 +552,7 @@ app.listen(3000);
       </code></pre>`,
         `<ul>There are also:
         <li>- <code>app.put()</code>;</li>
+        <li>- <code>app.patch()</code>;</li>
         <li>- <code>app.delete()</code>.</li>
       </ul>
       `,
