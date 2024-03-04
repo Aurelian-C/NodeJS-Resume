@@ -472,6 +472,16 @@ app.use(<b>'/'</b>, (req, res, next) => {
         
 app.listen(3000);
       </code></pre>`,
+        `<h3>Basic routing</h3>
+        <p>Routing refers to determining how an application responds to a client request to a particular endpoint, which is a URI (or path) and a specific HTTP request method (GET, POST, and so on).</p>
+        <p>Each route can have one or more handler functions, which are executed when the route is matched.</p>
+        <ul>Route definition takes the following structure: <code>app.<i>METHOD</i>(PATH, HANDLER)</code>, where:
+          <li>- <code>app</code> is an instance of express;</li>
+          <li>- <code>METHOD</code> is an HTTP request method, in lowercase;</li>
+          <li>- <code>PATH</code> is a path on the server;</li>
+          <li>- <code>HANDLER</code> is the function executed when the route is matched.</li>
+        </ul>
+        `,
       ],
     },
     {
@@ -678,7 +688,7 @@ const express = require('express');
 const router = express.Router();
 
 router.get('/add-product', (req, res, next) => {
-  <i>res.sendFile(path.join(__dirname, '../', 'views', 'add-product.html'));</i>
+  <i>res.sendFile(path.join(__dirname, '..', 'views', 'add-product.html'));</i>
 });
 
 router.post('/add-product', (req, res, next) => {
@@ -688,6 +698,13 @@ router.post('/add-product', (req, res, next) => {
 
 module.exports = router;
         </code></pre>
+        `,
+        `<h3>More aboute <code>path.join()</code> method</h3>
+        <p>The <code>path.join()</code> method <i>joins the specified <u>path segments</u> into <u>one path</u></i>. You can specify as many path segments as you like.</p>
+        <p>The specified <i>path segments must be <u>strings</u></i>, separated by comma <code>,</code>.</p>
+        `,
+        `<h3>More aboute <code>__dirname</code> variable</h3>
+        <p><code>__dirname</code> is an <i>environment variable</i> that tells you <i>the <u>absolute path of the directory</u> containing the currently executing file</i>.</p>
         `,
       ],
     },
