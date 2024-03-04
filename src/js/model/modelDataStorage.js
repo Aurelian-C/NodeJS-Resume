@@ -505,7 +505,7 @@ app.get('/add-product', (req, res, next) => {
 });
 
 app.post('/product', (req, res, next) => {
-    console.log(<i>req.body</i>); //<i>by default, request doesn't try to parse the incoming request body</i>
+    console.log(<i>req.body</i>); //by default, request doesn't try to parse the incoming request body
     res.redirect('/');
 });
 
