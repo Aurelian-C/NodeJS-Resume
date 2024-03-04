@@ -447,7 +447,7 @@ app.use('/api', [middleware1, middleware2]);
       ],
     },
     {
-      sectionTitle: 'Handling Different Routes',
+      sectionTitle: 'Handling Different Routes With <code>app.use()</code>',
       sectionSource: '',
       tooltips: [
         `<pre><code>
