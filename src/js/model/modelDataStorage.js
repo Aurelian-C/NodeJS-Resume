@@ -720,6 +720,8 @@ const path = require("path");
 // If you get a deprecation warning for above code - in that case, you can simply switch to the code below:
 // module.exports = path.dirname(require.main.filename);      
       </code></pre>
+
+      <pre><code>
 const path = require('path');
 
 const express = require('express');
