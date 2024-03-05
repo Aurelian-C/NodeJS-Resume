@@ -645,10 +645,15 @@ app.listen(3000);
       ],
     },
     {
-      sectionTitle: 'Serving HTML Pages with <code>sendFile()</code> function',
+      sectionTitle:
+        'Serving HTML Pages with <code>sendFile()</code> function, <code>path.join()</code> method and <code>__dirname</code> global variable',
       sectionSource: '',
       highlights: {
-        highlight1: ['<code>sendFile()</code>'],
+        highlight1: [
+          '<code>sendFile()</code>',
+          '<code>path.join()</code>',
+          '<code>__dirname</code>',
+        ],
       },
       tooltips: [
         `<p>It's important to know that you're not limited to <code>send()</code> dummy text or anything like that, you can <code>sendFiles()</code> to your users, for example HTML files or images.</p>
