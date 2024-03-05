@@ -29,9 +29,11 @@ class ApplicationView {
               <h2>
                 <p class="card__title--1">Section ${idx + 1}</p>
                 <div>${card.title}</div>
-                <div class="card__title-description">- ${
+                ${
                   card.titleDescription
-                } -</div>
+                    ? `<div class="card__title-description">- ${card.titleDescription} -</div>`
+                    : ''
+                }
               </h2>
               ${tooltipMarkup}
             </div>
