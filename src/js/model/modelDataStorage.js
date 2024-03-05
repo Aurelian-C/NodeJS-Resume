@@ -722,7 +722,7 @@ const express = require('express');
 const router = express.Router();
 
 router.get('/add-product', (req, res, next) => {
-  <i>res.sendFile(path.join(__dirname, '..', 'views', 'add-product.html'));</i>
+  <i>res.<b>sendFile</b>(<b>path.join</b>(<b>__dirname</b>, '..', 'views', 'add-product.html'));</i>
 });
 
 router.post('/add-product', (req, res, next) => {
@@ -733,12 +733,22 @@ router.post('/add-product', (req, res, next) => {
 module.exports = router;
         </code></pre>
         `,
+        `<h3>More aboute <code>res.sendFile()</code> function</h3>
+        <p>The <code>res.sendFile()</code> function <i>transfers the file at the given path</i> and <i>it sets the Content-Type response HTTP header field based on the filename extension</i>.</p>
+        <p>Unless the <code>root</code> option is set in the options object, <i>path must be an <u>absolute path</u> to the file</i>.</p>
+        <ul>This API <i>provides access to data on the running file system</i>. Ensure that either:
+          <li>a) the way in which the path argument was constructed into an absolute path is secure if it contains user input or</li>
+          <li>b) set the root option to the absolute path of a directory to contain access within.</li>
+        </ul>
+        <p>When the <code>root</code> option is provided, the path argument is allowed to be a relative path, including containing <code>..</code>. Express.js will validate that the relative path provided as path will resolve within the given <code>root</code> option.</p>
+        `,
         `<h3>More aboute <code>path.join()</code> method</h3>
         <p>The <code>path.join()</code> method <i>joins the specified <u>path segments</u> into <u>one path</u></i>. You can specify as many path segments as you like.</p>
         <p>The specified <i>path segments must be <u>strings</u></i>, separated by comma <code>,</code>.</p>
+        <p>We're using <code>path.join()</code> because this will automatically build the path in a way that works on both Linux and Windows systems.</p>
         `,
         `<h3>More aboute <code>__dirname</code> variable</h3>
-        <p><code>__dirname</code> is an <i>environment variable</i> that tells you <i>the <u>absolute path of the directory</u> containing the currently executing file</i>.</p>
+        <p><code>__dirname</code> is a <i>global variable</i> made available by Node.js (environment variable) that tells you <i>the <u>absolute path of the directory</u> containing the currently executing file</i>.</p>
         `,
       ],
     },
