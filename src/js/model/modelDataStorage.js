@@ -782,9 +782,25 @@ app.listen(3000);
       ],
     },
     {
-      sectionTitle: 'Using a Helper Function for Navigation',
+      sectionTitle:
+        'Using a Helper Function for Navigation: <code>path.dirname()</code> with <code>process.mainModule.filename</code> or <code>require.main.filename</code>',
       sectionSource: '',
+      highlights: {
+        highlight1: [
+          '<code>path.dirname()</code>',
+          '<code>process.mainModule.filename</code>',
+          '<code>require.main.filename</code>',
+        ],
+      },
       tooltips: [
+        `<h3>The <code>path.dirname()</code> method</h3>
+        <p>The <code>path.dirname()</code> method <i>returns the directories of a file path</i>.</p>`,
+        `<h3>The <code>process.mainModule</code> property</h3>
+        <p>The <code>process.mainModule</code> property is an inbuilt application programming interface of the processing module which is used to get the main module. This is an alternative way to get require.main but unlike require.main, process.mainModule dynamically changes in runtime. Generally, we can assume those two modules are the same. </p>
+        `,
+        `<h3>The <code>require.main.filename</code></h3>
+        <p><code>require.main.filename</code> is great for <i>figuring out the entry point for the current application</i>. Unfortunately, <code>require.main.filename</code> sometimes fails when an application is executed with an alternative process manager, e.g., iisnode.</p>`,
+        `<p>With <code>path.dirname(process.mainModule.filename)</code> or <code>path.dirname(require.main.filename)</code> you <i>get the parent directory path</i>.</p>`,
         `<pre><code>
 const path = require("path");
 
