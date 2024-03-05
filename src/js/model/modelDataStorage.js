@@ -32,7 +32,7 @@ const introduction = {
 };
 
 const understanding_the_basics = {
-  title: 'Understanding the Basics',
+  title: 'Understanding the Basics <br>(The Essential Knownledge You Need)',
   sections: [
     {
       sectionTitle: 'How the Web works',
@@ -200,7 +200,8 @@ server.listen(3000);
 };
 
 const development_workflow_and_debugging = {
-  title: 'Improved Development Workflow and Debugging',
+  title:
+    'Improved Development Workflow and Debugging <br>(Fixing Error, Developing Efficiently)',
   sections: [
     {
       sectionTitle: 'Understanding NPM Scripts',
@@ -306,7 +307,7 @@ const development_workflow_and_debugging = {
 };
 
 const working_with_ExpressJS = {
-  title: 'Working with Express.js',
+  title: 'Working with Express.js <br>(Do not reinvent the Wheel!)',
   sections: [
     {
       sectionTitle: 'What is Express.js?',
@@ -868,7 +869,8 @@ app.listen(3000);
 };
 
 const dynamic_content_and_adding_templating_engines = {
-  title: 'Working with Dynamic Content & Adding Templating Engines',
+  title:
+    'Working with Dynamic Content & Adding Templating Engines <br>(Rendering more than Static HTML)',
   sections: [
     {
       sectionTitle: 'Module Introduction',
