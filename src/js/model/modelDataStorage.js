@@ -22,10 +22,10 @@ const introduction = {
       tooltips: [``],
     },
     {
-      sectionTitle: 'Working with the REPL vs using files',
+      sectionTitle: 'Working with the REPL vs Using Files',
       sectionSource: '',
       highlights: {
-        highlight1: ['REPL vs using files'],
+        highlight1: ['REPL vs Using Files'],
       },
       tooltips: [``],
     },
@@ -181,7 +181,7 @@ server.listen(3000);
       tooltips: [``],
     },
     {
-      sectionTitle: 'Understanding Event Driven Code Execution',
+      sectionTitle: 'Understanding Event Driven code execution',
       sectionSource: '',
       tooltips: [``],
     },
@@ -350,7 +350,7 @@ app.listen(3000);
     },
     {
       sectionTitle:
-        'Middleware Functions, <code>next()</code> Function & Sending a Response with <code>res.send()</code> function',
+        'Middleware functions, <code>next()</code> function & sending a Response with <code>res.send()</code> function',
       sectionSource: '',
       highlights: {
         highlight2: [
@@ -451,7 +451,7 @@ app.use('/api', [middleware1, middleware2]);
       ],
     },
     {
-      sectionTitle: 'Handling Different Routes With <code>app.use()</code>',
+      sectionTitle: 'Handling different routes with <code>app.use()</code>',
       sectionSource: '',
       tooltips: [
         `<pre><code>
@@ -489,10 +489,10 @@ app.listen(3000);
       ],
     },
     {
-      sectionTitle: 'Parsing Incoming Requests with body-parser Package',
+      sectionTitle: 'Parsing incoming Requests with body-parser package',
       sectionSource: '',
       highlights: {
-        highlight1: ['Parsing Incoming Requests'],
+        highlight1: ['Parsing incoming Requests'],
         highlight2: ['body-parser'],
       },
       tooltips: [
@@ -585,7 +585,7 @@ app.listen(3000);
     },
     {
       sectionTitle:
-        'Limiting Middleware Execution By Filtering Request by Paths and Methods',
+        'Limiting middleware execution by filtering Request by paths and methods',
       sectionSource: '',
       tooltips: [
         `<h3>Filtering request by method</h3>
@@ -748,7 +748,7 @@ app.listen(3000);
     },
     {
       sectionTitle:
-        'Using a Helper Function for Navigation: <code>path.dirname()</code> with <code>process.mainModule.filename</code> or <code>require.main.filename</code>',
+        'Using a helper function for navigation: <code>path.dirname()</code> with <code>process.mainModule.filename</code> or <code>require.main.filename</code>',
       sectionSource: '',
       highlights: {
         highlight1: [
@@ -818,7 +818,7 @@ module.exports = router;
       ],
     },
     {
-      sectionTitle: 'Serving Files Statically with <code>express.static</code>',
+      sectionTitle: 'Serving files statically with <code>express.static</code>',
       highlights: {
         highlight1: ['<code>express.static</code>'],
       },
