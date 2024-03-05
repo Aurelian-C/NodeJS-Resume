@@ -796,6 +796,7 @@ app.listen(3000);
         `<h3>The <code>path.dirname()</code> method</h3>
         <p>The <code>path.dirname()</code> method <i>return the directory name of a file path</i>.</p>`,
         `<h3>The <code>process.mainModule</code> property</h3>
+        <p><i><code>process</code> is a global variable</i> provided by Node.js, you don't need to import it.</p>
         <p>The <code>process.mainModule</code> property is an inbuilt application programming interface of the processing module which is <i>used to get the main module</i>. This is <i>an alternative way to get <code>require.main</code></i> but unlike <code>require.main</code>, <code>process.mainModule</code> dynamically changes in runtime. Generally, we can assume those two modules are the same.</p>
         `,
         `<h3>The <code>require.main.filename</code></h3>
@@ -814,38 +815,32 @@ const path = require("path");
 
       <pre><code>
 const path = require('path');
-
 const express = require('express');
-
-const rootDir = require('../util/path');
+<i>const rootDir = require('../util/path');</i>
 
 const router = express.Router();
 
-// /admin/add-product => GET
 router.get('/add-product', (req, res, next) => {
-  res.sendFile(path.join(rootDir, 'views', 'add-product.html'));
+  res.sendFile(path.join(<i>rootDir</i>, 'views', 'add-product.html'));
 });
 
-// /admin/add-product => POST
 router.post('/add-product', (req, res, next) => {
   console.log(req.body);
   res.redirect('/');
 });
 
 module.exports = router;
+      </code></pre>
 
       <pre><code>
 const path = require('path');
-
 const express = require('express');
-      
 <i>const rootDir = require('../util/path');</i>
       
 const router = express.Router();
       
-
 router.get('/add-product', (req, res, next) => {
-  <i>res.sendFile(path.join(rootDir, 'views', 'add-product.html'));</i>
+  res.sendFile(path.join(<i>rootDir</i>, 'views', 'add-product.html'));
 });
       
 router.post('/add-product', (req, res, next) => {
@@ -863,7 +858,6 @@ module.exports = router;
       tooltips: [
         `<pre><code>
 const path = require('path');
-
 const express = require('express');
 const bodyParser = require('body-parser');
 
