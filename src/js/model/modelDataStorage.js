@@ -794,20 +794,22 @@ app.listen(3000);
       },
       tooltips: [
         `<h3>The <code>path.dirname()</code> method</h3>
-        <p>The <code>path.dirname()</code> method <i>returns the directories of a file path</i>.</p>`,
+        <p>The <code>path.dirname()</code> method <i>return the directory name of a file path</i>.</p>`,
         `<h3>The <code>process.mainModule</code> property</h3>
-        <p>The <code>process.mainModule</code> property is an inbuilt application programming interface of the processing module which is used to get the main module. This is an alternative way to get require.main but unlike require.main, process.mainModule dynamically changes in runtime. Generally, we can assume those two modules are the same. </p>
+        <p>The <code>process.mainModule</code> property is an inbuilt application programming interface of the processing module which is <i>used to get the main module</i>. This is <i>an alternative way to get <code>require.main</code></i> but unlike <code>require.main</code>, <code>process.mainModule</code> dynamically changes in runtime. Generally, we can assume those two modules are the same.</p>
         `,
         `<h3>The <code>require.main.filename</code></h3>
-        <p><code>require.main.filename</code> is great for <i>figuring out the entry point for the current application</i>. Unfortunately, <code>require.main.filename</code> sometimes fails when an application is executed with an alternative process manager, e.g., iisnode.</p>`,
-        `<p>With <code>path.dirname(process.mainModule.filename)</code> or <code>path.dirname(require.main.filename)</code> you <i>get the parent directory path</i>.</p>`,
+        <p><code>require.main.filename</code> is great for <i>figuring out the entry point for the current application</i>.</p>
+        <p>Unfortunately, <code>require.main.filename</code> sometimes fails when an application is executed with an alternative process manager, e.g., iisnode.</p>`,
         `<pre><code>
 const path = require("path");
 
 <i>module.exports = path.dirname(process.mainModule.filename);</i>
 
 // If you get a deprecation warning for above code - in that case, you can simply switch to the code below:
-// module.exports = path.dirname(require.main.filename);      
+<i>// module.exports = path.dirname(require.main.filename);</i>
+
+// With path.dirname(process.mainModule.filename) or path.dirname(require.main.filename) you <i>get the parent directory path</i>
       </code></pre>
 
       <pre><code>
