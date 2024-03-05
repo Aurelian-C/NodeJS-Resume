@@ -28,7 +28,10 @@ class ApplicationView {
             <div class="card__title">
               <h2>
                 <p class="card__title--1">Section ${idx + 1}</p>
-                ${card.title}
+                <div>${card.title}</div>
+                <div class="card__title-description">- ${
+                  card.titleDescription
+                } -</div>
               </h2>
               ${tooltipMarkup}
             </div>
@@ -46,16 +49,30 @@ class ApplicationView {
     let title = article.sectionTitle;
 
     const createHighlight1 = highlight => {
-      title = title.replace(
-        highlight,
-        `<span class="highlight--1">${highlight}</span>`
-      );
+      if (highlight.includes('<code>')) {
+        title = title.replace(
+          highlight,
+          `<span class="highlight__code--1">${highlight}</span>`
+        );
+      } else {
+        title = title.replace(
+          highlight,
+          `<span class="highlight__text--1">${highlight}</span>`
+        );
+      }
     };
     const createHighlight2 = highlight => {
-      title = title.replace(
-        highlight,
-        `<span class="highlight--2">${highlight}</span>`
-      );
+      if (highlight.includes('<code>')) {
+        title = title.replace(
+          highlight,
+          `<span class="highlight__code--2">${highlight}</span>`
+        );
+      } else {
+        title = title.replace(
+          highlight,
+          `<span class="highlight__text--2">${highlight}</span>`
+        );
+      }
     };
 
     if (article.highlights?.highlight1) {

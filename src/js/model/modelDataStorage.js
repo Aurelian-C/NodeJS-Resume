@@ -1,5 +1,6 @@
 const introduction = {
   title: 'Introduction',
+  titleDescription: '',
   sections: [
     {
       sectionTitle: 'What is Node.js? What it is used for?',
@@ -32,7 +33,8 @@ const introduction = {
 };
 
 const understanding_the_basics = {
-  title: 'Understanding the Basics <br>(The Essential Knownledge You Need)',
+  title: 'Understanding the Basics',
+  titleDescription: 'The Essential Knownledge You Need',
   sections: [
     {
       sectionTitle: 'How the Web works',
@@ -200,8 +202,8 @@ server.listen(3000);
 };
 
 const development_workflow_and_debugging = {
-  title:
-    'Improved Development Workflow and Debugging <br>(Fixing Error, Developing Efficiently)',
+  title: 'Improved Development Workflow and Debugging',
+  titleDescription: 'Fixing Error, Developing Efficiently',
   sections: [
     {
       sectionTitle: 'Understanding NPM Scripts',
@@ -307,7 +309,8 @@ const development_workflow_and_debugging = {
 };
 
 const working_with_ExpressJS = {
-  title: 'Working with Express.js <br>(Do not reinvent the Wheel!)',
+  title: 'Working with Express.js',
+  titleDescription: 'Do not reinvent the Wheel!',
   sections: [
     {
       sectionTitle: 'What is Express.js?',
@@ -642,8 +645,11 @@ app.listen(3000);
       ],
     },
     {
-      sectionTitle: 'Serving HTML Pages',
+      sectionTitle: 'Serving HTML Pages with <code>sendFile()</code> function',
       sectionSource: '',
+      highlights: {
+        highlight1: ['<code>sendFile()</code>'],
+      },
       tooltips: [
         `<p>It's important to know that you're not limited to <code>send()</code> dummy text or anything like that, you can <code>sendFiles()</code> to your users, for example HTML files or images.</p>
         <p>I'll show you how we can return HTML pages (files), more specific HTML files we prepared to our client, instead of writing HTML code in Node.js as we did us far, which wasn't really that great.</p>`,
@@ -869,8 +875,8 @@ app.listen(3000);
 };
 
 const dynamic_content_and_adding_templating_engines = {
-  title:
-    'Working with Dynamic Content & Adding Templating Engines <br>(Rendering more than Static HTML)',
+  title: 'Working with Dynamic Content & Adding Templating Engines',
+  titleDescription: 'Rendering more than Static HTML',
   sections: [
     {
       sectionTitle: 'Module Introduction',
@@ -962,6 +968,7 @@ const dynamic_content_and_adding_templating_engines = {
 
 const mvc = {
   title: 'The Model View Controller (MVC)',
+  titleDescription: '',
   sections: [
     {
       sectionTitle: 'Module Introduction',
@@ -1018,6 +1025,7 @@ const mvc = {
 
 const dynamic_routes_and_advanced_models = {
   title: 'Dynamic Routes & Advanced Models',
+  titleDescription: '',
   sections: [
     {
       sectionTitle: 'Module Introduction',
@@ -1124,6 +1132,7 @@ const dynamic_routes_and_advanced_models = {
 
 const sql_introduction = {
   title: 'SQL Introduction',
+  titleDescription: '',
   sections: [
     {
       sectionTitle: 'Module Introduction',
@@ -1200,6 +1209,7 @@ const sql_introduction = {
 
 const understanding_sequelize = {
   title: 'Understanding Sequelize',
+  titleDescription: '',
   sections: [
     {
       sectionTitle: 'Module Introduction',
@@ -1341,6 +1351,7 @@ const understanding_sequelize = {
 
 const noSQL_and_MongoDB = {
   title: 'Working with NoSQL & Using MongoDB',
+  titleDescription: '',
   sections: [
     {
       sectionTitle: 'Module Introduction',
@@ -1512,6 +1523,7 @@ const noSQL_and_MongoDB = {
 
 const mongoose = {
   title: 'Working with Mongoose',
+  titleDescription: '',
   sections: [
     {
       sectionTitle: 'Module Introduction',
@@ -1623,6 +1635,7 @@ const mongoose = {
 
 const sessions_and_cookies = {
   title: 'Sessions & Cookies',
+  titleDescription: '',
   sections: [
     {
       sectionTitle: 'Module Introduction',
@@ -1734,6 +1747,7 @@ const sessions_and_cookies = {
 
 const adding_authentication = {
   title: 'Adding Authentication',
+  titleDescription: '',
   sections: [
     {
       sectionTitle: 'Module Introduction',
@@ -1845,6 +1859,7 @@ const adding_authentication = {
 
 const sending_emails = {
   title: 'Sending Emails',
+  titleDescription: '',
   sections: [
     {
       sectionTitle: 'Module Introduction',
@@ -1881,6 +1896,7 @@ const sending_emails = {
 
 const advanced_authentication = {
   title: 'Advanced Authentication',
+  titleDescription: '',
   sections: [
     {
       sectionTitle: 'Module Introduction',
@@ -1947,6 +1963,7 @@ const advanced_authentication = {
 
 const understanding_validation = {
   title: 'Understanding Validation',
+  titleDescription: '',
   sections: [
     {
       sectionTitle: 'Module Introduction',
@@ -2043,6 +2060,7 @@ const understanding_validation = {
 
 const error_handling = {
   title: 'Error Handling',
+  titleDescription: '',
   sections: [
     {
       sectionTitle: 'Module Introduction',
@@ -2114,6 +2132,7 @@ const error_handling = {
 
 const file_upload_and_download = {
   title: 'File Upload & Download',
+  titleDescription: '',
   sections: [
     {
       sectionTitle: 'Module Introduction',
@@ -2215,6 +2234,7 @@ const file_upload_and_download = {
 
 const adding_pagination = {
   title: 'Adding Pagination',
+  titleDescription: '',
   sections: [
     {
       sectionTitle: 'Module Introduction',
@@ -2266,6 +2286,7 @@ const adding_pagination = {
 
 const understanding_async_requests = {
   title: 'Understanding Async Requests',
+  titleDescription: '',
   sections: [
     {
       sectionTitle: 'Module Introduction',
@@ -2307,6 +2328,7 @@ const understanding_async_requests = {
 
 const adding_payments = {
   title: 'Adding Payments',
+  titleDescription: '',
   sections: [
     {
       sectionTitle: 'Module Introduction',
@@ -2338,6 +2360,7 @@ const adding_payments = {
 
 const working_with_REST_APIs_basics = {
   title: 'Working with REST APIs - The Basics',
+  titleDescription: '',
   sections: [
     {
       sectionTitle: 'Module Introduction',
@@ -2400,6 +2423,7 @@ const working_with_REST_APIs_basics = {
 
 const working_with_REST_APIs_practical = {
   title: 'Working with REST APIs - The Practical Application',
+  titleDescription: '',
   sections: [
     {
       sectionTitle: 'Module Introduction',
@@ -2556,6 +2580,7 @@ const working_with_REST_APIs_practical = {
 
 const understanding_async_await_in_NodeJS = {
   title: 'Understanding Async Await in Node.js',
+  titleDescription: '',
   sections: [
     {
       sectionTitle: 'Module Introduction',
@@ -2602,6 +2627,7 @@ const understanding_async_await_in_NodeJS = {
 
 const websockets_and_socket = {
   title: 'Understanding Websockets & Socket.io',
+  titleDescription: '',
   sections: [
     {
       sectionTitle: 'Module Introduction',
@@ -2678,6 +2704,7 @@ const websockets_and_socket = {
 
 const graphQL = {
   title: 'Working with GraphQL',
+  titleDescription: '',
   sections: [
     {
       sectionTitle: 'Module Introduction',
@@ -2824,6 +2851,7 @@ const graphQL = {
 
 const deploying_our_app = {
   title: 'Deploying our App',
+  titleDescription: '',
   sections: [
     {
       sectionTitle: 'Module Introduction',
@@ -2910,6 +2938,7 @@ const deploying_our_app = {
 
 const testing = {
   title: 'Testing Node.js Applications',
+  titleDescription: '',
   sections: [
     {
       sectionTitle: 'Module Introduction',
@@ -3001,6 +3030,7 @@ const testing = {
 
 const nodeJS_as_a_build_tool = {
   title: 'Node.js as a Build Tool & Using npm',
+  titleDescription: '',
   sections: [
     {
       sectionTitle: 'Module Introduction',
@@ -3042,6 +3072,7 @@ const nodeJS_as_a_build_tool = {
 
 const modern_javaScript_and_nodeJS = {
   title: 'Modern JavaScript & NodeJS',
+  titleDescription: '',
   sections: [
     {
       sectionTitle: 'Module Introduction',
@@ -3078,6 +3109,7 @@ const modern_javaScript_and_nodeJS = {
 
 const nodeJS_and_TypeScript = {
   title: 'NodeJS & TypeScript',
+  titleDescription: '',
   sections: [
     {
       sectionTitle: 'Module Introduction',

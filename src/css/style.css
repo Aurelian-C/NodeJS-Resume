@@ -112,6 +112,13 @@ body {
   font-size: 1.8rem;
 }
 
+.card__title-description {
+  font-size: 1.3rem;
+  font-weight: 600;
+  font-style: italic;
+  filter: brightness(0.8);
+}
+
 .card__articles {
   margin: 0.5rem 0;
 }
@@ -207,19 +214,31 @@ body {
   color: rgb(255, 125, 125);
 }
 
-.highlight--1,
-.highlight--2 {
+.highlight__text--1,
+.highlight__text--2,
+.highlight__code--1,
+.highlight__code--2 {
   padding: 1px 2px;
   font-weight: bold;
   font-size: var(--font-size-highlight);
 }
 
-.highlight--1 {
+.highlight__text--1 {
   background-color: var(--highlight-color-1);
   color: black;
 }
 
-.highlight--2 {
+.highlight__text--2 {
+  background-color: var(--highlight-color-2);
+  color: var(--has-content-color);
+}
+
+.highlight__code--1 code {
+  background-color: var(--highlight-color-1);
+  color: black;
+}
+
+.highlight__code--2 code {
   background-color: var(--highlight-color-2);
   color: var(--has-content-color);
 }
@@ -231,13 +250,6 @@ code {
   border: 2px solid #666;
   border-radius: 5px;
   color: #e6e6e6;
-}
-
-.highlight--2 code {
-  background-color: inherit;
-  border: none;
-  color: var(--has-content-color);
-  font-size: var(--font-size-highlight);
 }
 
 /* --------------------- Tooltip functionality --------------------- */
