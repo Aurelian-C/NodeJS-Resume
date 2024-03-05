@@ -485,40 +485,6 @@ app.listen(3000);
       ],
     },
     {
-      sectionTitle: '<code>app.use("/")</code> vs <code>app.get("/")</code>',
-      sectionSource: '',
-      tooltips: [
-        `<code>app.use("/")</code> will <i>match all the paths</i> but <code>app.get("/")</code> will do an <i>exact match</i>.</p>
-        <p><code>app.get("/")</code>, <code>app.post("/")</code> an so on, make sure that it's not just a specified HTTP method, but will do an exact match for the <code>/</code> path.</p>`,
-        `<h3><code>app.use("/")</code> is tipically used as "catch all unhandled routes" middleware</h3>
-        <p><i><code>app.use("/")</code> is commonly used at the final of your Node.js code for unhandled routes, because in the case you <u>access a URL path that doesn't exist (a URL path that is not handled by a middleware)</u>, you need to have a middleware function that handle that incoming request and finally send a response that serves a HTML error page.</i></p>
-        <pre><code>
-const path = require('path');
-
-const express = require('express');
-const bodyParser = require('body-parser');
-
-const app = express();
-
-const adminRoutes = require('./routes/admin');
-const shopRoutes = require('./routes/shop');
-
-app.use(bodyParser.urlencoded({extended: false}));
-app.use(express.static(path.join(__dirname, 'public')));
-
-app.use('/admin', adminRoutes);
-app.use(shopRoutes);
-
-<i>app.use((req, res, next) => {
-    res.status(404).sendFile(path.join(__dirname, 'views', '404.html'));
-});</i>
-
-app.listen(3000);
-              </code></pre>
-        `,
-      ],
-    },
-    {
       sectionTitle: 'Parsing Incoming Requests with body-parser Package',
       sectionSource: '',
       highlights: {
@@ -562,52 +528,11 @@ app.listen(3000);
       ],
     },
     {
-      sectionTitle: 'Limiting Middleware Execution to POST Requests',
-      sectionSource: '',
-      tooltips: [
-        `<pre><code>
-const express = require('express');
-const bodyParser = require('body-parser');
-        
-const app = express();
-        
-app.use(bodyParser.urlencoded({ extended: false }));
-        
-<i>// app.use() will work with all HTTP methods (GET, POST, PATCH, etc.)</i>
-app<b>.use</b>('/', (req, res, next) => {
-  next();
-});
-        
-<i>// app.get() will work only with GET method</i>
-app<b>.get</b>('/add-product', (req, res, next) => {
-  res.send();
-});
-        
-<i>// app.post() will work only with POST method</i>
-app<b>.post</b>('/product', (req, res, next) => {
-  res.redirect('/');
-});
-        
-app.use('/', (req, res, next) => {
-  res.send();
-});
-        
-app.listen(3000);
-      </code></pre>`,
-        `<ul>There are also:
-        <li>- <code>app.put()</code>;</li>
-        <li>- <code>app.patch()</code>;</li>
-        <li>- <code>app.delete()</code>.</li>
-      </ul>
-      `,
-      ],
-    },
-    {
       sectionTitle: 'Using Express Router',
       sectionSource: '',
       tooltips: [
         `<p>With Express.js routing we can execute different code for different incoming requests and paths or urls without having to write a bunch of <code>if</code> statements.</p>
-        <p>When the application grows, we want to <i>split our routing code over multiple files</i>. Express.js  gives us a pretty nice way of outsourcing routing into other files.</p>
+        <p>When the application grows, we want to <i>split our routing code over multiple files</i>. Express.js  gives us a pretty nice way of outsourcing routing into other files. You can <i>use the <code>express.Router</code> to split your routes across files</i>.</p>
         <p>The convention is to create in your application a new folder called "routes". In this folder youl will store all your files related to Express.js route code that should execute for different paths.</p>
         `,
         `<pre><code>
@@ -655,29 +580,32 @@ app.listen(3000);
       ],
     },
     {
-      sectionTitle: 'Filtering Paths',
+      sectionTitle:
+        'Limiting Middleware Execution By Filtering Request by Paths and Methods',
       sectionSource: '',
       tooltips: [
-        `<pre><code>
+        `<h3>Filtering request by method</h3>
+        <p><i>If you filter requests by method, paths are matched exactly</i>, otherwise, with <code>app.use()</code> the first segment of a URL is matched.</p>
+        <pre><code>
 const express = require("express");
 
 const router = express.Router();
         
 // The same path (/add-product) can be used if the method is different (.get), because is treated as a different URL path
 // /admin/add-product => GET
-router.get("/add-product", (req, res, next) => {
+<i>router<b>.get</b>("/add-product"</i>, (req, res, next) => {
   res.send('Form submision!');
 });
         
 // The same path (/add-product) can be used if the method is different (.post), because is treated as a different URL path
 // /admin/add-product => POST
-router.post("/add-product", (req, res, next) => {
+<i>router<b>.post</b>("/add-product"</i>, (req, res, next) => {
    res.redirect("/");
 });
 
 module.exports = router;
-        </code></pre>
-        
+        </code></pre>`,
+        `<h3>Filtering request by path</h3>
         <pre><code>
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -689,7 +617,7 @@ const shopRoutes = require('./routes/shop');
 
 app.use(bodyParser.urlencoded({extended: false}));
 
-<i>app.use('/admin', adminRoutes);</i>
+<i>app.use(<b>'/admin'</b>, adminRoutes);</i>
 app.use(shopRoutes);
 
 app.use((req, res, next) => {
@@ -698,6 +626,9 @@ app.use((req, res, next) => {
 
 app.listen(3000);
       </code></pre>`,
+        `<h3><code>app.use("/")</code> vs <code>app.get("/")</code></h3>
+      <p><code>app.use("/")</code> will <i>match all the paths</i> but <code>app.get("/")</code> will do an <i>exact match</i>.</p>
+      <p>With <code>app.get("/")</code>, <code>app.post("/")</code> an so on, you make sure that you filter middleware execution not only by a specified HTTP method, but even by an exact match for the <code>/</code> path.</p>`,
       ],
     },
     {
@@ -713,7 +644,8 @@ app.listen(3000);
       sectionTitle: 'Serving HTML Pages',
       sectionSource: '',
       tooltips: [
-        `<p>I'll show you how we can return HTML pages (files), more specific HTML files we prepared to our client, instead of writing HTML code in Node.js as we did us far, which wasn't really that great.</p>`,
+        `<p>It's important to know that you're not limited to <code>send()</code> dummy text or anything like that, you can <code>sendFiles()</code> to your users, for example HTML files or images.</p>
+        <p>I'll show you how we can return HTML pages (files), more specific HTML files we prepared to our client, instead of writing HTML code in Node.js as we did us far, which wasn't really that great.</p>`,
         `<pre><code>
 const path = require('path');
 
@@ -756,7 +688,33 @@ module.exports = router;
       sectionTitle: 'Serving a 404 Error HTML Page',
       sectionSource: '',
       tooltips: [
-        `<pre><code>
+        `<h3><code>app.use("/")</code> is tipically used as "catch all unhandled routes" middleware</h3>
+        <p><i><code>app.use("/")</code> is commonly used at the final of your Node.js code for unhandled routes, because in the case you <u>access a URL path that doesn't exist (a URL path that is not handled by a middleware)</u>, you need to have a middleware function that handle that incoming request and finally send a response that serves a HTML error page.</i></p>
+        <pre><code>
+const path = require('path');
+
+const express = require('express');
+const bodyParser = require('body-parser');
+
+const app = express();
+
+const adminRoutes = require('./routes/admin');
+const shopRoutes = require('./routes/shop');
+
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use('/admin', adminRoutes);
+app.use(shopRoutes);
+
+<i>app.use((req, res, next) => {
+    res.status(404).sendFile(path.join(__dirname, 'views', '404.html'));
+});</i>
+
+app.listen(3000);
+              </code></pre>
+        
+        <pre><code>
 const path = require('path');
 
 const express = require('express');
