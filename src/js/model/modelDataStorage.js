@@ -485,6 +485,40 @@ app.listen(3000);
       ],
     },
     {
+      sectionTitle: '<code>app.use("/")</code> vs <code>app.get("/")</code>',
+      sectionSource: '',
+      tooltips: [
+        `<code>app.use("/")</code> will <i>match all the paths</i> but <code>app.get("/")</code> will do an <i>exact match</i>.</p>
+        <p><code>app.get("/")</code>, <code>app.post("/")</code> an so on, make sure that it's not just a specified HTTP method, but will do an exact match for the <code>/</code> path.</p>`,
+        `<h3><code>app.use("/")</code> is tipically used as "catch all unhandled routes" middleware</h3>
+        <p><i><code>app.use("/")</code> is commonly used at the final of your Node.js code for unhandled routes, because in the case you <u>access a URL path that doesn't exist (a URL path that is not handled by a middleware)</u>, you need to have a middleware function that handle that incoming request and finally send a response that serves a HTML error page.</i></p>
+        <pre><code>
+const path = require('path');
+
+const express = require('express');
+const bodyParser = require('body-parser');
+
+const app = express();
+
+const adminRoutes = require('./routes/admin');
+const shopRoutes = require('./routes/shop');
+
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use('/admin', adminRoutes);
+app.use(shopRoutes);
+
+<i>app.use((req, res, next) => {
+    res.status(404).sendFile(path.join(__dirname, 'views', '404.html'));
+});</i>
+
+app.listen(3000);
+              </code></pre>
+        `,
+      ],
+    },
+    {
       sectionTitle: 'Parsing Incoming Requests with body-parser Package',
       sectionSource: '',
       highlights: {
@@ -572,7 +606,10 @@ app.listen(3000);
       sectionTitle: 'Using Express Router',
       sectionSource: '',
       tooltips: [
-        `<p>With Express.js routing we can execute different code for different incoming requests and paths or urls without having to write a bunch of <code>if</code> statements.</p>`,
+        `<p>With Express.js routing we can execute different code for different incoming requests and paths or urls without having to write a bunch of <code>if</code> statements.</p>
+        <p>When the application grows, we want to <i>split our routing code over multiple files</i>. Express.js  gives us a pretty nice way of outsourcing routing into other files.</p>
+        <p>The convention is to create in your application a new folder called "routes". In this folder youl will store all your files related to Express.js route code that should execute for different paths.</p>
+        `,
         `<pre><code>
 const express = require('express');
 
@@ -592,36 +629,29 @@ const express = require('express');
         <pre><code>
 const express = require('express');
 
+<i>const router = express.Router();</i>
+
+<i>router.get</i>('/', (req, res, next) => {
+  res.send('Hello from Express!');
+});
+
+<i>module.exports = router;</i>
+        </code></pre>
+
+        <pre><code>
+const express = require('express');
+
 const app = express();
 
-<i>const adminRoutes = require('./routes/admin');</i>
+<i>const adminRoutes = require('./<u>routes</u>/admin');
+const shopRoutes = require('./<u>routes</u>/shop');
 
-<i>app.use(adminRoutes);</i>
+app.use(adminRoutes);
+app.use(shopRoutes);</i>
 
 app.listen(3000);
         </code></pre>
         `,
-      ],
-    },
-    {
-      sectionTitle: 'Adding a 404 Error Page',
-      sectionSource: '',
-      tooltips: [
-        `<pre><code>
-const express = require('express');
-      
-const app = express();
-      
-const adminRoutes = require('./routes/admin');
-      
-app.use(adminRoutes);
-
-<i>app.use((req, res, next) => {
-  res.send('Page Not Found!');
-})</i>
-      
-app.listen(3000);
-              </code></pre>`,
       ],
     },
     {
@@ -633,13 +663,13 @@ const express = require("express");
 
 const router = express.Router();
         
-// The same path (/add-product) can be used if the method is different (.get)
+// The same path (/add-product) can be used if the method is different (.get), because is treated as a different URL path
 // /admin/add-product => GET
 router.get("/add-product", (req, res, next) => {
   res.send('Form submision!');
 });
         
-// The same path (/add-product) can be used if the method is different (.post)
+// The same path (/add-product) can be used if the method is different (.post), because is treated as a different URL path
 // /admin/add-product => POST
 router.post("/add-product", (req, res, next) => {
    res.redirect("/");
@@ -673,7 +703,11 @@ app.listen(3000);
     {
       sectionTitle: 'Creating HTML Pages',
       sectionSource: '',
-      tooltips: [``],
+      tooltips: [
+        `<p>You store all your HTML pages in a folder called "views" because you will structure your application folders in a MVC arhitecture.</p>
+        <p>One part of MVC is that you manage your views, so what you serve to the user, in one place of our application, in the "views" folder. So "views" folder will just be a bunch of HTML files.</p>
+        `,
+      ],
     },
     {
       sectionTitle: 'Serving HTML Pages',
@@ -706,6 +740,35 @@ module.exports = router;
         `<h3>More aboute <code>__dirname</code> variable</h3>
         <p><code>__dirname</code> is an <i>environment variable</i> that tells you <i>the <u>absolute path of the directory</u> containing the currently executing file</i>.</p>
         `,
+      ],
+    },
+    {
+      sectionTitle: 'Serving a 404 Error HTML Page',
+      sectionSource: '',
+      tooltips: [
+        `<pre><code>
+const path = require('path');
+
+const express = require('express');
+const bodyParser = require('body-parser');
+
+const app = express();
+
+const adminRoutes = require('./routes/admin');
+const shopRoutes = require('./routes/shop');
+
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use('/admin', adminRoutes);
+app.use(shopRoutes);
+
+<i>app.use((req, res, next) => {
+    res.status(404).sendFile(path.join(__dirname, 'views', '404.html'));
+});</i>
+
+app.listen(3000);
+              </code></pre>`,
       ],
     },
     {
