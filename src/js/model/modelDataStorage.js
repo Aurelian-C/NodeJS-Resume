@@ -1009,9 +1009,19 @@ module.exports = router;
           <p>In other words, <code>view engine</code> allows us to tell Express.js "Hey, for any dynamic templates we're trying to render please use this engine we're registering here", and <code>views</code> allows us to tell Express.js where to find these dynamic views.</p>
         </ul>
         `,
+        `<h3>More about <code>res.render()</code> function</h3>
+        <p>The <code>res.render()</code> function <i>renders a <code>view</code> and sends the rendered HTML string to the client</i>.</p>
+        <pre><code>
+//send the rendered view to the client
+res.render('shop')
+        </code></pre>
+        <p>The <code>view</code> argument is <i>a string that is the <u>file path</u> of the view file to render</i>. This can be an absolute path, or a path relative to the <code>views</code> setting. If the path does not contain a file extension, then the <code>view</code> engine setting determines the file extension.</p>
+        <p>NOTE: The <code>view</code> argument performs file system operations like reading a file from disk and evaluating Node.js modules, and as so for security reasons should not contain input from the end-user.</p>
+        `,
         `<h3>Reference Links</h3>
         <p><a href="https://expressjs.com/en/guide/using-template-engines.html">Using template engines with Express</a></p>
         <p><a href="https://expressjs.com/en/api.html#app.set">app.set() function</a></p>
+        <p><a href="https://expressjs.com/en/api.html#res.render">res.render() function</a></p>
         `,
       ],
     },
