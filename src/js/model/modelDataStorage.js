@@ -315,7 +315,7 @@ const working_with_ExpressJS = {
     {
       sectionTitle: 'What is Express.js?',
       highlights: {
-        highlight2: ['Express.js'],
+        highlight1: ['Express.js'],
       },
       sectionSource: '',
       tooltips: [
@@ -649,7 +649,7 @@ app.listen(3000);
         'Serving HTML Pages with <code>sendFile()</code> function, <code>path.join()</code> method and <code>__dirname</code> global variable',
       sectionSource: '',
       highlights: {
-        highlight1: [
+        highlight2: [
           '<code>sendFile()</code>',
           '<code>path.join()</code>',
           '<code>__dirname</code>',
@@ -756,7 +756,7 @@ app.listen(3000);
         'Using a helper function for navigation: <code>path.dirname()</code> with <code>process.mainModule.filename</code> or <code>require.main.filename</code>',
       sectionSource: '',
       highlights: {
-        highlight1: [
+        highlight2: [
           '<code>path.dirname()</code>',
           '<code>process.mainModule.filename</code>',
           '<code>require.main.filename</code>',
@@ -825,7 +825,7 @@ module.exports = router;
     {
       sectionTitle: 'Serving files statically with <code>express.static</code>',
       highlights: {
-        highlight1: ['<code>express.static</code>'],
+        highlight2: ['<code>express.static</code>'],
       },
       sectionSource: '',
       tooltips: [
@@ -935,8 +935,8 @@ exports.routes = router;
         'Installing & implementing Pug with <code>app.set()</code> & <code>res.render()</code>',
       sectionSource: '',
       highlights: {
-        highlight1: ['<code>app.set()</code>', '<code>res.render()</code>'],
-        highlight2: ['Pug'],
+        highlight1: ['Pug'],
+        highlight2: ['<code>app.set()</code>', '<code>res.render()</code>'],
       },
       tooltips: [
         `<h3>Install Pug on your project</h3>
