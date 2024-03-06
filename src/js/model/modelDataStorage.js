@@ -899,7 +899,7 @@ const rootDir = require('../util/path');
 
 const router = express.Router();
 
-<i>// ALL USERS have access to the "products" array and ANY USER can manipulate "products". The "products" array is shared to ALL USERS. 
+<i>//ALL USERS have access to the "products" array and ANY USER can manipulate "products". The "products" array is shared to ALL USERS. 
 const products = [];</i>
 
 router.get('/add-product', (req, res, next) => {
@@ -914,7 +914,6 @@ router.post('/add-product', (req, res, next) => {
 exports.routes = router;
 <i>exports.products = products;</i>      
       </code></pre>
-      
       <p>Later we'll learn about a technique to <i>share data in memory in the Node.js app across <u>different requests but only for one and the same user</u></i> and not across all users, because in the above code we have shared data across requests and across users.</p>
       `,
       ],
@@ -924,7 +923,7 @@ exports.routes = router;
       sectionSource: '',
       tooltips: [
         `<p>A template engine enables you to use <i>static template files</i> in your application. <i>At runtime, the template engine replaces variables in a template file with actual values, and transforms the template into an HTML file sent to the client.</i> This approach makes it easier to design an HTML page.</p>
-        <p>Some popular template engines that work with Express are Pug (Jade), EJS and Handlebars. The Express application generator uses Pug as its default, but it also supports several others.</p>
+        <p>Some popular template engines that work with Express are <i>Pug (Jade)</i>, <i>EJS</i> and <i>Handlebars</i>. The Express application generator uses Pug as its default, but it also supports several others.</p>
         `,
         `<h3>Reference Links</h3>
         <p><a href="https://expressjs.com/en/resources/template-engines.html">Template engines</a></p>
@@ -1022,13 +1021,75 @@ res.render('shop')
         <p><a href="https://expressjs.com/en/guide/using-template-engines.html">Using template engines with Express</a></p>
         <p><a href="https://expressjs.com/en/api.html#app.set">app.set() function</a></p>
         <p><a href="https://expressjs.com/en/api.html#res.render">res.render() function</a></p>
+        <p><a href="https://pugjs.org/api/getting-started.html">Pug documentation</a></p>
         `,
       ],
     },
     {
       sectionTitle: 'Outputting Dynamic Content',
       sectionSource: '',
-      tooltips: [``],
+      highlights: {
+        highlight1: ['Dynamic Content'],
+      },
+      tooltips: [
+        `<ul>The <code>res.render()</code> function renders a <code>view</code> and sends the rendered HTML string to the client. <i>Optional parameters</i>:
+          <li><i>- <code>locals</code>, an <u>object</u> whose properties define local variables for the view.</i></li>
+          <li>- <code>callback</code>, a callback function. If provided, the method returns both the possible error and rendered string, but does not perform an automated response. When an error occurs, the method invokes next(err) internally.</li>
+        </ul>
+      <pre><code>
+const express = require("express");
+const adminData = require("./admin");
+
+const router = express.Router();
+
+router.get("/", (req, res, next) => {
+  //pass a local variable to the view
+  res.render("shop", <i>{ prods: adminData.products, htmlTitle: "Shop" }</i>); 
+});
+
+module.exports = router;
+      </code></pre>`,
+        `<p>You access local variables in the Pug file like in example below:</p>
+      <pre><code>
+doctype html
+head
+  meta(charset='UTF-8')
+  meta(name='viewport' content='width=device-width, initial-scale=1.0')
+  meta(http-equiv='X-UA-Compatible' content='ie=edge')
+  <i>title <b>#{htmlTitle}</b></i>
+  link(rel='stylesheet' href='/css/main.css')
+header.main-header
+  nav.main-header__nav
+    ul.main-header__item-list
+      li.main-header__item
+        a.active(href='/') Shop
+      li.main-header__item
+        a(href='/admin/add-product') Add Product
+main
+  <b>if prods.length > 0</b>
+    .grid
+      <b>each product in prods</b>
+        article.card.product-item
+          header.card__header
+            <i>h1.product__title <b>#{product.title}</b></i>
+          .card__image
+            img(src='https://cdn.com/photo.png' alt='A Book')
+          .card__content
+            h2.product__price $19.99
+            p.product__description
+              | A very interesting book
+              | things!
+          .card__actions
+            button.btn Add to Cart
+  <b>else</b> 
+    h1 No products
+      </code></pre>
+      `,
+        `<h3>Reference Links</h3>
+    <p><a href="https://expressjs.com/en/api.html#res.render">res.render() function</a></p>
+    <p><a href="https://pugjs.org/api/getting-started.html">Pug documentation</a></p>
+    `,
+      ],
     },
     {
       sectionTitle: 'Converting HTML Files to Pug',
