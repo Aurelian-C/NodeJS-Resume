@@ -1120,6 +1120,11 @@ html(lang="en")
       </code></pre>
       <p>NOTE: <code>path</code> is a local variable read by "main-layout.png":</p>
       <pre><code>
+router.get('/', (req, res, next) => {
+  const products = adminData.products;
+  res.render('shop', { prods: products, pageTitle: 'Shop', <i>path: '/'</i> });
+});
+
 router.get('/add-product', (req, res, next) => {
   res.render('add-product', { pageTitle: 'Add Product', <i>path: '/admin/add-product'</i> });
 });
