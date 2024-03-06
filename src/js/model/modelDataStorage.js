@@ -884,32 +884,139 @@ const dynamic_content_and_adding_templating_engines = {
   titleDescription: 'Rendering more than Static HTML',
   sections: [
     {
-      sectionTitle: 'Module Introduction',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
       sectionTitle: 'Sharing Data Across Requests & Users',
       sectionSource: '',
-      tooltips: [``],
+      highlights: {
+        highlight1: ['Sharing Data'],
+      },
+      tooltips: [
+        `<pre></code>
+const path = require('path');
+
+const express = require('express');
+
+const rootDir = require('../util/path');
+
+const router = express.Router();
+
+<i>// ALL USERS have access to the "products" array and ANY USER can manipulate "products". The "products" array is shared to ALL USERS. 
+const products = [];</i>
+
+router.get('/add-product', (req, res, next) => {
+  res.sendFile(path.join(rootDir, 'views', 'add-product.html'));
+});
+
+router.post('/add-product', (req, res, next) => {
+  <i>products.push({ title: req.body.title });</i> //ANY USER can manipulate the "products" array, because it's shared to ALL USERS
+  res.redirect('/');
+});
+
+exports.routes = router;
+<i>exports.products = products;</i>      
+      </code></pre>
+      
+      <p>Later we'll learn about a technique to <i>share data in memory in the Node.js app across <u>different requests but only for one and the same user</u></i> and not across all users, because in the above code we have shared data across requests and across users.</p>
+      `,
+      ],
     },
     {
       sectionTitle: 'Templating Engines - An Overview',
       sectionSource: '',
-      tooltips: [``],
+      tooltips: [
+        `<p>A template engine enables you to use <i>static template files</i> in your application. <i>At runtime, the template engine replaces variables in a template file with actual values, and transforms the template into an HTML file sent to the client.</i> This approach makes it easier to design an HTML page.</p>
+        <p>Some popular template engines that work with Express are Pug (Jade), EJS and Handlebars. The Express application generator uses Pug as its default, but it also supports several others.</p>
+        `,
+        `<h3>Reference Links</h3>
+        <p><a href="https://expressjs.com/en/resources/template-engines.html">Template engines</a></p>
+        `,
+      ],
     },
     {
-      sectionTitle: 'Installing & Implementing Pug',
+      sectionTitle:
+        'Installing & implementing Pug with <code>app.set()</code> & <code>res.render()</code>',
       sectionSource: '',
-      tooltips: [``],
+      highlights: {
+        highlight1: ['<code>app.set()</code>', '<code>res.render()</code>'],
+        highlight2: ['Pug'],
+      },
+      tooltips: [
+        `<h3>Install Pug on your project</h3>
+        <p>You install Pug on your project by run the <i><code>npm install pug</code></i> command in your VS Code terminal.</p>`,
+        `<h3>Implementing Pug - step 1</h3>
+        <ul>To render template files, set the following application setting properties, set in <code>app.js</code> in the default app created by the generator:
+          <li>a) <code>view engine</code>, the template engine to use. For example, to use the Pug template engine: <i><code>app.set('view engine', 'pug')</code></i>.</li>
+          <li>b) <code>views</code>, the directory where the template files are located. Eg: <i><code>app.set('views', './views')</code></i>. This defaults to the <code>views</code> directory in the application root directory.</li>
+        </ul>
+        <pre><code>
+const path = require('path');
+
+const express = require('express');
+const bodyParser = require('body-parser');
+
+const app = express();
+
+<i>app.<b>set</b>('view engine', 'pug');
+app.<b>set</b>('views', 'views');</i>
+
+const adminData = require('./routes/admin');
+const shopRoutes = require('./routes/shop');
+
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use('/admin', adminData.routes);
+app.use(shopRoutes);
+
+app.use((req, res, next) => {
+    res.status(404).sendFile(path.join(__dirname, 'views', '404.html'));
+});
+
+app.listen(3000);        
+        </code></pre>
+        <p>After the view engine is set, you don't have to specify the engine or load the template engine module in your app; Express loads the module internally, as shown below (for the above example): <code>app.set('view engine', 'pug')</code>.</p>
+        `,
+        `<h3>Implementing Pug - step 2</h3>
+        <p>Create a Pug template file named <code>shop.pug</code> in the views directory, with the following content:</p>
+        <pre><code>
+html
+  head
+    title= title
+  body
+    h1= message
+        </code></pre>
+        `,
+        `<h3>Implementing Pug - step 3</h3>
+        <p>Then create a route to render the <code>shop.pug</code> file. If the <code>view engine</code> property is not set, you must specify the extension of the view file. Otherwise, you can omit it.</p>
+        <pre><code>
+const express = require('express');
+
+const router = express.Router();
+
+router.get('/', (req, res, next) => {
+  <i>res.<b>render</b>('shop');</i>
+});
+
+module.exports = router;
+        </code></pre>
+        <p>When you make a request to the home page, the <code>shop.pug</code> file will be rendered as HTML.</p>
+        <p>NOTE: The view engine cache does not cache the contents of the template's output, only the underlying template itself. The view is still re-rendered with every request even when the cache is on.</p>
+        `,
+        `<h3>More about <code>app.set()</code> function</h3>
+        <p>The <code>app.set()</code> function is used to <i>assign the setting name to value (or to set a <u>global configuration</u> value)</i>. You may store any value that you want, but <i>certain names can be used to <u>configure the behavior of the server</u></i>.</p>
+        <ul>Some of this certain names interesting for you are:
+          <li>- <code>view engine</code>: the default engine extension to use when omitted.</li>
+          <li>- <code>views</code>: a directory or an array of directories for the application's views. If an array, the views are looked up in the order they occur in the array.</li>
+          <p>In other words, <code>view engine</code> allows us to tell Express.js "Hey, for any dynamic templates we're trying to render please use this engine we're registering here", and <code>views</code> allows us to tell Express.js where to find these dynamic views.</p>
+        </ul>
+        `,
+        `<h3>Reference Links</h3>
+        <p><a href="https://expressjs.com/en/guide/using-template-engines.html">Using template engines with Express</a></p>
+        <p><a href="https://expressjs.com/en/api.html#app.set">app.set() function</a></p>
+        `,
+      ],
     },
     {
       sectionTitle: 'Outputting Dynamic Content',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Official Pug Docs',
       sectionSource: '',
       tooltips: [``],
     },

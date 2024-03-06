@@ -331,6 +331,11 @@ code {
   text-indent: 40px;
 }
 
+.tooltip_paragraph p a {
+  text-decoration: none;
+  color: rgb(0, 255, 248);
+}
+
 ul {
   list-style: none;
 }
