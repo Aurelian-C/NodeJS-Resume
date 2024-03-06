@@ -1026,7 +1026,7 @@ res.render('shop')
       ],
     },
     {
-      sectionTitle: 'Outputting Dynamic Content',
+      sectionTitle: 'Outputting Dynamic Content with Pug',
       sectionSource: '',
       highlights: {
         highlight1: ['Dynamic Content'],
@@ -1092,19 +1092,63 @@ main
       ],
     },
     {
-      sectionTitle: 'Converting HTML Files to Pug',
+      sectionTitle: 'Adding a Layout with Pug by exteding your .pug files',
       sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Adding a Layout',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Finishing the Pug Template',
-      sectionSource: '',
-      tooltips: [``],
+      highlights: {
+        highlight1: ['Layout', 'exteding your .pug files'],
+      },
+      tooltips: [
+        `<pre><code>
+<!DOCTYPE html>
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    meta(http-equiv="X-UA-Compatible", content="ie=edge")
+    title #{pageTitle}
+    link(rel="stylesheet", href="/css/main.css")
+    <i><b>block</b> styles</i>
+  body   
+    header.main-header
+      nav.main-header__nav
+        ul.main-header__item-list
+          li.main-header__item
+            a(href="/", <i>class=(path === '/' ? 'active' : '')</i>) Shop
+          li.main-header__item
+            a(href="/admin/add-product", <i>class=(path === '/admin/add-product' ? 'active' : '')</i>) Add Product
+    <i><b>block</b> content</i>      
+      </code></pre>
+      <p>NOTE: <code>path</code> is a local variable read by "main-layout.png":</p>
+      <pre><code>
+router.get('/add-product', (req, res, next) => {
+  res.render('add-product', { pageTitle: 'Add Product', <i>path: '/admin/add-product'</i> });
+});
+      </code></pre>`,
+        `<h3>Extends your <code>.pug</code> files</h3>
+      <pre><code>
+<b>extends</b> layouts/main-layout.pug
+
+<i><b>block</b> content</i>
+    h1 Page Not Found!
+      </code></pre>
+
+      <pre><code>
+<b>extends</b> layouts/main-layout.pug
+
+<i><b>block</b> styles</i>
+  link(rel="stylesheet", href="/css/forms.css")
+  link(rel="stylesheet", href="/css/product.css")
+
+<i><b>block</b> content</i>
+  main
+    form.product-form(action="/admin/add-product", method="POST")
+      .form-control
+        label(for="title") Title
+        input(type="text", name="title")#title
+        button.btn(type="submit") Add Product
+      </code></pre>
+      `,
+      ],
     },
     {
       sectionTitle: 'Avoiding an Error',
