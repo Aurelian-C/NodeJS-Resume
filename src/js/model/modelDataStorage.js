@@ -880,7 +880,7 @@ app.listen(3000);
 };
 
 const dynamic_content_and_adding_templating_engines = {
-  title: 'Working with Dynamic Content & Adding Templating Engines',
+  title: 'Working with Dynamic Content & adding Templating Engines',
   titleDescription: 'Rendering more than Static HTML',
   sections: [
     {
@@ -1154,26 +1154,6 @@ router.get('/add-product', (req, res, next) => {
       </code></pre>
       `,
       ],
-    },
-    {
-      sectionTitle: 'Avoiding an Error',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Working with Handlebars',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Converting our Project to Handlebars',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Adding the Layout to Handlebars',
-      sectionSource: '',
-      tooltips: [``],
     },
     {
       sectionTitle: 'Working with EJS',
