@@ -1218,7 +1218,7 @@ app.<b>set</b>('views', 'views');</i>
       ],
     },
     {
-      sectionTitle: 'Working on the Layout with Partials',
+      sectionTitle: 'Adding a Layout with Partials',
       sectionSource: '',
       highlights: {
         highlight1: ['Partials'],
@@ -1229,16 +1229,6 @@ app.<b>set</b>('views', 'views');</i>
         <p>For that you need to create a new subfolder in the <code>views</code> folder which you name it, for example, <code>includes</code>, and that name is up to you. There you will create a couple of shared files or shared code blocks, which you want to share across all your views.</p>
         `,
       ],
-    },
-    {
-      sectionTitle: 'Wrap Up',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Useful Resources & Links',
-      sectionSource: '',
-      tooltips: [``],
     },
   ],
 };
