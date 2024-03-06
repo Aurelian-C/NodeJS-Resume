@@ -972,7 +972,7 @@ app.use((req, res, next) => {
 
 app.listen(3000);        
         </code></pre>
-        <p>After the view engine is set, you don't have to specify the engine or load the template engine module in your app; Express loads the module internally, as shown below (for the above example): <code>app.set('view engine', 'pug')</code>.</p>
+        <p>After the <code>view engine</code> is set, you don't have to specify the engine or load the template engine module in your app; Express loads the module internally, as shown below (for the above example): <code>app.set('view engine', 'pug')</code>.</p>
         `,
         `<h3>Implementing Pug - step 2</h3>
         <p>Create a Pug template file named <code>shop.pug</code> in the views directory, with the following content:</p>
@@ -1158,12 +1158,77 @@ router.get('/add-product', (req, res, next) => {
     {
       sectionTitle: 'Working with EJS',
       sectionSource: '',
-      tooltips: [``],
+      highlights: {
+        highlight2: ['EJS'],
+      },
+      tooltips: [
+        `<h3>Install EJS on your project</h3>
+      <p>You install EJS on your project by running the <i><code>npm install ejs</code></i> command in your VS Code terminal.</p>`,
+        `<h3>Implementing EJS template engine</h3>
+      <ul>To render template files, set the following application setting properties, set in <code>app.js</code> in the default app created by the generator:
+        <li>a) <code>view engine</code>, the template engine to use. For example, to use the EJS template engine: <i><code>app.set('view engine', 'ejs')</code></i>.</li>
+        <li>b) <code>views</code>, the directory where the template files are located. Eg: <i><code>app.set('views', './views')</code></i>. This defaults to the <code>views</code> directory in the application root directory.</li>
+      </ul>
+      <pre><code>
+const path = require('path');
+
+const express = require('express');
+const bodyParser = require('body-parser');
+
+const app = express();
+
+<i>app.<b>set</b>('view engine', 'ejs');
+app.<b>set</b>('views', 'views');</i>
+
+const adminData = require('./routes/admin');
+const shopRoutes = require('./routes/shop');
+
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use('/admin', adminData.routes);
+app.use(shopRoutes);
+
+app.use((req, res, next) => {
+  res.status(404).sendFile(path.join(__dirname, 'views', '404.html'));
+});
+
+app.listen(3000);        
+      </code></pre>
+      <p>After the <code>view engine</code> is set, you don't have to specify the engine or load the template engine module in your app; Express loads the module internally, as shown below (for the above example): <code>app.set('view engine', 'ejs')</code>.</p>
+      `,
+        `<h3>Render a .ejs template file</h3>
+      <p>The rendering process of a .ejs template file is the same like .pug template files.</p>
+      <p>As your learn, you render a template file with the special <code>res.render()</code> method provided by Express.js:</p>
+      <pre><code>
+router.get('/', (req, res, next) => {
+  //To .render method you can optionally define an object which will hold the data that is passed as variables into the template file
+  <i>res.<b>render</b>('shop', { pathTitle: 'Shop', otherKey: 'someData' });</i>
+});
+      </code></pre>
+      <p>The <code>res.render()</code> method will always look for the registered <code>view engine</code>, something you do at the beginning in app.js:</p>
+      <pre><code>
+<i>app.<b>set</b>('view engine', 'ejs');
+app.<b>set</b>('views', 'views');</i>
+      </code></pre>
+      `,
+        `<h3>Reference Links</h3>
+      <p><a href="https://ejs.co/">EJS documentation</a></p>
+      `,
+      ],
     },
     {
       sectionTitle: 'Working on the Layout with Partials',
       sectionSource: '',
-      tooltips: [``],
+      highlights: {
+        highlight1: ['Partials'],
+      },
+      tooltips: [
+        `<p><i>EJS doesn't have layouts</i> but we can use so-called Partials or Includes, a feature that PUG also have it.</p>
+        <p>The idea is that you have some code blocks which you reuse in different parts of your templates, and you can therefore just share them across your templates. So it's a bit like the opposite of a layout, instead of having one master layout where you put your individual view parts into, you have a couple of separated shared view parts which you can merge into the views you're creating</p>
+        <p>For that you need to create a new subfolder in the <code>views</code> folder which you name it, for example, <code>includes</code>, and that name is up to you. There you will create a couple of shared files or shared code blocks, which you want to share across all your views.</p>
+        `,
+      ],
     },
     {
       sectionTitle: 'Wrap Up',
