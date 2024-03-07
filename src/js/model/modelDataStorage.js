@@ -1235,57 +1235,89 @@ app.<b>set</b>('views', 'views');</i>
 
 const mvc = {
   title: 'The Model View Controller (MVC)',
-  titleDescription: '',
+  titleDescription: 'Structuring your code',
   sections: [
-    {
-      sectionTitle: 'Module Introduction',
-      sectionSource: '',
-      tooltips: [``],
-    },
     {
       sectionTitle: 'What is the MVC?',
       sectionSource: '',
-      tooltips: [``],
+      highlights: {
+        highlight1: ['MVC'],
+      },
+      tooltips: [
+        `<p>In this module I want to dive into a very important aspect of building backend applications. We want to follow a certain <i>pattern for structuring our code</i> and with that, I don't really just mean how we split it over files or how we write the code, but I mean how we <i>logically separate our code</i> and the different functions it fulfills or the different things it does.</p>`,
+        `<h3>The MVC Pattern</h3>
+        <p>What does MVC stand for or what is it? It's all about a <i>separation of concerns</i>, so making sure that different parts of your code do different things, and you clearly know which part is responsible for what. MVC stands for Model View Controller, so we work with <i>models</i>, <i>views</i> and <i>controllers</i>.</p>`,
+        `<h3>Model</h3>
+        <ul>Model characteristics:
+          <li>- Responsible for <i>representing your data</i>;</li>
+          <li>- Responsible for <i>managing your data</i> (saving, updating, fetching, ...);</li>
+          <li>- Doesn't matter if you manage data in memory, files, databases;</li>
+          <li>- Contains <i>data-related logic</i>.</li>
+        </ul>
+        `,
+        `<h3>View</h3>
+        <ul>View characteristics:
+          <li>- What the users see;</li>
+          <li>- Shouldn't contain too much logic.</li>
+        </ul>
+        `,
+        `<h3>Controller</h3>
+        <ul>Controller characteristics:
+          <li>- Connects Model and View;</li>
+          <li>- Should only make sure that the two can communicate (in both directions).</li>
+        </ul>
+        <p>Controller should do everything that needs to be done to connect your Model and the View, so to get the data from A to B, and that can involve both directions. It can mean that through your View, for example, through a form, some data was sent to your Node.js application, and you now need to send that data to the Model to save it there, or it can of course mean you're fetching data via the Model and send that into a View, which is then returned to the user.</p>
+        `,
+      ],
     },
     {
-      sectionTitle: 'Adding Controllers',
+      sectionTitle:
+        'Storing/Feching Data in/from Files with <code>fs.readFile()</code> and <code>fs.writeFile()</code>',
       sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Finishing the Controllers',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Adding a Product Model',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Storing Data in Files Via the Model',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Fetching Data from Files Via the Model',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Refactoring the File Storage Code',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Wrap Up',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Useful Resources & Links',
-      sectionSource: '',
-      tooltips: [``],
+      highlights: {
+        highlight1: ['Storing/Feching Data in/from Files'],
+        highlight2: [
+          '<code>fs.readFile()</code>',
+          '<code>fs.writeFile()</code>',
+        ],
+      },
+      tooltips: [
+        `<pre><code>
+<i>const fs = require('<b>fs</b>');</i>
+const path = require('path');
+
+const filePath = path.join(path.dirname(process.mainModule.filename), 'data', 'products.json');
+
+const getProductsFromFile = cb => {
+  <b>fs.readFile</b>(filePath, (err, fileContent) => {
+    if (err) {
+      cb([]);
+    } else {
+      cb(JSON.parse(fileContent));
+    }
+  });
+};
+
+module.exports = class Product {
+  constructor(t) {
+    this.title = t;
+  }
+
+  save() {
+    getProductsFromFile(products => {
+      products.push(this);
+      <b>fs.writeFile</b>(filePath, JSON.stringify(products), err => {
+        console.log(err);
+      });
+    });
+  }
+
+  static fetchAll(cb) {
+    getProductsFromFile(cb);
+  }
+};     
+      </code></pre>`,
+      ],
     },
   ],
 };
