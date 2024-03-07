@@ -1324,7 +1324,7 @@ module.exports = class Product {
 
 const dynamic_routes_and_advanced_models = {
   title: 'Dynamic Routes & Advanced Models',
-  titleDescription: '',
+  titleDescription: 'Passing & using Dynamic Data',
   sections: [
     {
       sectionTitle: 'Module Introduction',
