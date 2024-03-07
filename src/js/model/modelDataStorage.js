@@ -1327,19 +1327,15 @@ const dynamic_routes_and_advanced_models = {
   titleDescription: 'Passing & using Dynamic Data',
   sections: [
     {
-      sectionTitle: 'Module Introduction',
+      sectionTitle: 'Module introduction',
       sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Preparations',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Applied Changes',
-      sectionSource: '',
-      tooltips: [``],
+      tooltips: [
+        `<p>We need the ability to <i>pass some dynamic data through our routes</i>. We want to be able to <i>encode some information in our URL</i>, so that we can, for example, pass a product ID as part of the URL. In this module, you will learn how you can do that, how you can actually <i>submit or send data through the URL</i>, and when you would not do that and put your data into the request body instead.</p>
+        <ul>You will learn about how to:
+         <li>- pass <i><u>Route</u> Params</i>;</li>
+         <li>- use <i><u>Query</u> Params</i>;</li>
+        </ul>`,
+      ],
     },
     {
       sectionTitle: 'Adding the Product ID to the Path',
@@ -1349,6 +1345,9 @@ const dynamic_routes_and_advanced_models = {
     {
       sectionTitle: 'Extracting Dynamic Params',
       sectionSource: '',
+      highlights: {
+        highlight1: ['Dynamic Params'],
+      },
       tooltips: [``],
     },
     {
@@ -1374,6 +1373,9 @@ const dynamic_routes_and_advanced_models = {
     {
       sectionTitle: 'Using Query Params',
       sectionSource: '',
+      highlights: {
+        highlight1: ['Query Params'],
+      },
       tooltips: [``],
     },
     {
