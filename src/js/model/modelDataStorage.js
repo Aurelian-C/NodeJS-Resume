@@ -1396,7 +1396,7 @@ exports.getProduct = (req, res, next) => {
 
 const sql_introduction = {
   title: 'SQL Introduction',
-  titleDescription: '',
+  titleDescription: 'Storing Application Data Correctly',
   sections: [
     {
       sectionTitle: 'Module Introduction',
@@ -1473,7 +1473,7 @@ const sql_introduction = {
 
 const understanding_sequelize = {
   title: 'Understanding Sequelize',
-  titleDescription: '',
+  titleDescription: 'Focus on Node.js, not on SQL',
   sections: [
     {
       sectionTitle: 'Module Introduction',
@@ -1615,7 +1615,7 @@ const understanding_sequelize = {
 
 const noSQL_and_MongoDB = {
   title: 'Working with NoSQL & Using MongoDB',
-  titleDescription: '',
+  titleDescription: 'Storing Data in a Different Kind of Database',
   sections: [
     {
       sectionTitle: 'Module Introduction',
@@ -1787,7 +1787,7 @@ const noSQL_and_MongoDB = {
 
 const mongoose = {
   title: 'Working with Mongoose',
-  titleDescription: '',
+  titleDescription: 'A MongoDB ORM',
   sections: [
     {
       sectionTitle: 'Module Introduction',
@@ -1899,7 +1899,7 @@ const mongoose = {
 
 const sessions_and_cookies = {
   title: 'Sessions & Cookies',
-  titleDescription: '',
+  titleDescription: 'Persisting Data across Requests',
   sections: [
     {
       sectionTitle: 'Module Introduction',
@@ -2011,7 +2011,7 @@ const sessions_and_cookies = {
 
 const adding_authentication = {
   title: 'Adding Authentication',
-  titleDescription: '',
+  titleDescription: 'Restricting Access',
   sections: [
     {
       sectionTitle: 'Module Introduction',
@@ -2123,7 +2123,7 @@ const adding_authentication = {
 
 const sending_emails = {
   title: 'Sending Emails',
-  titleDescription: '',
+  titleDescription: 'Communicating with the Outside World',
   sections: [
     {
       sectionTitle: 'Module Introduction',
@@ -2160,7 +2160,7 @@ const sending_emails = {
 
 const advanced_authentication = {
   title: 'Advanced Authentication',
-  titleDescription: '',
+  titleDescription: 'Beyond Signup & Login',
   sections: [
     {
       sectionTitle: 'Module Introduction',
@@ -2227,7 +2227,7 @@ const advanced_authentication = {
 
 const understanding_validation = {
   title: 'Understanding Validation',
-  titleDescription: '',
+  titleDescription: 'Getting that Precious User Input',
   sections: [
     {
       sectionTitle: 'Module Introduction',
@@ -2324,7 +2324,7 @@ const understanding_validation = {
 
 const error_handling = {
   title: 'Error Handling',
-  titleDescription: '',
+  titleDescription: 'Fail Gracefully',
   sections: [
     {
       sectionTitle: 'Module Introduction',
@@ -2396,7 +2396,7 @@ const error_handling = {
 
 const file_upload_and_download = {
   title: 'File Upload & Download',
-  titleDescription: '',
+  titleDescription: 'Handling Files Correctly',
   sections: [
     {
       sectionTitle: 'Module Introduction',
@@ -2498,7 +2498,7 @@ const file_upload_and_download = {
 
 const adding_pagination = {
   title: 'Adding Pagination',
-  titleDescription: '',
+  titleDescription: 'Fetching Data in Chuncks',
   sections: [
     {
       sectionTitle: 'Module Introduction',
@@ -2550,7 +2550,7 @@ const adding_pagination = {
 
 const understanding_async_requests = {
   title: 'Understanding Async Requests',
-  titleDescription: '',
+  titleDescription: 'Behind-The-Scenes Work',
   sections: [
     {
       sectionTitle: 'Module Introduction',
@@ -2592,7 +2592,7 @@ const understanding_async_requests = {
 
 const adding_payments = {
   title: 'Adding Payments',
-  titleDescription: '',
+  titleDescription: 'Creating a Real Shop',
   sections: [
     {
       sectionTitle: 'Module Introduction',
@@ -2624,7 +2624,7 @@ const adding_payments = {
 
 const working_with_REST_APIs_basics = {
   title: 'Working with REST APIs - The Basics',
-  titleDescription: '',
+  titleDescription: 'Decoupling Frontend and Backend',
   sections: [
     {
       sectionTitle: 'Module Introduction',
@@ -2687,7 +2687,7 @@ const working_with_REST_APIs_basics = {
 
 const working_with_REST_APIs_practical = {
   title: 'Working with REST APIs - The Practical Application',
-  titleDescription: '',
+  titleDescription: 'Complete Project, Authentication & More',
   sections: [
     {
       sectionTitle: 'Module Introduction',
@@ -2844,7 +2844,7 @@ const working_with_REST_APIs_practical = {
 
 const understanding_async_await_in_NodeJS = {
   title: 'Understanding Async Await in Node.js',
-  titleDescription: '',
+  titleDescription: 'Working with Async Code more Elegantly',
   sections: [
     {
       sectionTitle: 'Module Introduction',
@@ -2891,7 +2891,7 @@ const understanding_async_await_in_NodeJS = {
 
 const websockets_and_socket = {
   title: 'Understanding Websockets & Socket.io',
-  titleDescription: '',
+  titleDescription: 'Pushing Data from Server to Client',
   sections: [
     {
       sectionTitle: 'Module Introduction',
@@ -2968,7 +2968,7 @@ const websockets_and_socket = {
 
 const graphQL = {
   title: 'Working with GraphQL',
-  titleDescription: '',
+  titleDescription: 'REST on Steroids',
   sections: [
     {
       sectionTitle: 'Module Introduction',
@@ -3115,7 +3115,7 @@ const graphQL = {
 
 const deploying_our_app = {
   title: 'Deploying our App',
-  titleDescription: '',
+  titleDescription: 'From Development to Production',
   sections: [
     {
       sectionTitle: 'Module Introduction',
@@ -3202,7 +3202,7 @@ const deploying_our_app = {
 
 const testing = {
   title: 'Testing Node.js Applications',
-  titleDescription: '',
+  titleDescription: 'Automated Code Test',
   sections: [
     {
       sectionTitle: 'Module Introduction',
@@ -3294,7 +3294,7 @@ const testing = {
 
 const nodeJS_as_a_build_tool = {
   title: 'Node.js as a Build Tool & Using npm',
-  titleDescription: '',
+  titleDescription: 'Beyond Node Web Servers',
   sections: [
     {
       sectionTitle: 'Module Introduction',
