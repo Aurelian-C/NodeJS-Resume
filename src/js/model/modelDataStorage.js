@@ -1317,13 +1317,14 @@ module.exports = class Product {
   }
 };     
       </code></pre>`,
+        `<p>IMPORTANT: It's important to understand that <i>working with <u>files for data storage</u> is suboptimal for bigger amounts of data</i>.</p>`,
       ],
     },
   ],
 };
 
 const dynamic_routes_and_advanced_models = {
-  title: 'Dynamic Routes & Advanced Models',
+  title: 'Dynamic Routes',
   titleDescription: 'Passing & using Dynamic Data',
   sections: [
     {
@@ -1389,56 +1390,6 @@ exports.getProduct = (req, res, next) => {
       <p>IMPORTANT: <i>The extracted value from query params will always be a string!</i> So boolean <code>true</code> or <code>false</code> will be extracted as string "true" or "false".</p>
       `,
       ],
-    },
-    {
-      sectionTitle: 'Pre-Populating the Edit Product Page with Data',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Linking to the Edit Page',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Editing the Product Data',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Adding the Product-Delete Functionality',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Deleting Cart Items',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Displaying Cart Items on the Cart Page',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Deleting Cart Items',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Fixing a Delete Product Bug',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Wrap Up',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Useful Resources & Links',
-      sectionSource: '',
-      tooltips: [``],
     },
   ],
 };
