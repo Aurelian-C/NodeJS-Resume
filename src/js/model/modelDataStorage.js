@@ -1338,37 +1338,38 @@ const dynamic_routes_and_advanced_models = {
       ],
     },
     {
-      sectionTitle: 'Adding the Product ID to the Path',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
       sectionTitle: 'Extracting Dynamic Params',
       sectionSource: '',
       highlights: {
         highlight1: ['Dynamic Params'],
       },
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Loading Product Detail Data',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Rendering the Product Detail View',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Passing Data with POST Requests',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Adding a Cart Model',
-      sectionSource: '',
-      tooltips: [``],
+      tooltips: [
+        `<pre><code>
+const path = require('path');
+const express = require('express');
+const shopController = require('../controllers/shop');
+
+const router = express.Router();
+
+router.get('/', shopController.getIndex);
+router.get('/products', shopController.getProducts);
+<i>router.get('/products/<b>:productId</b>', shopController.getProduct);</i>
+router.get('/cart', shopController.getCart);
+router.get('/orders', shopController.getOrders);
+router.get('/checkout', shopController.getCheckout);
+
+module.exports = router;      
+      </code></pre>
+      
+      <pre><code>
+exports.getProduct = (req, res, next) => {
+  <i>const prodId = <b>req.params</b>.productId;</i>
+  console.log(prodId);
+  res.redirect('/');
+};      
+      </code></pre>
+      `,
+      ],
     },
     {
       sectionTitle: 'Using Query Params',
@@ -1376,7 +1377,18 @@ const dynamic_routes_and_advanced_models = {
       highlights: {
         highlight1: ['Query Params'],
       },
-      tooltips: [``],
+      tooltips: [
+        `      <pre><code>
+exports.getProduct = (req, res, next) => {
+  <i>const editMode = <b>req.query</b>.edit;</i>  //The extracted value always is a string!
+  console.log(editMode);
+  res.redirect('/');
+};      
+      </code></pre>
+      
+      <p>IMPORTANT: <i>The extracted value from query params will always be a string!</i> So boolean <code>true</code> or <code>false</code> will be extracted as string "true" or "false".</p>
+      `,
+      ],
     },
     {
       sectionTitle: 'Pre-Populating the Edit Product Page with Data',
