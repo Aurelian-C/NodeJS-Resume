@@ -1394,228 +1394,9 @@ exports.getProduct = (req, res, next) => {
   ],
 };
 
-const sql_introduction = {
-  title: 'SQL Introduction',
-  titleDescription: 'Storing Application Data Correctly',
-  sections: [
-    {
-      sectionTitle: 'Module Introduction',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Choosing a Database',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'NoSQL Introduction',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Comparing SQL and NoSQL',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Setting Up MySQL',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Connecting our App to the SQL Database',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Basic SQL & Creating a Table',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Retrieving Data',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Fetching Products',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Fetching Products - Time to Practice',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Inserting Data Into the Database',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Fetching a Single Product with the "where" Condition',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Wrap Up',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Useful Resources & Links',
-      sectionSource: '',
-      tooltips: [``],
-    },
-  ],
-};
-
-const understanding_sequelize = {
-  title: 'Understanding Sequelize',
-  titleDescription: 'Focus on Node.js, not on SQL',
-  sections: [
-    {
-      sectionTitle: 'Module Introduction',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'What is Sequelize?',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Connecting to the Database',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Defining a Model',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Syncing JS Definitions to the Database',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Inserting Data & Creating a Product',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'MUST READ: findById() in Sequelize 5',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Retrieving Data & Finding Products',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Getting a Single Product with the "where" Condition',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Fetching Admin Products',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Updating Products',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Deleting Products',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Creating a User Model',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Adding a One-To-Many Relationship',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Creating & Managing a Dummy User',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Using Magic Association Methods',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Fetching Related Products',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'One-To-Many & Many-To-Many Relations',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Creating & Fetching a Cart',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Adding New Products to the Cart',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Adding Existing Products & Retrieving Cart Items',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Deleting Related Items & Deleting Cart Products',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Adding an Order Model',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Storing Cartitems as Orderitems',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Resetting the Cart & Fetching and Outputting Orders',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Wrap Up',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Useful Resources & Links',
-      sectionSource: '',
-      tooltips: [``],
-    },
-  ],
-};
-
 const noSQL_and_MongoDB = {
   title: 'Working with NoSQL & Using MongoDB',
-  titleDescription: 'Storing Data in a Different Kind of Database',
+  titleDescription: 'Storing Application Data Correctly',
   sections: [
     {
       sectionTitle: 'Module Introduction',
@@ -1787,7 +1568,7 @@ const noSQL_and_MongoDB = {
 
 const mongoose = {
   title: 'Working with Mongoose',
-  titleDescription: 'A MongoDB ORM',
+  titleDescription: 'A MongoDB ORM (like Sequalize for MySQL)',
   sections: [
     {
       sectionTitle: 'Module Introduction',
@@ -3491,8 +3272,6 @@ export const dataStorage = [
   dynamic_content_and_adding_templating_engines,
   mvc,
   dynamic_routes_and_advanced_models,
-  sql_introduction,
-  understanding_sequelize,
   noSQL_and_MongoDB,
   mongoose,
   sessions_and_cookies,
