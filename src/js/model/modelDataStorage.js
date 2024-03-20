@@ -1399,54 +1399,102 @@ const sessions_and_cookies = {
   titleDescription: 'Persisting Data across Requests',
   sections: [
     {
-      sectionTitle: 'Module Introduction',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
       sectionTitle: 'What is a Cookie?',
       sectionSource: '',
-      tooltips: [``],
+      tooltips: [
+        `<h3>What is a cookie when we talk about browsers and servers?</h3>
+        <p>In the context of browsers and servers, a "cookie" refers to <i>a small <b>piece of data</b> sent from a website and stored on the user's device by the user's web browser</i>. Cookies are <i>commonly used to remember information about the user</i>, such as their preferences, login credentials, or items added to a shopping cart.</p>
+        <p><i>When you visit a website, the server sends a cookie to your browser, which then stores it on your device. The next time you visit the same website, your browser sends the stored cookie back to the server along with your request. This allows the server to recognize you and provide personalized content or functionality based on your previous interactions.</i></p>
+        <ul>Cookies can be either <i><b>session</b> cookies</i> or <i><b>persistent</b> cookies</i>:
+          <li>1. Session cookies: these are <i>temporary cookies that are erased when you close your browser</i>. They are typically used to maintain your session state while you navigate a website, such as keeping you logged in.
+          <li>2. Persistent cookies: these cookies <i>remain on your device even after you close your browser</i>. They are <i>used to remember your preferences or login information across multiple sessions</i>, such as language preferences or customization settings.</li></li>
+        </ul>
+        <p>Cookies play a crucial role in enhancing user experience on the web by enabling personalized content and functionality, but they also raise privacy concerns. Some users may be wary of cookies tracking their online behavior, leading to debates over privacy regulations and the development of technologies like browser cookie settings and privacy-focused browsing modes.</p>
+        `,
+      ],
     },
     {
-      sectionTitle: 'The Current Project Status',
+      sectionTitle: 'Setting & manipulating Cookies',
       sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Optional: Creating the Login Form',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Adding the Request Driven Login Solution',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Setting a Cookie',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Manipulating Cookies',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Configuring Cookies',
-      sectionSource: '',
-      tooltips: [``],
+      tooltips: [
+        `<h3>Setting a cookie</h3>
+        <pre><code>
+exports.postLogin = (req, res, next) => {
+  <i>res.<b>setHeader('Set-Cookie', 'loggedIn=true')</b>;</i>
+  res.redirect('/');
+};
+      </code></pre>`,
+        `<h3>Manipulating a cookie</h3>
+        <pre><code>
+exports.getLogin = (req, res, next) => {
+  const isLoggedIn = <b>req
+    .get('Cookie')</b>
+    .split(';')[1]
+    .trim()
+    .split('=')[1];
+  res.render('auth/login', {
+    path: '/login',
+    pageTitle: 'Login',
+    isAuthenticated: isLoggedIn
+  });
+};
+
+exports.postLogin = (req, res, next) => {
+  <b>res.setHeader('Set-Cookie', 'loggedIn=true')</b>;
+  res.redirect('/');
+};      
+      </code></pre>`,
+        `<pre><code>
+ const express = require('express');
+ const authController = require('../controllers/auth');
+ 
+ const router = express.Router();
+ 
+ <i>router.get('/login', authController.getLogin);
+ router.post('/login', authController.postLogin);</i>
+ 
+ module.exports = router;     
+      </code></pre>`,
+        `<h3>Don't store sensitive cookies (data) in the browser</h3>
+        <p>Keep in mind that a <i>user can manipulating some cookie value directly on the client side (browser)</i>. So whilst it is certainly interesting to store some cookies (data) in the client side, especially things that are related to tracking users, advertisements tracking and so on, <i>sensitive cookies (data) should not be stored in the browser because users can edit them</i>. So whilst cookies are generally a good thing for storing data across requests, it might not be the best approach in all scenarios, and that is exactly something where sessions can help us with, and we will learn how sessions can help us with storing sensitive information across requests.</p>`,
+      ],
     },
     {
       sectionTitle: 'What is a Session?',
       sectionSource: '',
-      tooltips: [``],
+      tooltips: [
+        `<p>Sessions and cookies are both mechanisms used in web development to manage user interactions and maintain stateful information, but they serve different purposes and have distinct characteristics.</p>
+        <ul>Differences:
+          <li>1. <i><u>Storage Location</u>: <b>Sessions store data on the server-side</b>, typically in memory or a database, while <b>cookies store data on the client-side</b>, within the user's browser.</i></li>
+          <li>2. <u>Data Storage Capacity</u>: Sessions can store larger amounts of data since they are not limited by the size constraints of HTTP headers (like cookies are). Cookies, on the other hand, are limited to around 4KB of data per domain.</li>
+          <li>3. <u>Lifetime</u>: Sessions are typically temporary and expire after a certain period of inactivity or when the user closes their browser. Cookies can have varying lifetimes, including session cookies (which expire when the browser is closed) and persistent cookies (which have an expiration date set by the server).</li>
+          <li>4. <i><u>Security</u>: Sessions are generally considered more secure than cookies because session data is stored on the server-side, reducing the risk of data tampering or theft by malicious actors.</i> However, cookies can be encrypted or set with the 'HttpOnly' flag to enhance security.</li>
+        </ul>
+        `,
+        `<h3>When to use each?</h3>
+        <ul>Use Sessions When:
+          <li>- You need to <i>store sensitive information</i> such as user authentication tokens or session-specific data.</li>
+          <li>- You want to <i>minimize the amount of data stored on the client-side for security reasons</i>.</li>
+          <li>- You require a larger storage capacity for session data.</li>
+          <li>- You need to maintain state across multiple HTTP requests within a single browsing session.</li>
+        </ul>
+        <ul>Use Cookies When:
+          <li>- You need to <i>persistently identify users</i> across multiple sessions or visits to the site.</li>
+          <li>- You want to <i>store non-sensitive information</i> such as user preferences or browsing history.</li>
+          <li>- You want to implement features like remembering login credentials, language preferences, or shopping cart contents.</li>
+          <li>- You need to <i>share data between the client and server in a lightweight and efficient manner</i>.</li>
+        </ul>
+        <p>In practice, web developers often use a combination of sessions and cookies to achieve specific functionality and balance security, performance, and usability requirements. For example, <i>sessions may be used for managing user authentication and storing sensitive data, while cookies may be used for personalization and user tracking</i>.</p>
+        <p>In general, use a session for any data that belongs to a user that you don't want to lose after every response you send from the server, and that should not be visible to other users.</p>
+        `,
+      ],
     },
     {
       sectionTitle: 'Initializing the Session Middleware',
       sectionSource: '',
-      tooltips: [``],
+      tooltips: [
+        `<p>We handle sessions by installing a third party package called <i><code>express-session</code></i>. <code>express-session</code> package is actually part of the official Express.js suite, but not baked into Express.js itself, that's why we need to install it.</p>`,
+      ],
     },
     {
       sectionTitle: 'Using the Session Middleware',
@@ -1459,47 +1507,7 @@ const sessions_and_cookies = {
       tooltips: [``],
     },
     {
-      sectionTitle: 'Sessions & Cookies - A Short Summary',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Assignment 5: Time to Practice - Sessions and Cookies',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
       sectionTitle: 'Deleting a Cookie',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Fixing Some Minor Bugs',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Making "Add to Cart" Work Again',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Two Tiny Improvements',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Wrap Up',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Code Adjustments',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Useful Resources & Links',
       sectionSource: '',
       tooltips: [``],
     },
