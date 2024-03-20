@@ -1456,7 +1456,7 @@ exports.postLogin = (req, res, next) => {
  module.exports = router;     
       </code></pre>`,
         `<h3>Don't store sensitive cookies (data) in the browser</h3>
-        <p>Keep in mind that a <i>user can manipulating some cookie value directly on the client side (browser)</i>. So whilst it is certainly interesting to store some cookies (data) in the client side, especially things that are related to tracking users, advertisements tracking and so on, <i>sensitive cookies (data) should not be stored in the browser because users can edit them</i>. So whilst cookies are generally a good thing for storing data across requests, it might not be the best approach in all scenarios, and that is exactly something where sessions can help us with, and we will learn how sessions can help us with storing sensitive information across requests.</p>`,
+        <p>Keep in mind that a <i>user can view and can manipulate some cookies value directly on the client side (browser)</i>. So whilst it is certainly interesting to store some cookies (data) in the client side, especially things that are related to tracking users, advertisements tracking and so on, <i>sensitive cookies (data) should not be stored in the browser because users can edit them</i>. So whilst cookies are generally a good thing for storing data across requests, it might not be the best approach in all scenarios, and that is exactly something where sessions can help us with, and we will learn how sessions can help us with storing sensitive information across requests.</p>`,
       ],
     },
     {
