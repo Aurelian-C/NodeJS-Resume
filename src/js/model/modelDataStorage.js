@@ -1740,25 +1740,31 @@ const advanced_authentication = {
     {
       sectionTitle: 'Resetting Passwords',
       sectionSource: '',
-      tooltips: [``],
+      tooltips: [
+        `<p>Password resetting has to be implemented ina way that prevents users from resetting random user accounts</p>`,
+        `<p>Reset tokens have to be random, unguessable and unique.</p>`,
+      ],
     },
     {
       sectionTitle: 'Implementing the Token Logic & Creating the Token',
       sectionSource: '',
       tooltips: [
         `<p>We want to be able to enter an email address and then receive an email with a link that allows us to reset the password Now for that, we need to first of all create a unique token that also has some expiry date, which we will store in our database, so that the link which we didn't click includes that token, and we can verify that the user did get that link from us because if we just, well let the user now change that password, we got no security mechanism in place, so we need that token to put it into the email we're about to send to only let users change the password through the email that contains that token, that's an additional security mechanism.</p>`,
+        `<p>Reset tokens have to be random, unguessable and unique.</p>`,
       ],
     },
     {
       sectionTitle: 'Why we Need Authorization',
       sectionSource: '',
-      tooltips: [``],
+      tooltips: [
+        `<p>Not every autenticated user should be able to do everything Instead, you want to lock down access by restricting the permissions of your users.</p>`,
+      ],
     },
   ],
 };
 
 const understanding_validation = {
-  title: 'Understanding Validation',
+  title: 'Understanding Validation: Form, User Input & Validation',
   titleDescription: 'Getting that Precious User Input',
   sections: [
     {
