@@ -1703,32 +1703,30 @@ const sending_emails = {
   titleDescription: 'Communicating with the Outside World',
   sections: [
     {
-      sectionTitle: 'Module Introduction',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
       sectionTitle: 'How Does Sending Emails Work?',
       sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Using SendGrid',
-      sectionSource: '',
-      tooltips: [``],
+      tooltips: [
+        `<h3>How does sending mails work?</h3>
+      <p>It's important to understand that Node.js or Express.js are runtimes that we use for writing our server side logic, but <i>with Node.js or Express.js you can't trivially create a mailing server</i>.</p>
+      <p>Handling mails is totally different to handling incoming requests and responses, it's a totally different technology, something totally different happens behind the scenes. Therefore in reality, you will very likely never implement your own mail server because that is a very complex task, creating a mail server that is capable of handling thousands of emails at the same time, sending them and so on, security, all that stuff is highly complex, so <i>in reality you typically use third party mail servers for sending emails</i>.</p>
+      <p>By the way, all major web applications you might be interacting with, including Udemy, don't have their own mail servers, they are using third party providers like AWS or whatever it is for sending emails.</p>
+      `,
+      ],
     },
     {
       sectionTitle: 'Using Nodemailer to Send an Email',
       sectionSource: '',
-      tooltips: [``],
+      highlights: {
+        highlight1: ['Nodemailer'],
+      },
+      tooltips: [
+        `<p><i>Node.js or Express.js won't send emails on its own, you need some third party service for that.</i></p>
+        <p>You can use a packages called <code>nodemailer</code> for sending email from Node.js or Express.js</p>
+        `,
+      ],
     },
     {
       sectionTitle: 'Potential Limitation for Large Scale Apps',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Useful Resources & Links',
       sectionSource: '',
       tooltips: [``],
     },
