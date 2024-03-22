@@ -1738,62 +1738,19 @@ const advanced_authentication = {
   titleDescription: 'Beyond Signup & Login',
   sections: [
     {
-      sectionTitle: 'Module Introduction',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
       sectionTitle: 'Resetting Passwords',
       sectionSource: '',
       tooltips: [``],
     },
     {
-      sectionTitle: 'Implementing the Token Logic',
+      sectionTitle: 'Implementing the Token Logic & Creating the Token',
       sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Creating the Token',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Creating the Reset Password Form',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Adding Logic to Update the Password',
-      sectionSource: '',
-      tooltips: [``],
+      tooltips: [
+        `<p>We want to be able to enter an email address and then receive an email with a link that allows us to reset the password Now for that, we need to first of all create a unique token that also has some expiry date, which we will store in our database, so that the link which we didn't click includes that token, and we can verify that the user did get that link from us because if we just, well let the user now change that password, we got no security mechanism in place, so we need that token to put it into the email we're about to send to only let users change the password through the email that contains that token, that's an additional security mechanism.</p>`,
+      ],
     },
     {
       sectionTitle: 'Why we Need Authorization',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Adding Authorization',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Adding Protection to Post Actions',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Why Editing Fails',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Wrap Up',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Useful Resources & Links',
       sectionSource: '',
       tooltips: [``],
     },
