@@ -1672,17 +1672,20 @@ module.exports = router;
       ],
     },
     {
-      sectionTitle: 'Using a CSRF Token',
+      sectionTitle:
+        'Using a CSRF Token & Adding CSRF Protection on Your Web Pages',
       sectionSource: '',
       highlights: {
         highlight1: ['CSRF Token'],
       },
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Adding CSRF Protection',
-      sectionSource: '',
-      tooltips: [``],
+      tooltips: [
+        `
+      <p>To generate CSRF Tokens we need to install a package <code>npm install <b>csurf</b></code>.</p>
+      <p><code>csurf</code> is a package for Express.js that allows you to generate a so-called CSRF token. <i>CSRF token is a string value you can embed into your HTML forms into your web pages</i>, for every request that does something on the backend that changes the users state, so anything like ordering something, anything that does something sensitive which you want to protect against. You can include such a CSRF token in your views (pages) and <i>on the server, the <code>csurf</code> package will check if the incoming request does have that valid CSRF token that you include into your HTML forms</i>.</p>`,
+        `<h3>How does a CSRF token protect us?</h3>
+      <p>The fake sites might send a request to your backend and they could theoretically use your session, but the requests will be missing the CSRF token and they can't guess the CSRF token because it's a random hashed value and only one value is valid, and the <code>csurf</code> package which runs on the server determines whether a CSRF token is valid, so the fake sites can't guess it and they also can steal it, because a new CSRF token is generated for every page you render.</p>
+      `,
+      ],
     },
     {
       sectionTitle: 'csurf() alternatives',
