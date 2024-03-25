@@ -1698,6 +1698,36 @@ module.exports = router;
   ],
 };
 
+const advanced_authentication = {
+  title: 'Advanced Authentication',
+  titleDescription: 'Beyond Signup & Login',
+  sections: [
+    {
+      sectionTitle: 'Resetting Passwords',
+      sectionSource: '',
+      tooltips: [
+        `<p>Password resetting has to be implemented ina way that prevents users from resetting random user accounts</p>`,
+        `<p>Reset tokens have to be random, unguessable and unique.</p>`,
+      ],
+    },
+    {
+      sectionTitle: 'Implementing the Token Logic & Creating the Token',
+      sectionSource: '',
+      tooltips: [
+        `<p>We want to be able to enter an email address and then receive an email with a link that allows us to reset the password Now for that, we need to first of all create a unique token that also has some expiry date, which we will store in our database, so that the link which we didn't click includes that token, and we can verify that the user did get that link from us because if we just, well let the user now change that password, we got no security mechanism in place, so we need that token to put it into the email we're about to send to only let users change the password through the email that contains that token, that's an additional security mechanism.</p>`,
+        `<p>Reset tokens have to be random, unguessable and unique.</p>`,
+      ],
+    },
+    {
+      sectionTitle: 'Why we Need Authorization',
+      sectionSource: '',
+      tooltips: [
+        `<p>Not every autenticated user should be able to do everything Instead, you want to lock down access by restricting the permissions of your users.</p>`,
+      ],
+    },
+  ],
+};
+
 const sending_emails = {
   title: 'Sending Emails',
   titleDescription: 'Communicating with the Outside World',
@@ -1733,77 +1763,62 @@ const sending_emails = {
   ],
 };
 
-const advanced_authentication = {
-  title: 'Advanced Authentication',
-  titleDescription: 'Beyond Signup & Login',
-  sections: [
-    {
-      sectionTitle: 'Resetting Passwords',
-      sectionSource: '',
-      tooltips: [
-        `<p>Password resetting has to be implemented ina way that prevents users from resetting random user accounts</p>`,
-        `<p>Reset tokens have to be random, unguessable and unique.</p>`,
-      ],
-    },
-    {
-      sectionTitle: 'Implementing the Token Logic & Creating the Token',
-      sectionSource: '',
-      tooltips: [
-        `<p>We want to be able to enter an email address and then receive an email with a link that allows us to reset the password Now for that, we need to first of all create a unique token that also has some expiry date, which we will store in our database, so that the link which we didn't click includes that token, and we can verify that the user did get that link from us because if we just, well let the user now change that password, we got no security mechanism in place, so we need that token to put it into the email we're about to send to only let users change the password through the email that contains that token, that's an additional security mechanism.</p>`,
-        `<p>Reset tokens have to be random, unguessable and unique.</p>`,
-      ],
-    },
-    {
-      sectionTitle: 'Why we Need Authorization',
-      sectionSource: '',
-      tooltips: [
-        `<p>Not every autenticated user should be able to do everything Instead, you want to lock down access by restricting the permissions of your users.</p>`,
-      ],
-    },
-  ],
-};
-
 const understanding_validation = {
   title: 'Understanding Validation: Form, User Input & Validation',
   titleDescription: 'Getting that Precious User Input',
   sections: [
     {
-      sectionTitle: 'Module Introduction',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
       sectionTitle: 'Why Should We Use Validation?',
       sectionSource: '',
-      tooltips: [``],
+      tooltips: [
+        `<h3>Client-Side vs Server-Side Validation</h3>
+        <p>Validating user inputs and forms in a web application is essential for <i>security</i>, <i>data integrity</i>, and <i>user experience</i>. Both client-side and server-side validations play crucial roles, and <i>implementing validation on both ends is considered the best approach</i>.</p>`,
+        `<h3>Client-side Validation</h3>
+        <p>Client-side validation occurs in the user's browser before the data is sent to the server. This is typically done using JavaScript.</p>
+        <ul>Advantages:
+          <li>- <i>Immediate Feedback</i>: Users get immediate feedback on their inputs, which enhances the user experience by allowing them to correct errors on-the-fly without waiting for a server response.</li>
+          <li>- <i>Reduced Server Load</i>: By catching common input errors on the client side, it reduces the number of requests made to the server, hence lowering the server's workload and network traffic.</li>
+        </ul>
+        <ul>Considerations:
+          <li>- <i>Cannot Be Trusted Alone</i>: Since client-side code can be modified or bypassed by an attacker, you cannot rely on client-side validation for security.</li>
+          <li>- <i>Compatibility Issues</i>: You must ensure that validations work across different browsers and devices.</li>
+        </ul>
+        `,
+        `<h3>Server-side Validation</h3>
+        <p>Server-side validation is performed on the server, after the data has been submitted.</p>
+        <ul>Advantages:
+          <li>- <b>Security</b>: <i>Server-side validation is secure because the user cannot bypass or modify the validation logic.</i> It is the final checkpoint for ensuring that the data adhering to your application’s rules and requirements is saved in your database.</li>
+          <li>- <b>Data Integrity</b>: <i>It ensures that only valid data is processed and stored, protecting your application against malicious data and attacks</i>, such as SQL injection, cross-site scripting (XSS), etc.</li>
+        </ul>
+        <ul>Considerations:
+          <li>- <i>User Experience</i>: Solely relying on server-side validation can deteriorate the user experience, as it requires a round trip to the server to validate inputs, causing delays in feedback.</li>
+          <li>- <i>Increased Server Load</i>: Every form submission requires server processing, which can increase the workload on the server.</li>
+        </ul>        
+        `,
+        `<h3>Best Approach: Combination of Both</h3>
+        <ul>The best practice is to implement both client-side and server-side validation:
+          <li>- Use client-side validation to provide immediate feedback and improve the user experience. This is your first line of defense against incorrect or incomplete data submission.</li>
+          <li>- Implement server-side validation as the primary security measure to ensure that the data is valid, secure, and consistent with your application's rules, regardless of the client-side validation outcome.</li>
+        </ul>
+        <p>This dual-layer approach <i>maximizes security and user experience</i>, ensuring that your application is robust against malicious activities while being user-friendly. <b>Always remember the golden rule of web development: "Never trust user input."</b></p>
+        `,
+      ],
     },
     {
-      sectionTitle: 'How to Validate Input?',
+      sectionTitle:
+        'Setup & Basic Validation: <code>express-validator</code> package',
       sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Setup & Basic Validation',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Using Validation Error Messages',
-      sectionSource: '',
-      tooltips: [``],
+      highlights: {
+        highlight1: ['<code>express-validator</code>'],
+      },
+      tooltips: [
+        `<p>To add validation, we'll use a third party package. The package we'll be using is called <i><code>express-validator</code></i>.</p>
+        <p>Typically you want to <i>validate on your <code>app.post()</code> or your non-get routes</i>, because you want to validate whenever the user sends data, and that is not the case for our <code>app.get()</code> routes.</p>
+        `,
+      ],
     },
     {
       sectionTitle: 'Built-In & Custom Validators',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'More Validators',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Checking For Field Equality',
       sectionSource: '',
       tooltips: [``],
     },
@@ -1813,49 +1828,13 @@ const understanding_validation = {
       tooltips: [``],
     },
     {
-      sectionTitle: 'Assignment 6: Time to Practice - Validation',
+      sectionTitle: 'Sanitizing Data with <code>express-validator</code>',
       sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Keeping User Input',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Adding Conditional CSS Classes',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Adding Validation to Login',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Sanitizing Data',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Validating Product Addition',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Validating Product Editing',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Wrap Up',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Useful Resources & Links',
-      sectionSource: '',
-      tooltips: [``],
+      tooltips: [
+        `<h3>Sanitizing Data: Visual vs Security</h3>
+      <p>Visual sanitizing data is a type of sanitizing data which makes sense to ensure that <i>your data is stored in a uniform format</i> (ex: trim all white spaces in an email, lowercase all letters in an email etc.). This type of data sanitization is only for visual aspects, not for security reasons.</p>
+      `,
+      ],
     },
   ],
 };
@@ -1864,11 +1843,6 @@ const error_handling = {
   title: 'Error Handling',
   titleDescription: 'Fail Gracefully',
   sections: [
-    {
-      sectionTitle: 'Module Introduction',
-      sectionSource: '',
-      tooltips: [``],
-    },
     {
       sectionTitle: 'Types of Errors & Error Handling',
       sectionSource: '',
@@ -3031,8 +3005,8 @@ export const dataStorage = [
   dynamic_routes_and_advanced_models,
   sessions_and_cookies,
   adding_authentication,
-  sending_emails,
   advanced_authentication,
+  sending_emails,
   understanding_validation,
   error_handling,
   file_upload_and_download,
