@@ -1846,17 +1846,40 @@ const error_handling = {
     {
       sectionTitle: 'Types of Errors & Error Handling',
       sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Analyzing the Error Handling in the Current Project',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Errors - Some Theory',
-      sectionSource: '',
-      tooltips: [``],
+      highlights: {
+        highlight1: ['Error Handling'],
+      },
+      tooltips: [
+        `<p>If your server <i>thrown errors</i> and you don't <i>handle them</i>, your server just crashes. Now how can we handle errors?</p>
+        <p>One solution for synchronous code, so code that executes line by line immediately and does not wait for anything (for example where we don't interact with files or where we don't send requests), such code can  be wrapped with try/catch block.</p>
+        <p>We also have async operations that can fail, and such operations when using Promises are handled with <code>then()</code> and <code>catch()</code>.</p>
+        `,
+        `<h3>Synchronous errors: handling errors with <code>try {} catch {}</code> block</h3>
+        <p>To handle errors for synchronous code use <code>try {} catch {}</code> block.</p>
+        <p>With try/catch we <code>try{}</code> a certain code, and then we have to add <code>catch{}</code> where we catch a potential error that might have been thrown, and in <code>catch{}</code> we can handle errors.</p>
+        <pre></code>
+function sum(a, b) {
+    if (a && b) return a + b;
+    throw new Error('Invalid arguments');
+};
+
+// console.log(sum(1));
+
+try {
+    console.log(sum(1));
+} catch (error) {
+    console.log('Error occurred!');
+    console.log(error);
+}
+
+console.log('This works!');
+        </code></pre>
+        <p><i>NOTE: If you don't use try/catch, when a error occurrs, the call stack is blocked and you can't continue after the error line. If you handle errors with try/catch, when a error occurrs, the error is handle in catch block, BUT the call stack can continue to run after the catch block.</i></p>
+        <p>When you use try/catch and handle a error inside of it, the call stack will never be blocked, and it can continue running after the error line.</p>
+        `,
+        `<h3>Asynchronous errors: handling errors with <code>then()</code> and <code>catch()</code></h3>
+        <p>To handle errors for asynchronous code use <code>then()</code> and <code>catch()</code>.</p>`,
+      ],
     },
     {
       sectionTitle: 'Throwing Errors in Code',
@@ -1871,37 +1894,74 @@ const error_handling = {
     {
       sectionTitle: 'Using the Express.js Error Handling Middleware',
       sectionSource: '',
-      tooltips: [``],
+      highlights: {
+        highlight1: ['Express.js Error Handling Middleware'],
+      },
+      tooltips: [
+        `<p>You can <i>use the Express error handling middleware to <u>handle all unhandled errors</u></i>.</p>
+        <p>Instead of throwing an error in <code>catch()</code>, we can call <code>next(error)</code> with an error passed as an argument. This let Express.js know that an error occurred, and it will skip all other middlewares and move right away to an error handling middleware:</p>
+        <pre><code>
+.then() {
+    //code here
+}
+.catch(err) {
+    const error = new Error(err);
+    error.httpStatusCode = 500;
+    <i>next(error);</i>
+}
+        </code></pre>
+        `,
+        `<pre><code>
+app.use(<i>(error, req, res, next)</i> {
+    //code here
+})
+        </code></pre>
+        <p>NOTE: If you got more than one error-handling middleware, they'll execute from top to bottom. Just like the "normal" middleware.</p>
+        `,
+        `<h3>Using the Error Handling Middleware Correctly</h3>
+        <pre><code>
+app.use((req, res, next) => {
+    if (!req.session.user) {
+      <i>throw new Error('Dummy Error'); //this will work because it is in synchronous function</i>
+    }
+
+    Promise
+      .then(
+        //code here
+      )
+      .catch(error) {
+        <i>// throw new Error(error); //this will not work because it is in asynchronous function
+        next(error);</i>
+      }
+})
+        </code></pre>
+        <pre><code>
+app.use(<i>(error, req, res, next)</i> {
+    //code here
+})
+        </code></pre>
+        <p>In synchronous places, so outside of callbacks and Promises, you throw an error and Express.js will detect it and execute your next error handling middleware. Inside of async code, so inside of <code>then()</code>, <code>catch()</code> or callbacks, throwing an error does not work. <b>Inside of async code, you have to use <code>next(error)</code> with an error included.</b> So inside of async ode snippets, you need to use <code>next(error)</code> wrapping that error, outside of async code you can just throw that error.</p>
+        `,
+      ],
     },
     {
-      sectionTitle: 'Updating the App',
+      sectionTitle: 'Errors & HTTP Response Status Codes',
       sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Using the Error Handling Middleware Correctly',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Status Codes',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Available Status Codes',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Wrap Up',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Useful Resources & Links',
-      sectionSource: '',
-      tooltips: [``],
+      highlights: {
+        highlight1: ['Status Codes'],
+      },
+      tooltips: [
+        `<h3>Which codes do we have and why do we use them?</h3>
+      <p>First of all let's start with what the codes are therefore. The codes are simply <i><u>extra information</u> we pass to the browser which helps the browser understand if an operation succeeded or not</i>. If you're writing an application with a lot of client side JavaScript or a mobile app and you will fetch only data instead of complete HTML pages, status codes also allow you to understand if an error happened and which kind of error, because <i>you typically map certain kinds of errors to certain kinds of status codes</i>.</p>
+      <ul>Status codes:
+        <li>- <b><code>2xx</code> (Success)</b>: these are always success status codes, they indicate that the operation simply succeeded.</li>
+        <li>- <b><code>3xx</code> (Redirect)</b>: indicates that a redirection happened.</li>
+        <li>- <b><code>4xx</code> (Client-side error)</b>: indicates that something happened because an error was done by the client.</li>
+        <li>- <b><code>5xx</code> (Server-side error)</b>: indicate that a server side error occurred.</li>
+      </ul>
+      <p>When returning responses, it can make sense to also set an appropiate HTTP status code - this lets the browser know what went wrong. Setting status code does NOT mean that the response is incomplete or the app crashed!</p>
+      `,
+      ],
     },
   ],
 };
