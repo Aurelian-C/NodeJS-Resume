@@ -1971,24 +1971,28 @@ const file_upload_and_download = {
   titleDescription: 'Handling Files Correctly',
   sections: [
     {
-      sectionTitle: 'Module Introduction',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Adding a File Picker to the Frontend',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Handling Multipart Form Data',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
       sectionTitle: 'Handling File Uploads with Multer',
       sectionSource: '',
-      tooltips: [``],
+      highlights: {
+        highlight2: ['Multer'],
+      },
+      tooltips: [
+        `<p>Multer is a third party package that <i>parses incoming requests for files</i>, request with mixt data: text and file data.</p>
+        <p>Multer is a Node.js middleware for handling multipart/form-data, which is primarily used for uploading files.</p>
+        <p><i>Multer will not process any form which is not multipart (multipart/form-data)</i>:</p>
+        <pre><code>
+form action="/admin/edit-product" method="POST" <b>enctype="multipart/form-data"</b>
+        </code></pre>
+        `,
+        `<p>Like <code>bodyParser</code> package, <i><code>multer</code> is a middleware which we <u>execute on every incoming request</u></i>, and it then simply has a look at that request, sees if it's multipart/form-data and tries to extract files if that is the case.</p>`,
+        `<h3>Key features and uses of Multer</h3>
+        <p>1. <i>File Uploads</i>: Multer is used to handle file uploads, such as images, videos, documents, and other binary data, from HTML forms. It can process both single and multiple file uploads.</p>
+        <p>2. <i>Configuration</i>: Multer allows you to configure various options, such as where to store uploaded files, how to name them, and size limits for uploaded files.</p>
+        <p>3. <i>Middleware</i>: Multer is typically used as middleware in Express.js applications. It can be added to specific routes to process file uploads. Multer processes the uploaded files and makes them accessible in the request object for further handling.</p>
+        <p>4. <i>Storage Engines</i>: Multer supports different storage engines, including disk storage, memory storage, and cloud storage solutions like Amazon S3. You can choose the storage engine that best suits your project's needs.</p>
+        <p>5. <i>File Validation</i>: Multer can validate uploaded files based on file type, file size, and other criteria. This helps ensure that only acceptable files are processed.</p>
+        `,
+      ],
     },
     {
       sectionTitle: 'Configuring Multer to Adjust Filename & Filepath',
@@ -1998,17 +2002,17 @@ const file_upload_and_download = {
     {
       sectionTitle: 'Filtering Files by Mimetype',
       sectionSource: '',
+      highlights: {
+        highlight1: ['Mimetype'],
+      },
       tooltips: [``],
     },
     {
       sectionTitle: 'Storing File Data in the Database',
       sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Remove imageUrl from "Add Product"',
-      sectionSource: '',
-      tooltips: [``],
+      tooltips: [
+        `<p>Files like images, videos, PDFs etc, should not be stored in a database, they are too big. It's too inefficient to store files in a database and query them from there. You need to <i>store files on file system</i>, but you need to <i>store the path to the file in the database</i>.</p>`,
+      ],
     },
     {
       sectionTitle: 'Serving Images Statically',
@@ -2023,7 +2027,12 @@ const file_upload_and_download = {
     {
       sectionTitle: 'Setting File Type Headers',
       sectionSource: '',
-      tooltips: [``],
+      highlights: {
+        highlight1: ['File Type Headers'],
+      },
+      tooltips: [
+        `<p>Setting headers to files that you are download, you control how the browser should handle the incoming data. For example, should it automatically open a file, should it instead let you download it?</p>`,
+      ],
     },
     {
       sectionTitle: 'Restricting File Access',
@@ -2033,37 +2042,51 @@ const file_upload_and_download = {
     {
       sectionTitle: 'Streaming Data vs Preloading Data',
       sectionSource: '',
-      tooltips: [``],
+      highlights: {
+        highlight1: ['Streaming Data'],
+      },
+      tooltips: [
+        `<p><code>fs.readFile()</code> vs <code>fs.createReadStream()</code></p>
+        <p>We can <code>fs.pipe(res)</code> our readable stream, the file stream into the response, and that means that the response will be streamed to the browser and will contain the data, and the data will basically be downloaded by the browser step by step, and for large files this is a huge advantage because Node.js never has to preload all the data into memory, but just streams it to the client on the fly, and the most it has to store is one chunk of data.</p>
+        <pre><code>
+const fs = require('fs');
+
+function downloadPDF(req, res, next) {
+    const file = <i>fs.createReadStream</i>(invoicePath);
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', 'inline');
+    <i>file.pipe(res);</i>
+};
+        </code></pre>
+        `,
+      ],
     },
     {
       sectionTitle: 'Using PDFKit for .pdf Generation',
       sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Generating .pdf Files with Order Data',
-      sectionSource: '',
+      highlights: {
+        highlight2: ['PDFKit'],
+      },
       tooltips: [``],
     },
     {
       sectionTitle: 'Deleting Files',
       sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Fixing Invoice Links',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Wrap Up',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Useful Resources & Links',
-      sectionSource: '',
-      tooltips: [``],
+      tooltips: [
+        `<pre><code>
+const fs = require('fs');
+
+const deleteFile = (filePath) => {
+    <i>fs.unlink</i>(filePath, (err) => {
+        if (err) {
+            throw (err);
+        }
+    });
+}
+
+exports.deleteFile = deleteFile;      
+      </code></pre>`,
+      ],
     },
   ],
 };
@@ -2073,11 +2096,6 @@ const adding_pagination = {
   titleDescription: 'Fetching Data in Chuncks',
   sections: [
     {
-      sectionTitle: 'Module Introduction',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
       sectionTitle: 'Adding Pagination Links',
       sectionSource: '',
       tooltips: [``],
@@ -2085,6 +2103,9 @@ const adding_pagination = {
     {
       sectionTitle: 'Retrieving a Chunk of Data',
       sectionSource: '',
+      highlights: {
+        highlight1: ['Chunk of Data'],
+      },
       tooltips: [``],
     },
     {
@@ -2102,21 +2123,6 @@ const adding_pagination = {
       sectionSource: '',
       tooltips: [``],
     },
-    {
-      sectionTitle: 'Re-Using the Pagination Logic & Controls',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Wrap Up',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Useful Resources & Links',
-      sectionSource: '',
-      tooltips: [``],
-    },
   ],
 };
 
@@ -2125,37 +2131,53 @@ const understanding_async_requests = {
   titleDescription: 'Behind-The-Scenes Work',
   sections: [
     {
-      sectionTitle: 'Module Introduction',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
       sectionTitle: 'What are Async Requests?',
       sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Adding Client Side JS Code',
-      sectionSource: '',
-      tooltips: [``],
+      highlights: {
+        highlight1: ['Async Requests'],
+      },
+      tooltips: [
+        `<h3>Traditional Request-Response flow on Web Applications</h3>
+        <p>Thus far we always had a look at a particular kind of request and response. The request was always a request sent from our browser, when we submitted a form or entered a URL or clicked a link, and the response always was either a redirect or a new HTML page. Now that can take you very far, but <i>sometimes, you get some requests that will only happen behind the scenes, that means you don't want to get back a new HTML page, you only want to exchange some data with the server</i>. We'll have a look at what asynchronous JavaScript requests are, why we would use them, and how we will use them.</p>
+        <p>In a web/mobile application you have your frontend(client-side) and you have your backend(server-side). Now typically, you send a request from your client to the server and you get back a response. Up until now, the response always was a HTML page or a redirect to another route that then returned also a HTML page.</p>
+        <p>Now there is nothing wrong with that, but there are tasks where you don't want to reload the HTML page just to, for example delete an item. And actually, in modern web applications, the portion that happens behind the scenes grows, since we can do a lot with JavaScript in the browser where we never need to fetch a new HTML page, but where we constantly change the existing HTML page, as this is faster than loading a new one, but that's something I'll cover in the restful API modules.</p>
+        `,
+        `<h3>What are Asynchronous Requests?</h3>
+        <p>The idea behind asynchronous requests is that you do send the request, but that request typically contains just some data in a special format named JSON, and that data is sent to the server, to a certain URL or a route accepted by that server (so that logic doesn't change). The server can do whatever it wants to do with that, and then we return a response, and that response is also returned behind the scenes, so it's NOT a new HTML page that needs to be rendered, it's instead again just some data in that <i>JSON format</i> typically.</p>
+        <p>That is how client-server can communicate through JavaScript, so through client-side JavaScript and the server-side logic, <i>without exchanging a new HTML page</i>. That allows you to do some work behind the scenes without interrupting the user flow, without reloading the HTML page.</p>
+        `,
+      ],
     },
     {
       sectionTitle: 'The JSON Data Format',
+      sectionSource: '',
+      highlights: {
+        highlight1: ['JSON'],
+      },
+      tooltips: [
+        `<p>JSON stands for JavaScript Object Notation. JSON data looks a lot like a normal JavaScript object, but one important difference is that all key names are enclosed by double quotation marks <code>"</code>. Besides that, you can store text (string), numeric (integers and floats) and boolean data as well as nested objects and arrays.</p>`,
+      ],
+    },
+    {
+      sectionTitle: 'Adding Client-Side JS Code',
       sectionSource: '',
       tooltips: [``],
     },
     {
       sectionTitle: 'Sending & Handling Background Requests',
       sectionSource: '',
-      tooltips: [``],
+      tooltips: [
+        `<p><pre><code>
+function asyncRequest(req, res, next) {
+    res.status(200)<i>.json({ message: "Success", data: ["str1", "str2"] })</i>;
+}
+        </code></pre></p>
+        <p><i>NOTE: <code>.json()</code> will automatically transform a JavaScript object to JSON format.</i></p>
+        `,
+      ],
     },
     {
       sectionTitle: 'Manipulating the DOM',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Useful Resources & Links',
       sectionSource: '',
       tooltips: [``],
     },
@@ -2166,11 +2188,6 @@ const adding_payments = {
   title: 'Adding Payments',
   titleDescription: 'Creating a Real Shop',
   sections: [
-    {
-      sectionTitle: 'Module Introduction',
-      sectionSource: '',
-      tooltips: [``],
-    },
     {
       sectionTitle: 'How Payments Work',
       sectionSource: '',
@@ -2186,11 +2203,6 @@ const adding_payments = {
       sectionSource: '',
       tooltips: [``],
     },
-    {
-      sectionTitle: 'Useful Resources & Links',
-      sectionSource: '',
-      tooltips: [``],
-    },
   ],
 };
 
@@ -2199,19 +2211,26 @@ const working_with_REST_APIs_basics = {
   titleDescription: 'Decoupling Frontend and Backend',
   sections: [
     {
-      sectionTitle: 'Module Introduction',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
       sectionTitle: 'What are REST APIs and why do we use Them?',
       sectionSource: '',
-      tooltips: [``],
+      tooltips: [
+        `<p>REST APIs are there to solve one problem: <i>not every Frontend (User Interface) requires HTML Pages! So not every UI might want your server to generate the HTML code, which effectively is the UI</i>.</p>
+        <p><i>With REST APIs we transfer Data instead of User Interfaces (HTML Pages)</i>.</p>
+        <p>It's also important to highlight that in REST APIs only the response and the request data changes, but not the general server-side logic. So everything you learned about validating, reaching out to databases, handling files on the server, all these things don't change, you do that in exactly the same way when building a REST API, and that is really important because often, REST APIs and traditional web apps where you render the views on the server-side are seen as two totally different things. They are not, they only differ in the response and in the kind of data you expect, but they don't differ in what happens on the server, besides the fact that you don't render the view.</p>
+        `,
+      ],
     },
     {
       sectionTitle: 'Accessing Data with REST APIs',
       sectionSource: '',
-      tooltips: [``],
+      tooltips: [
+        `<ul>Data Formats:
+        <li>- HTML;</li>
+        <li>- Plain Text;</li>
+        <li>- XML;</li>
+        <li>- JSON;</li>
+      </ul>`,
+      ],
     },
     {
       sectionTitle: 'Understanding Routing & HTTP Methods',
@@ -2232,27 +2251,62 @@ const working_with_REST_APIs_basics = {
     {
       sectionTitle: 'Sending Requests & Responses and Working with Postman',
       sectionSource: '',
+      highlights: {
+        highlight1: ['Postman'],
+      },
       tooltips: [``],
     },
     {
       sectionTitle: 'REST APIs, Clients & CORS Errors',
       sectionSource: '',
-      tooltips: [``],
+      highlights: {
+        highlight2: ['CORS Errors'],
+      },
+      tooltips: [
+        `<h3>What are CORS?</h3>
+      <p>CORS stands for Cross Origin Resource Sharing and <i>by default, CORS is not allowed by browsers</i>.</p>
+      <p><img src="../../src/img/cors_1.jpg"/></p>
+      <p>We can <i>overwrite CORS</i> in our Node.js server, because CORS mechanism makes sense for some applications, for REST APIs, it typically does not. We want to <i>allow our server to share its data</i>, we want to offer data from our server to different clients, and these clients will often not be served by the same server as our REST API runs on.</p>
+      <p>Take Google Maps for example: you're not running your app on Google servers, still you can access it, and the same is true for your own API. Even if you build both the frontend and the backend, you will often serve the two ends from different servers, because you can choose a server for the frontend that's optimized for frontend code, that really serves that really well, and you serve your server-side code, your Node.js code from a different server. So you will have different domains, different addresses there too for frontend and backend.</p>
+      <p>A lot of people see the CORS error on the client-side and want to solve it in their browser-side JavaScript code, you just can't, <b>you can only solve CORS errors on the server</b>.</p>
+      <pre><code>
+const express = require('express');
+const bodyParser = require('body-parser');
+
+const feedRoutes = require('./routes/feed');
+
+const app = express();
+
+app.use(bodyParser.json()); // application/json
+
+app.use((req, res, next) => {
+    <i>res.setHeader(<b>'Access-Control-Allow-<u>Origin</u>'</b>, '*');
+    res.setHeader(<b>'Access-Control-Allow-<u>Methods</u>'</b>, 'OPTIONS, GET, POST, PUT, PATCH, DELETE');
+    res.setHeader(<b>'Access-Control-Allow-<u>Headers</u>'</b>, 'Content-Type, Authorization');</i>
+    next();
+});
+
+app.use('/feed', feedRoutes);
+
+app.listen(8080);
+      </code></pre>
+      `,
+      ],
     },
     {
       sectionTitle: 'Sending POST Requests',
       sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Wrap Up',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Useful Resources & Links',
-      sectionSource: '',
-      tooltips: [``],
+      tooltips: [
+        `<pre><code>
+fetch('http://localhost:8080/feed/post', {
+  <i><b>method</b>: 'POST',
+  <b>headers</b>: {
+    'Content-Type': 'application/json'
+  }
+  <b>body</b>: JSON.stringify</i>({ title: 'A title', content: 'Some content...'})
+})      
+      </code></pre>`,
+      ],
     },
   ],
 };
