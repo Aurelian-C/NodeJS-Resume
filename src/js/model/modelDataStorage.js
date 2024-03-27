@@ -2240,7 +2240,14 @@ const working_with_REST_APIs_basics = {
     {
       sectionTitle: 'REST APIs - The Core Principles',
       sectionSource: '',
-      tooltips: [``],
+      tooltips: [
+        `<ul>REST Concepts & Ideas:
+        <li>- <i>REST APIs are all about data, no UI logic in exchanged;</i></li>
+        <li>- <i>REST APIs are normal Node.js servers</i> which expose different endpoints (HTTP method + path) for clients to send request to;</li>
+        <li>- <i>JSON is the common data format</i> that is used both for requests and resposnes;</li>
+        <li>- REST APIs are decoupled from the clients that use them.</li>
+      </ul>`,
+      ],
     },
     {
       sectionTitle:
@@ -2290,6 +2297,8 @@ app.use('/feed', feedRoutes);
 
 app.listen(8080);
       </code></pre>
+      <p>CORS errors occur when the API and your client are sitting on different servers, different domains, and they want to exchange data. You "fix them" in quotation marks, because they are a security mechanism, but you can bypass that on purpose by setting the right <u>CORS headers</u>, which basically tell the client "Hey, it's fine, I'm a public API! You may use my data!".</p>
+      <p>So <b>CORS errors occur when using an API that does NOT set CORS headers!</b></p>
       `,
       ],
     },
@@ -2305,7 +2314,13 @@ fetch('http://localhost:8080/feed/post', {
   }
   <b>body</b>: JSON.stringify</i>({ title: 'A title', content: 'Some content...'})
 })      
-      </code></pre>`,
+      </code></pre>
+      <p>Attach data in JSON format and let the other end know by setting the "Conten-Type" header.</p>
+      <ul><i>Express.js set the "Conten-Type" header automatically when using the <code>res.json()</code> method.</i> In the browser, setting the "Conten-Type" header depends on which method you use:
+        <li>- when using the <i>Fetch API</i> we had to set it manually;</li>
+        <li>- when you would use <i>Axios library</i> in browser-side JavaScript for sending async requests, it would be done automatically</li>
+      </ul>
+      `,
       ],
     },
   ],
@@ -2473,14 +2488,13 @@ const understanding_async_await_in_NodeJS = {
   titleDescription: 'Working with Async Code more Elegantly',
   sections: [
     {
-      sectionTitle: 'Module Introduction',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
       sectionTitle: 'What is Async Await All About?',
       sectionSource: '',
-      tooltips: [``],
+      tooltips: [
+        `<p><code>async</code> and <code>await</code> are two keywords which are part of the core JavaScript language, they're not an exclusive part of the Node.js runtime, they are also available in modern browsers or in frontend projects, but you can use them in also Node.js projects. The question of course is what do these two keywords do?</p>
+        <p><i><code>async</code> and <code>await</code> allows you to write asynchronous requests that looks like a synchronous way.</i></p>
+        `,
+      ],
     },
     {
       sectionTitle: 'Transforming "Then Catch" to "Async Await"',
@@ -2489,26 +2503,6 @@ const understanding_async_await_in_NodeJS = {
     },
     {
       sectionTitle: 'Top-level "await"',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Assignment 8: Time to Practice - Async Await',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'The User Name is Missing!',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Wrap Up',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Useful Resources & Links',
       sectionSource: '',
       tooltips: [``],
     },
