@@ -353,7 +353,7 @@ const development_workflow_and_debugging = {
         'Understanding <code>package.json</code> file and NPM Scripts',
       sectionSource: '',
       highlights: {
-        highlight1: ['NPM Scripts'],
+        highlight1: ['<code>package.json</code>', 'NPM Scripts'],
       },
       tooltips: [
         `<p>NPM is a software that we use to manage the 3rd party open-source packages that we choose to include and use in our project.</p>
