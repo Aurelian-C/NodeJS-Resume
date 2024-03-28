@@ -2206,8 +2206,8 @@ const adding_payments = {
   ],
 };
 
-const working_with_REST_APIs_basics = {
-  title: 'Working with REST APIs - The Basics',
+const working_with_REST_APIs = {
+  title: 'Working with REST APIs',
   titleDescription: 'Decoupling Frontend and Backend',
   sections: [
     {
@@ -2217,6 +2217,7 @@ const working_with_REST_APIs_basics = {
         `<p>REST APIs are there to solve one problem: <i>not every Frontend (User Interface) requires HTML Pages! So not every UI might want your server to generate the HTML code, which effectively is the UI</i>.</p>
         <p><i>With REST APIs we transfer Data instead of User Interfaces (HTML Pages)</i>.</p>
         <p>It's also important to highlight that in REST APIs only the response and the request data changes, but not the general server-side logic. So everything you learned about validating, reaching out to databases, handling files on the server, all these things don't change, you do that in exactly the same way when building a REST API, and that is really important because often, REST APIs and traditional web apps where you render the views on the server-side are seen as two totally different things. They are not, they only differ in the response and in the kind of data you expect, but they don't differ in what happens on the server, besides the fact that you don't render the view.</p>
+        <p>Most of the server-side code does not change when we build REST APIs, only reqeust + response data is affected.</p>
         `,
       ],
     },
@@ -2235,7 +2236,10 @@ const working_with_REST_APIs_basics = {
     {
       sectionTitle: 'Understanding Routing & HTTP Methods',
       sectionSource: '',
-      tooltips: [``],
+      tooltips: [
+        `<p>API Endpoints</p>
+        <p>When you switch from "Classic" to REST APIs, you will have more HTTP methods available. In "classic" server, you only have "GET" and "POST", in REST APIs you will have: "PUT", "PATCH", "DELETE" and "OPTIONS".</p>`,
+      ],
     },
     {
       sectionTitle: 'REST APIs - The Core Principles',
@@ -2248,12 +2252,6 @@ const working_with_REST_APIs_basics = {
         <li>- REST APIs are decoupled from the clients that use them.</li>
       </ul>`,
       ],
-    },
-    {
-      sectionTitle:
-        'Creating our REST API Project & Implementing the Route Setup',
-      sectionSource: '',
-      tooltips: [``],
     },
     {
       sectionTitle: 'Sending Requests & Responses and Working with Postman',
@@ -2323,162 +2321,148 @@ fetch('http://localhost:8080/feed/post', {
       `,
       ],
     },
-  ],
-};
-
-const working_with_REST_APIs_practical = {
-  title: 'Working with REST APIs - The Practical Application',
-  titleDescription: 'Complete Project, Authentication & More',
-  sections: [
-    {
-      sectionTitle: 'Module Introduction',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'REST APIs & The Rest Of The Course',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Understanding the Frontend Setup',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Planning the API',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Fetching Lists of Posts',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Adding a Create Post Endpoint',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Adding Server Side Validation',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Setting Up a Post Model',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Storing Posts in the Database',
-      sectionSource: '',
-      tooltips: [``],
-    },
     {
       sectionTitle: 'Static Images & Error Handling',
       sectionSource: '',
       tooltips: [``],
     },
     {
-      sectionTitle: 'Fetching a Single Post',
+      sectionTitle: 'Image Names & Windows Operating System',
       sectionSource: '',
       tooltips: [``],
     },
     {
-      sectionTitle: 'Image Names & Windows',
+      sectionTitle: 'Uploading Images (Files) with Multer',
+      highlights: {
+        highlight1: ['Uploading Images (Files) with Multer'],
+      },
       sectionSource: '',
-      tooltips: [``],
+      tooltips: [
+        `<pre><code>
+<i>const formData = <b>new FormData()</b>;
+<b>formData.append</b>('title', 'someTitle');
+<b>formData.append</b>('image', FileList);</i>
+
+fetch('http://localhost:8080/feed/post', {
+<i><b>method</b>: 'POST',
+<b>body</b>: formData</i>,
+})      
+  </code></pre>
+  <p>NOTE: When we upload images, we won't use JSON data because <i>JSON data is only text</i>, so only data that can be represented as a text. A file can't be, or not easily can be JSON format, it will be very big quickly and very big files are a huge issue or impossible to upload in JSON format. So <b>we can't use JSON for data where we have both a file and normal text data</b>.</p>
+  `,
+      ],
     },
     {
-      sectionTitle: 'Uploading Images',
+      sectionTitle: 'How Does Authentication Work: JSON Web Token (JWT)',
       sectionSource: '',
-      tooltips: [``],
+      highlights: {
+        highlight2: ['JSON Web Token (JWT)'],
+      },
+      tooltips: [
+        `<h3>How Does Authentication Work?</h3>
+    <p>In REST APIs, we still have our client-side and server-side. The client still sends authentication credentials to the server.</p>
+  <p>In the past, without building a REST API, we would have checked that credentials on the server and if it is valid, we would have established a session. Now, <i>we don't use a session anymore because REST APIs are stateless</i>, REST APIs don't care about the client. In REST APIs, server and client are strict decoupling and every request should be treated standalone: that means every request should have all the data it needs to authenticate itself. With a session, the server needs to store data about the client, the server then stores that a client is authenticated, and that's just not how REST APIs work. <i>In REST APIs, the server will not store anything about any client, so <b>we don't store sessions on a REST API</b>.</i></p>
+  <p>Instead of using session like we use to do, <i>in REST APIs we return a so-called <b>token</b> to the client</i>. That token will be <i>generated on the server</i> and will hold some information which can only be <i>validated by the server</i>, and this token will then be <i>stored in the client (in storage in the browser)</i>. The client can then attach this token to every subsequent request it sends to the server. <i>So this stored token is then attached to every request that targets a resource on the server which requires authentication.</i></p>
+  <p>That token can only be validated by the server, which created the token, and if you change that token on the frontend or you try to create it to fake that you are authenticated, that will be detected, because the server used a certain algorithm for generating the token which you can't fake, because you don't know the private key used by that server for generating the token.</p>
+  <p><img src="../../src/img/token_1.jpg"/></p>
+  `,
+        `<h3>What's that Token?</h3>
+    <p>The token contains <i>JSON data</i> or JavaScript data in the end, plus a <i>signature</i> (this signature is generated on the server with a special private key which is only stored on the server), and this gives us a so-called <b>JSON Web Token (JWT)</b>.</p>
+    <p>This JWT is then returned to the client and <i>the signature can only be verified by the server</i>, so you can't edit or create the JWT on the client (well, you can edit it, but then the server will detect this and will treat the token as invalid).</p>
+    <p><img src="../../src/img/token_2.jpg"/></p>
+    <p>This is how we generate the token or how we do authentication in REST APIs. We have the token which can be checked by the server, but which is NOT stored on the server with a session, instead is stored in the browser storage.</p>
+    `,
+        `<h3>Summary</h3>
+        <p>- The REST API server does NOT care about the client, request are handled in isolation => No session.</p>
+    <p>- Due to no sessions being used, authentication works differently in REST APIs.</p>
+    <p>- Each request needs to be able to send some data that proves that the request is authenticated.</p>
+    <p>- JSON Web Tokens ("JWT") are a common way of storing authentication information on the client and providing authentication status.</p>
+    <p>- JWTs are signed by the server and can only be validated by the server.</p>
+    `,
+      ],
     },
     {
-      sectionTitle: 'Updating Posts',
+      sectionTitle: 'Creating JSON Web Tokens (JWTs)',
       sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Deleting Posts',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Adding Pagination',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Adding a User Model',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Adding User Signup Validation',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Signing Users Up',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'How Does Authentication Work?',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Starting with User Login',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Logging In & Creating JSON Web Tokens (JWTs)',
-      sectionSource: '',
-      tooltips: [``],
+      highlights: {
+        highlight1: ['Creating JSON Web Tokens (JWTs)'],
+      },
+      tooltips: [
+        `<p>For generating JSON Web Tokens we need to install a package: <code>npm install <i>jsonwebtoken</i></code>. This is a package which allows us to create new JSON Web Tokens.</p>
+    <pre><code>
+const jwt = require('jsonwebtoken');
+
+app.post((req, res, next) => {
+<i>jwt<b>.sign</b>(
+  {
+    email: 'userEmail',
+    userId: 'userId,
+  },
+  <b>'secret-key'</b>,
+  { <b>expiresIn</b>: '1h' }
+);</i>
+
+res.status(200).json({ token, userId });
+});
+    </code></pre>
+    <p><code>jwt.sign()</code> creates a new signature and packs that into a new JSON Web Token.</p>
+    <p>Setting an expiration time to the JWT is a security mechanism you should add. Because the token is stored in the client, that token could be stolen. If the user does not logout, another person copies the token from his browser storage and then he can use it on his own PC forever. If you set an expiration time, the token becomes invalid when that time passed, so setting an expiration time is a good security mechanism and a nice balance between usability, where you would want infinite sessions, and security, where you would want to limit JWT validity to an amount of time.</p>
+    `,
+      ],
     },
     {
       sectionTitle: 'Using & Validating the Token',
       sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Adding Auth Middleware to All Routes',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Connecting Posts & Users',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Adding Authorization Checks',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Clearing Post-User Relations',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Assignment 7: Time to Practice - Working with REST APIs',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Wrap Up',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Useful Resources & Links',
-      sectionSource: '',
-      tooltips: [``],
+      highlights: {
+        highlight1: ['Using', 'Validating'],
+      },
+      tooltips: [
+        `<p>Now that we're generating a token and we're passing it to the client, we need to make sure that the client can pass back the token to the backend, to the REST API, and we then check for it's existence and it's validity, before we allow the request to continue. So <i>with JWT validation, we can block access to specific API Endpoints</i>.</p>`,
+        `<h3>How you attach a JWT when you send an async request from the client</h3>
+    <p>When you make a async request from the client to your REST API, you can <i>attach your JWT to the <code>fetch()</code> request headers</i>:</p>
+    <pre><code>
+fetch('https://rest-api/auth', {
+<i>headers: {
+  <b>Authorization: 'Bearer ' + token</b>
+}</i>
+});
+    </code></pre>`,
+        `<p>On your server, you can read the Authorization header:</p>
+    <pre><code>
+const jwt = require('jsonwebtoken');
+
+module.exports = (req, res, next) => {
+<i>const authHeader = <b>req.get('Authorization')</b>;</i>
+
+if (!authHeader) {
+const error = new Error('Not authenticated.');
+error.statusCode = 401;
+throw error;
+}
+
+const token = authHeader.split(' ')[1];
+
+let decodedToken;
+try {
+<i>decodedToken = <b>jwt.verify</b>(token, 'somesupersecretsecret');</i>
+} catch (err) {
+err.statusCode = 500;
+throw err;
+}
+
+if (!decodedToken) {
+const error = new Error('Not authenticated.');
+error.statusCode = 401;
+throw error;
+}
+
+req.userId = decodedToken.userId;
+next();
+};
+    </code></pre>
+    <p><code>jwt.verify()</code> will both decode and verify your JWT. You also have a <code>jwt.decode()</code>, but this will only decode your JWT and not check if it's valid.</p>
+    `,
+      ],
     },
   ],
 };
@@ -3121,8 +3105,7 @@ export const dataStorage = [
   adding_pagination,
   understanding_async_requests,
   adding_payments,
-  working_with_REST_APIs_basics,
-  working_with_REST_APIs_practical,
+  working_with_REST_APIs,
   understanding_async_await_in_NodeJS,
   websockets_and_socket,
   graphQL,
