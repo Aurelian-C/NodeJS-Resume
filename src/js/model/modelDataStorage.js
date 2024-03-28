@@ -131,6 +131,23 @@ console.log('Reading file...');
         `<h3>Node.js asynchronous functions</h3>
         <p>It's important to know that, when we use callbacks in our code, that doesn't automatically make it asynchronous. So, passing functions around into other functions is quite common in JavaScript, but that doesn't make them asynchronous automatically. It only works this way for some functions in the Node.js, such as the <code>fs.readFile</code> function and many others.</p>
         `,
+        `<h3>Node.js top-level code it's only executed once when the server starts</h3>
+        <p><b>Top-level code is only executed once we start the server</b>, and so in that situation, it doesn't matter at all if it blocks the code execution, because it happens only once, and only when the server actually starts:</p>
+        <pre><code>
+const http = require('http');
+const fs = require('fs');
+
+<i>//Top-level code it's only executed once, only when the server starts, so you can use here synchronous code even it's block the code execution</i>
+const input = fs.readFileSync('input.text', 'utf-8');
+
+const server = http.createServer((req, res) => {
+    <i>//Here you need to use asynchoronous code because it's executed over and over, for every incoming request</i>
+});
+
+server.listen(3000);
+        </code></pre>
+        <p>The secret is simply to know which code is only executed once and only at the beginning, when the server starts, and which code gets executed over and over again, and is therefore problematic when blocking the Event Loop.</p>
+        `,
       ],
     },
     {
@@ -2515,32 +2532,32 @@ fetch('https://rest-api/auth', {
 const jwt = require('jsonwebtoken');
 
 module.exports = (req, res, next) => {
-<i>const authHeader = <b>req.get('Authorization')</b>;</i>
+  <i>const authHeader = <b>req.get('Authorization')</b>;</i>
 
-if (!authHeader) {
-const error = new Error('Not authenticated.');
-error.statusCode = 401;
-throw error;
+  if (!authHeader) {
+    const error = new Error('Not authenticated.');
+    error.statusCode = 401;
+    throw error;
 }
 
-const token = authHeader.split(' ')[1];
+  const token = authHeader.split(' ')[1];
 
-let decodedToken;
-try {
-<i>decodedToken = <b>jwt.verify</b>(token, 'somesupersecretsecret');</i>
-} catch (err) {
-err.statusCode = 500;
-throw err;
-}
+  let decodedToken;
+  try {
+    <i>decodedToken = <b>jwt.verify</b>(token, 'somesupersecretsecret');</i>
+  } catch (err) {
+    err.statusCode = 500;
+    throw err;
+  }
 
-if (!decodedToken) {
-const error = new Error('Not authenticated.');
-error.statusCode = 401;
-throw error;
-}
+  if (!decodedToken) {
+    const error = new Error('Not authenticated.');
+    error.statusCode = 401;
+    throw error;
+  }
 
-req.userId = decodedToken.userId;
-next();
+  req.userId = decodedToken.userId;
+  next();
 };
     </code></pre>
     <p><code>jwt.verify()</code> will both decode and verify your JWT. You also have a <code>jwt.decode()</code>, but this will only decode your JWT and not check if it's valid.</p>
