@@ -21,7 +21,7 @@ const introduction = {
       ],
     },
     {
-      sectionTitle: 'How the Web works',
+      sectionTitle: 'How the Web Works',
       sectionSource: '',
       tooltips: [
         `<p>The web works through a combination of <i>client-server architecture</i>, <i>protocols</i>, and various technologies.</p>`,
