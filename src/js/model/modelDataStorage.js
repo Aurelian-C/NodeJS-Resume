@@ -192,7 +192,7 @@ server.listen(3000);
         highlight1: ['Headers'],
       },
       tooltips: [
-        `<p>Request & Response Headers are <i>piece of information</i> that we can receive with a request or that we can add to our responses.</p>
+        `<p>Request & Response Headers are <i>pieces of information</i> that we can receive with a request or that we can add to our responses.</p>
         <pre><code>
 const http = require('http');
 
@@ -233,12 +233,55 @@ server.listen(3000);
       tooltips: [``],
     },
     {
-      sectionTitle: 'Parsing Request Bodies',
+      sectionTitle: 'Using Modules in Node.js: Our Own Modules',
       sectionSource: '',
       highlights: {
-        highlight1: ['Parsing'],
+        highlight1: [],
       },
-      tooltips: [``],
+      tooltips: [
+        `<p>We can create our own modules and export something from them, like for example, a function. Thenwe can import this function into another module, and then use that function there.</p>
+        <p>You need to know that in Node.js every single file is treated as a module.</p>
+        <p>Node.js uses the <i>CommonJS module system</i> for importing and exporting modules within and across files. This system is primarily used for server-side development and is native to Node.js.</p>
+        `,
+        `<h3>Exporting in Node.js</h3>
+        <p>To export a module, function, object, or any variable from a file in Node.js, you use the <b><code>module.exports</code></b> object or the <b><code>exports</code></b> shorthand.</p>`,
+        `<h3>Export a <u>single</u> entity</h3>
+        <p>If you want to <i>export a <u>single</u> function, object, or class</i> from a file, you can assign it directly to <code>module.exports</code>:</p>
+        <pre><code>
+module.exports = function sayHello(name) {
+  return "Hello world!";
+};
+        </code></pre>`,
+        `<h3>Export <u>multiple</u> entities</h3>
+        <p>To <i>export <u>multiple</u> entities</i>, you can add them as properties of the <code>module.exports</code> object or <code>module.exports</code> object:</p>
+        <pre><code>
+exports.add = function(a, b) {
+  return a + b;
+};
+
+exports.subtract = function(a, b) {
+  return a - b;
+};
+        </code></pre>
+        `,
+        `<h3>Importing in Node.js</h3>
+        <p>To use the exported module or functions in another file, you use the <code>require()</code> function provided by Node.js</p>
+        <pre><code>
+const sayHello = require('./sayHello');
+
+const mathFunctions = require('./mathFunctions');
+console.log(mathFunctions.add;
+console.log(mathFunctions.subtract); 
+
+//or use destructuring
+const { add, subtract } = require('./mathFunctions');
+        </code></pre>
+        `,
+        `<h3>ES Modules in Node.js</h3>
+       <p><i>Node.js also supports ES Modules (ESM)</i>, a newer module system used in modern JavaScript development for both client and server side. ESM uses <code>import</code> and <code>export</code> statements and <i>is enabled by adding <code>"type": "module"</code> in your package.json</i> file or <i>using the <code>.mjs</code> extension for your modules</i>.</p>
+       <p>You can choose between CommonJS and ESM depending on your project's compatibility and your team's preference.</p>
+       `,
+      ],
     },
     {
       sectionTitle: 'The Node Lifecycle & Event Loop',
@@ -314,7 +357,7 @@ const development_workflow_and_debugging = {
       tooltips: [``],
     },
     {
-      sectionTitle: 'Installing 3rd Party Packages',
+      sectionTitle: 'Using Modules in Node.js: Installing 3rd Party Packages',
       sectionSource: '',
       highlights: {
         highlight1: ['3rd Party Packages'],
