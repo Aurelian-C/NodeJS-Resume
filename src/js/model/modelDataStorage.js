@@ -7,35 +7,19 @@ const introduction = {
       sectionSource: '',
       tooltips: [
         `<h3>What is Node.js?</h3>
-        <p>Node.js is a <i>runtime environment</i> that <i>allows you to run JavaScript code outside of a web browser</i>. It's built on the Chrome V8 JavaScript engine and provides a set of libraries and tools for <i>building server-side and networking applications</i>.</p>`,
+        <p>If you are used to run JavaScript in the browser, then the browser is a runtime environment for JavaScript.</p>
+        <p>Node.js is just another <b>runtime environment</b> build on Google's open-source V8 JavaScript Engine that <i>allows you to run JavaScript code outside of a web browser</i>, without all the restrictions that are in the browser.</p>
+        <p>Node.js provides a set of build-in modules, libraries and tools for <i>building server-side and networking applications</i>.</p>`,
         `<h3>What is it used for?</h3>
-        <p>Node.js is commonly used for building web servers, APIs (Application Programming Interfaces), real-time chat applications, streaming applications, and other networked applications.</p>
+        <p>Node.js is commonly used for building <i>web servers</i>, <i>APIs</i> (Application Programming Interfaces), real-time chat applications, streaming applications, and other networked applications.</p>
+        <p>Don't use Node.js if you want to build applications with heavy server-side processing (CPU-intensive) like image manipulations, video conversion, file compression or anything like that.</p>
         `,
         `<h3>Node.js characteristics</h3>
-        <p>Its <i>non-blocking</i>, <i>event-driven architecture</i> makes it particularly well-suited for building scalable and high-performance applications that <i>can handle a large number of simultaneous connections</i>. Additionally, it has a vibrant ecosystem of libraries and frameworks, such as Express.js, that make it easy to develop web applications with Node.js.</p>
+        <p>It's <i>single-threaded</i>, <i>non-blocking I/O model</i>, <i>event-driven architecture</i> makes it particularly well-suited for building scalable and high-performance applications that <i>can handle a large number of simultaneous connections</i>.</p>
+        <p>Additionally, it has a vibrant ecosystem of libraries and frameworks, such as Express.js, that make it easy to develop web applications with Node.js.</p>
         `,
       ],
     },
-    {
-      sectionTitle: 'Installing Node.js',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Working with the REPL vs Using Files',
-      sectionSource: '',
-      highlights: {
-        highlight1: ['REPL vs Using Files'],
-      },
-      tooltips: [``],
-    },
-  ],
-};
-
-const understanding_the_basics = {
-  title: 'Understanding the Basics',
-  titleDescription: 'The Essential Knownledge You Need',
-  sections: [
     {
       sectionTitle: 'How the Web works',
       sectionSource: '',
@@ -61,6 +45,95 @@ const understanding_the_basics = {
       ],
     },
     {
+      sectionTitle: 'Working with the REPL',
+      sectionSource: '',
+      highlights: {
+        highlight1: ['REPL'],
+      },
+      tooltips: [
+        `<p>Node REPL (Read Eval Print Loop) enable that you can <i>run JavaScript code directly in your terminal</i>.</p>`,
+      ],
+    },
+  ],
+};
+
+const understanding_the_basics = {
+  title: 'Understanding the Basics',
+  titleDescription: 'The Essential Knownledge You Need',
+  sections: [
+    {
+      sectionTitle: 'Installing Node.js',
+      sectionSource: '',
+      tooltips: [``],
+    },
+    {
+      sectionTitle: 'Using Modules in Node.js: Core (Build-In) Modules',
+      sectionSource: '',
+      highlights: {
+        highlight2: ['Core (Build-In) Modules'],
+      },
+      tooltips: [
+        `<p><i>Node.js is built around a concept of modules</i>, where all kinds of <i><u>additional functionality</u> are stored in a module</i>. For example, if you want to read a file from your system, you will use a module called "fs" (fs stands for file system).</p>
+        <p>How do we open up these modules, or how can we use them? Well, we do <b><code>require()</code></b> them into our code, and then store the result of the <code>require()</code> function in a variable. For example:
+        <pre><code>
+const fs = require("fs");
+        </code></pre>
+        <p>By requiring and using the <code>fs</code> module, we will get access to functions for reading data and writing data right to the file system.</p>
+        <ul>Besides <code>fs</code> module, there are some other module that will help you use additional functionalities:
+          <li>- <code>http</code>: creates an HTTP server in Node.js;</li>
+          <li>- <code>https</code>: creates an HTTPS server in Node.js;</li>
+          <li>- <code>path</code>: includes methods to deal with file paths;</li>
+          <li>- more build-in modules.</li>
+        </ul>
+        </p>
+        `,
+      ],
+    },
+    {
+      sectionTitle:
+        'Blocking and Non-Blocking Code: Asynchronous Nature of Node.js',
+      sectionSource: '',
+      highlights: {
+        highlight1: ['Asynchronous Nature of Node.js'],
+      },
+      tooltips: [
+        `<h3>Synchronous vs Asynchronous Node.js code</h3>
+        <p>Node.js has only <b>one single thread</b>, which means that all the users accessing your web server application are all using the same thread. Being a single thread, synchronous code become a problem especially with slow operations, because each line of code blocks the execution of the rest of the code. So we say that <i>synchronous code is also called blocking code</i> because a certain operation can only be executed after the one before has finished.</p>
+        <p>For example, when one user of your web server application locks the single thread with synchronous code, then all other users will have to wait for that execution to finish.</p>
+        <p>An example of synchronous code:</p>
+        <pre><code>
+const fs = require('fs');
+
+//Blocking code execution
+const input = <b>fs.readFileSync</b>('input.text', 'utf-8');
+
+console.log(input);
+        </code></pre>
+        <p>Because of the way Node.js was designed, synchronous code turns into a huge problem. The solution to synchronous code problem in Node.js is to <i>use asynchronous code (non-blocking code)</i>:</p>
+        <pre><code>
+const fs = require('fs');
+
+//Non-blocking code execution
+const input = <b>fs.readFile</b>('input.text', 'utf-8', <i>(err, data) => {
+    console.log(data);
+}</i>);
+        
+console.log('Reading file...');
+        </code></pre>
+        `,
+        `<h3><code>fs.readFileSync</code> (Synchronous) vs <code>fs.readFile</code> (Asynchronous)</h3>
+        <p><i><code>fs.readFileSync</code> is a <u>synchronous</u> function</i> that blocks the code execution until it's finish execution.</p>
+        <p>On the other hand, <i><code>fs.readFile</code> is an <u>asynchronous</u> function</i> that receives a callback function as a parameter, and this callback will be called with the data (result) when <code>fs.readFile</code> finish it's execution. In that time, the code execution is NOT blocked.</p>
+        <p>IMPORTANT: It's YOUR job as a developer to avoid blocking code execution by using asynchronous code. This is actually the whole reason why <b>Node.js is completely designed around callbacks</b>.</p>`,
+        `<h3>Node.js vs other programming languages</h3>
+        <p>In other programming languages, like PHP, it works very differently, because you get one new thread for each new user, which is a and really works completely different. But the creator of Node.js found this model to be the best solution for building highly performant and scalable web applications.</p>`,
+
+        `<h3>Node.js asynchronous functions</h3>
+        <p>It's important to know that, when we use callbacks in our code, that doesn't automatically make it asynchronous. So, passing functions around into other functions is quite common in JavaScript, but that doesn't make them asynchronous automatically. It only works this way for some functions in the Node.js, such as the <code>fs.readFile</code> function and many others.</p>
+        `,
+      ],
+    },
+    {
       sectionTitle: 'Creating a Node Server',
       sectionSource: '',
       highlights: {
@@ -68,10 +141,10 @@ const understanding_the_basics = {
       },
       tooltips: [
         `<pre><code>
-const http = require('http');
+const http = <i>require('http')</i>;
 
-const server = http.createServer((req, res) => {
-    // Your server side code here
+const server = <i>http.createServer</i>((req, res) => {
+    //Your server side code here
 });
 
 server.listen(3000);
@@ -183,19 +256,6 @@ server.listen(3000);
     {
       sectionTitle: 'Understanding Event Driven code execution',
       sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Blocking and Non-Blocking code',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Using the Node Modules system',
-      sectionSource: '',
-      highlights: {
-        highlight1: ['Node Modules'],
-      },
       tooltips: [``],
     },
   ],
