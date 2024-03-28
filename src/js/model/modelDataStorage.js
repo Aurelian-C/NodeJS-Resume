@@ -124,7 +124,7 @@ console.log('Reading file...');
         `<h3><code>fs.readFileSync</code> (Synchronous) vs <code>fs.readFile</code> (Asynchronous)</h3>
         <p><i><code>fs.readFileSync</code> is a <u>synchronous</u> function</i> that blocks the code execution until it's finish execution.</p>
         <p>On the other hand, <i><code>fs.readFile</code> is an <u>asynchronous</u> function</i> that receives a callback function as a parameter, and this callback will be called with the data (result) when <code>fs.readFile</code> finish it's execution. In that time, the code execution is NOT blocked.</p>
-        <p>IMPORTANT: It's YOUR job as a developer to avoid blocking code execution by using asynchronous code. This is actually the whole reason why <b>Node.js is completely designed around callbacks</b>.</p>`,
+        <p>IMPORTANT: It's YOUR job as a developer to avoid blocking code execution by using asynchronous code. This is actually the whole reason why <b>Node.js is completely designed around callbacks to implement asynchronous behavior</b>.</p>`,
         `<h3>Node.js vs other programming languages</h3>
         <p>In other programming languages, like PHP, it works very differently, because you get one new thread for each new user, which is a and really works completely different. But the creator of Node.js found this model to be the best solution for building highly performant and scalable web applications.</p>`,
 
@@ -134,10 +134,10 @@ console.log('Reading file...');
       ],
     },
     {
-      sectionTitle: 'Creating a Node Server',
+      sectionTitle: 'Creating a Simple Web Server',
       sectionSource: '',
       highlights: {
-        highlight1: ['Node Server'],
+        highlight1: ['Web Server'],
       },
       tooltips: [
         `<pre><code>
@@ -151,6 +151,77 @@ server.listen(3000);
       </code></pre>
       `,
       ],
+    },
+    {
+      sectionTitle: 'Understanding Requests',
+      sectionSource: '',
+      highlights: {
+        highlight1: ['Requests'],
+      },
+      tooltips: [``],
+    },
+    {
+      sectionTitle: 'Sending Responses',
+      sectionSource: '',
+      highlights: {
+        highlight1: ['Responses'],
+      },
+      tooltips: [``],
+    },
+    {
+      sectionTitle: 'Request & Response Headers',
+      sectionSource: '',
+      highlights: {
+        highlight1: ['Headers'],
+      },
+      tooltips: [
+        `<p>Request & Response Headers are <i>piece of information</i> that we can receive with a request or that we can add to our responses.</p>
+        <pre><code>
+const http = require('http');
+
+const server = http.createServer((req, res) => {
+    <i>res.writeHead(404, {
+      <b>'Content-Type': 'text/html'</b>
+    });</i>
+    res.end('&#129172span&#129174Hello world&#129172span/&#129174');
+});
+
+server.listen(3000);
+        </code></pre>
+        <p>For example, <code>'Content-Type'</code> header informs the browser that the response it's receive it a HTML response. There are many more headers that you can specify on your response.</p>
+        <p>It's important to understand that, <i>in a the case you want to add headers to a response, you need to set them before sending the response</i>.</p>
+        `,
+      ],
+    },
+    {
+      sectionTitle: 'Routing Requests',
+      sectionSource: '',
+      highlights: {
+        highlight1: ['Routing'],
+      },
+      tooltips: [
+        `<p>With routing, you can <i>write Node.js code that react to URL that a user is requesting</i>.</p>
+        <p>In Node.js, routing refers to the process of defining how an application responds to a client request to a particular endpoint, which is a URI (or path) and a specific HTTP request method (GET, POST, etc.). <i>Each route can have one or more handler functions, which are executed when the route is matched.</i></p>
+        <p><i>Routing is used to perform different actions based on the URL and HTTP method requested.</i> For example, you might have one route to send a user information when they access a webpage via a GET request, and another route to process the information submitted through a form via a POST request.</p>
+        <p><i>Node.js itself doesn't come with a built-in router</i>, so routing is often handled by Node.js frameworks like Express, which simplify the process of writing server-side code.</p>
+        `,
+      ],
+    },
+    {
+      sectionTitle: 'Redirecting Requests',
+      sectionSource: '',
+      highlights: {
+        highlight1: ['Redirecting'],
+      },
+      tooltips: [``],
+    },
+    {
+      sectionTitle: 'Parsing Request Bodies',
+      sectionSource: '',
+      highlights: {
+        highlight1: ['Parsing'],
+      },
+      tooltips: [``],
     },
     {
       sectionTitle: 'The Node Lifecycle & Event Loop',
@@ -204,54 +275,6 @@ server.listen(3000);
         <p>However, it's important to <i>use <code>process.exit()</code> with caution, especially in production code</i>, as it doesn't allow graceful shutdown and can leave resources in an inconsistent state. It's generally recommended to handle errors and shutdown gracefully whenever possible.</p>
         `,
       ],
-    },
-    {
-      sectionTitle: 'Understanding Requests',
-      sectionSource: '',
-      highlights: {
-        highlight1: ['Requests'],
-      },
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Sending Responses',
-      sectionSource: '',
-      highlights: {
-        highlight1: ['Responses'],
-      },
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Request & Response Headers',
-      sectionSource: '',
-      highlights: {
-        highlight1: ['Headers'],
-      },
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Routing Requests',
-      sectionSource: '',
-      highlights: {
-        highlight1: ['Routing'],
-      },
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Redirecting Requests',
-      sectionSource: '',
-      highlights: {
-        highlight1: ['Redirecting'],
-      },
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Parsing Request Bodies',
-      sectionSource: '',
-      highlights: {
-        highlight1: ['Parsing'],
-      },
-      tooltips: [``],
     },
     {
       sectionTitle: 'Understanding Event Driven code execution',
