@@ -349,12 +349,48 @@ const development_workflow_and_debugging = {
   titleDescription: 'Fixing Error, Developing Efficiently',
   sections: [
     {
-      sectionTitle: 'Understanding NPM Scripts',
+      sectionTitle:
+        'Understanding <code>package.json</code> file and NPM Scripts',
       sectionSource: '',
       highlights: {
         highlight1: ['NPM Scripts'],
       },
-      tooltips: [``],
+      tooltips: [
+        `<p>NPM is a software that we use to manage the 3rd party open-source packages that we choose to include and use in our project.</p>
+        <p>The first thing that we usually do whenever we start a new project, is to start with <code>npm init</code> that will create a <code>package.json</code> file.</p>
+        <p><code>package.json</code> file is kind of a configuration file of our project where all kinds of data about the project is stored.</p>
+        `,
+        `<h3>Global & Local npm Packages</h3>
+        <p>In the last lecture, we added nodemon as a <i>local dependency</i> to our project.</p>
+      <p>The good thing about local dependencies is that you can share projects without the node_modules folder (where they are stored) and you can run <code>npm install</code> in a project to then re-create that node_modules folder. This allows you to share only your source code, hence reducing the size of the shared project vastly.</p>
+      <p>I showed that <code>nodemon app.js</code> would not work in the terminal or command line because we don't use local dependencies there but global packages. You could install nodemon globally if you wanted (this is NOT required though - because we can just run it locally): <code>npm install -g nodemon</code> would do the trick. Specifically <i>the <code>-g</code> flag ensures that the package gets added as a global package which you now can use anywhere on your machine, <u>directly from inside the terminal or command prompt</u></i>.</p>
+        `,
+        `<h3>Package Versioning and Updating</h3>
+        <p>By running <code>npm outdated</code> in your terminal, you will receive a table with all outdated packages.</p>
+        <p>You can install a specific version of a npm package by running <code>npm install packageName<i>@1.0.0</i></code>.</p>
+        <p>You can update a specific npm package by running <code>npm update packageName</code>. The update command will respect the symbol that you'll have in the front of the package: <code>~</code>, <code>^</code> or <code>*</code>.</p>
+        <pre><code>
+{
+  "dependecies": {
+      "package1": "<b>~</b>1.5.7",
+      "package2": "<b>^</b>2.8.1",
+      "package3": "<b>*</b>4.1.5"
+  }
+}
+        </code></pre>
+        <ul>What symbols means:
+          <li>- <code>~</code> means that we only accept <i>patch (bug fixes)</i> releases (~1.5.<i>7</i>);</li>
+          <li>- <code>^</code> means that we only accept <i>minor</i> releases (^1.<i>5</i>.7);</li>
+          <li>- <code>*</code> means that we accept <i>all</i> releases: major, minor & patch (bug fixes) (*1.5.7).</li>
+        </ul>
+        <p>You can uninstall a npm package by running <code>npm uninstall packageName</code>.</p>
+        <p>In the context of npm dependencies, version numbers and the symbols preceding them (<code>~</code>, <code>^</code> or <code>*</code>) signify <i>different strategies for updating dependencies</i>. Understanding these symbols helps <i>manage package versions</i> and <i>ensures compatibility</i> within projects.</p>
+        `,
+        `<h3>Symbols and Their Meanings: Explanation in detail</h3>
+        <p>1. Tilde (<code>~</code>): When a version number is preceded by a tilde (<code>~</code>), it indicates that updates are allowed only to the latest PATCH version of the specified MINOR version. For example, <code>~1.5.7</code> allows updates to any version <code>1.5.x</code> where x >= 7. This is more restrictive and aims to reduce the risk of introducing breaking changes with new patches.</p>
+        <p>2. Caret (<code>^</code>): The caret symbol (<code>^</code>) allows updates that do not modify the left-most non-zero digit in the semver string. For <code>^2.8.1</code>, this means any version <code>2.x.x</code> is allowed as long as x >= 8.1 for the MINOR version, and any PATCH version updates. This is more permissive than the tilde, allowing for minor updates that should be backwards compatible.</p>        
+        </p>3. Asterisk (<code>*</code>) or Star: An asterisk (<code>*</code>) indicates that any version is allowed. It's the most permissive option, essentially ignoring versioning and always fetching the latest version. This can be risky as it might pull in incompatible updates.</p>`,
+      ],
     },
     {
       sectionTitle: 'Using Modules in Node.js: Installing 3rd Party Packages',
@@ -378,11 +414,6 @@ const development_workflow_and_debugging = {
       <p>NOTE: You can differentiate between <u>production</u> dependecies (<code>--save</code>), <u>development</u> dependencies (<code>--save-dev</code>) and <u>global</u> dependencies (<code>-g</code>).</p>
       `,
       ],
-    },
-    {
-      sectionTitle: 'Global Features vs Core Modules vs Third-Party Modules',
-      sectionSource: '',
-      tooltips: [``],
     },
     {
       sectionTitle: 'Using nodemon package for autorestarts',
@@ -411,13 +442,9 @@ const development_workflow_and_debugging = {
       ],
     },
     {
-      sectionTitle: 'Global & Local npm Packages',
+      sectionTitle: 'Global Features vs Core Modules vs Third-Party Modules',
       sectionSource: '',
-      tooltips: [
-        `<p>In the last lecture, we added nodemon as a <i>local dependency</i> to our project.</p>
-      <p>The good thing about local dependencies is that you can share projects without the node_modules folder (where they are stored) and you can run <code>npm install</code> in a project to then re-create that node_modules folder. This allows you to share only your source code, hence reducing the size of the shared project vastly.</p>
-      <p>I showed that <code>nodemon app.js</code> would not work in the terminal or command line because we don't use local dependencies there but global packages. You could install nodemon globally if you wanted (this is NOT required though - because we can just run it locally): <code>npm install -g nodemon</code> would do the trick. Specifically <i>the <code>-g</code> flag ensures that the package gets added as a global package which you now can use anywhere on your machine, <u>directly from inside the terminal or command prompt</u></i>.</p>`,
-      ],
+      tooltips: [``],
     },
     {
       sectionTitle: 'Understanding different Error Types',
