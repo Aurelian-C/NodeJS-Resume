@@ -37,9 +37,9 @@ class ApplicationView {
               </h2>
               ${tooltipMarkup}
             </div>
-            <div class="card__articles">
+            <ul class="card__articles">
               ${card.sections.map(this._generateMarkupArticle).join('')}
-            </div>
+            </ul>
           </div>
     `;
       })
@@ -85,11 +85,11 @@ class ApplicationView {
     }
 
     return `
-      <div class="card__article">
+      <li class="card__article">
           ${`<p class="card__article-title" data-title='${
             article.sectionTitle
           }'>${idx + 1}. ${title}</p>`}
-      </div>
+      </li>
     `;
   }
 }

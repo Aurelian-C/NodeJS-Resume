@@ -133,6 +133,7 @@ body {
 
 .card__articles {
   margin: 0.5rem 0;
+  list-style: none;
 }
 
 .card__article {
