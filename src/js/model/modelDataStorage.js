@@ -1,3 +1,5 @@
+import { introductionToStreams } from './articles.js';
+
 const introduction = {
   title: 'Introduction',
   titleDescription: '',
@@ -43,6 +45,11 @@ const introduction = {
         <p><i>Cookies are small <u>pieces of data stored by the browser</u> and sent with each request</i>, enabling websites to track user sessions and store user preferences. <i>Sessions allow servers to maintain stateful interactions with clients across multiple requests.</i> Authentication mechanisms such as username/password or token-based authentication are used to verify the identity of users accessing restricted resources.</p>`,
         `<p>This overview covers the fundamental concepts behind how the web works, though the actual implementation can be more complex due to factors like caching, content delivery networks (CDNs), and web application frameworks.</p>`,
       ],
+    },
+    {
+      sectionTitle: 'Static vs Dynamic vs API',
+      sectionSource: '',
+      tooltips: [`<p><img src="../../src/img/static_dynamic_api_1.jpg"/></p>`],
     },
     {
       sectionTitle: 'Working with the REPL',
@@ -341,6 +348,7 @@ const { add, subtract } = require('./mathFunctions');
       sectionSource: '',
       tooltips: [``],
     },
+    introductionToStreams,
   ],
 };
 
