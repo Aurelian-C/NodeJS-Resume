@@ -553,16 +553,24 @@ const working_with_ExpressJS = {
         <p>NOTE: Express.js is a package/framework you can use for Node.js that will help you write better Node.js code and focus on your business logic. Now, of course you could stick to Vanilla Node.js and that works, and depending on the complexity of your application or the level of challenges you are seeking, you can absolutely stick to Vanilla Node.js, you can theoretically write everything on your own just with Vanilla Node.js.</p>
         `,
         `<h3>What is Express.js and why do we use it?</h3>
-        <p>Express.js is a <i>framework</i> you can install as a third party package into your node project and as such, it basically <i>helps you outsource some of that nitty-gritty work</i>, some of these details you don't want to care about, it gives you a rule set in which you work and a lot of utility functions that help you write cleaner code and focus on your core business.</p>
-        <p>A framework is basically a set of helper functions, tools & rules that help you build your applicatiion.</p>`,
+        <p>Express.js is a <i>framework</i> you can install as a third party package into your Node.js project and as such, it basically <i>helps you outsource some of that nitty-gritty work</i>, some of these details you don't want to care about, it gives you a rule set in which you work and a lot of utility functions that help you write cleaner code and focus on your core business.</p>
+        <p>A framework is basically a set of helper functions, tools & rules that help you build your applicatiion.</p>
+        <ul>Express.js contains a very robust set of features:
+          <li>- complex routing;</li>
+          <li>- easier handling of requests and responses;</li>
+          <li>- middleware;</li>
+          <li>- server-side rendering;</li>
+          <li>- much more.</li>
+        </ul>
+        `,
       ],
     },
     {
       sectionTitle: 'Installing Express.js',
       sectionSource: '',
       tooltips: [
-        `<p>You install Express.js by typing in your VS Code terminal the <code>npm i express</code> command. This command will install Express.js as a dependency to your project.</p>`,
-        `<p>Once you install Express.js, you need to import it in your app.js file and create your Node.js server. You do this like the example below:</p>
+        `<p>You install Express.js by typing in your VSCode terminal the <b><code>npm i express</code></b> command. This command will <i>install Express.js as a dependency to your project</i>.</p>`,
+        `<p>Once you install Express.js, you need to import it in your <code>app.js</code> file and create your Node.js server. You do this like the example below:</p>
         <pre><code>
 const express = require('express');
 
