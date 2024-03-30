@@ -426,7 +426,7 @@ const development_workflow_and_debugging = {
         `,
         `<h3>Package Versioning and Updating</h3>
         <p>By running <code>npm outdated</code> in your terminal, you will receive a table with all outdated packages.</p>
-        <p>You can install a specific version of a npm package by running <code>npm install packageName<i>@1.0.0</i></code>.</p>
+        <p>You can install a specific version of a npm package by running <code>npm install packageName<i>@1.4.3</i></code> or simply <code>npm install packageName<i>@1</i></code>.</p>
         <p>You can update a specific npm package by running <code>npm update packageName</code>. The update command will respect the symbol that you'll have in the front of the package: <code>~</code>, <code>^</code> or <code>*</code>.</p>
         <pre><code>
 {
@@ -574,13 +574,17 @@ const working_with_ExpressJS = {
         <pre><code>
 const express = require('express');
 
+const port = 3000;
+
 const app = express();
 
 app.use((req, res, next) => {
-  // Middleware function code
+  res.status(200).send('Hello from the server!');
 })
 
-app.listen(3000);
+app.listen(port, () => {
+  console.log('App start running!')
+});
         </code></pre>`,
         `<p>Express.js handling incoming requests in a certain way called middleware functions. Middleware functions are a key characteristic of Express framework.</p>`,
       ],
@@ -2451,11 +2455,30 @@ const working_with_REST_APIs = {
       sectionTitle: 'What are REST APIs and why do we use Them?',
       sectionSource: '',
       tooltips: [
-        `<p>REST APIs are there to solve one problem: <i>not every Frontend (User Interface) requires HTML Pages! So not every UI might want your server to generate the HTML code, which effectively is the UI</i>.</p>
-        <p><i>With REST APIs we transfer Data instead of User Interfaces (HTML Pages)</i>.</p>
+        `<p>REST APIs are there to solve one problem: <i>not every Frontend (User Interface) requires HTML Pages from your server! So not every UI might want your server to generate the HTML code, which effectively is the UI</i>.</p>
+        <p><i>With REST APIs we <b>transfer <u>Data</u> instead of <u>UI</u> (HTML Pages)</b></i>.</p>
         <p>It's also important to highlight that in REST APIs only the response and the request data changes, but not the general server-side logic. So everything you learned about validating, reaching out to databases, handling files on the server, all these things don't change, you do that in exactly the same way when building a REST API, and that is really important because often, REST APIs and traditional web apps where you render the views on the server-side are seen as two totally different things. They are not, they only differ in the response and in the kind of data you expect, but they don't differ in what happens on the server, besides the fact that you don't render the view.</p>
         <p>Most of the server-side code does not change when we build REST APIs, only reqeust + response data is affected.</p>
         `,
+        `<h3>"Traditional" server-side logic vs REST APIs</h3>
+        <p>The most important thing a REST API offers is that we can have <i>a single REST API with many consumers</i>: browsers, native mobiles systems (android, IOS), native app (Windows or MacOS).
+        <p>In "traditional" server, with the HTML pages generated on the server, only browsers can use that server.</p>
+        `,
+      ],
+    },
+    {
+      sectionTitle: 'The REST API Arhitecture',
+      sectionSource: '',
+      tooltips: [
+        `<h3>Separate API into logical resources</h3>
+        <p><img src="../../src/img/rest_api_arhitecture_1.jpg"/></p>
+        <p><img src="../../src/img/rest_api_arhitecture_2.jpg"/></p>
+        `,
+        `<h3>Send data as JSON</h3>
+        <p><img src="../../src/img/rest_api_arhitecture_3.jpg"/></p>`,
+        `<h3>REST APIs are stateless</h3>
+        <p>In REST APIs all state is handled <i>on the client</i>. This means that each request must contain <u>all</u> the information necessary to process a certain request from the server. <i>The server should <u>not</u> have to remember previous requests in order to process the current request.</i></p>
+        <p><img src="../../src/img/rest_api_arhitecture_4.jpg"/></p>`,
       ],
     },
     {
@@ -2596,6 +2619,9 @@ fetch('http://localhost:8080/feed/post', {
         highlight2: ['JSON Web Token (JWT)'],
       },
       tooltips: [
+        `<h3>A REST API is stateless</h3>
+        <p>In REST APIs all state is handled <i>on the client</i>. This means that each request must contain <u>all</u> the information necessary to process a certain request from the server. <i>The server should <u>not</u> have to remember previous requests in order to process the current request.</i></p>
+        `,
         `<h3>How Does Authentication Work?</h3>
     <p>In REST APIs, we still have our client-side and server-side. The client still sends authentication credentials to the server.</p>
   <p>In the past, without building a REST API, we would have checked that credentials on the server and if it is valid, we would have established a session. Now, <i>we don't use a session anymore because REST APIs are stateless</i>, REST APIs don't care about the client. In REST APIs, server and client are strict decoupling and every request should be treated standalone: that means every request should have all the data it needs to authenticate itself. With a session, the server needs to store data about the client, the server then stores that a client is authenticated, and that's just not how REST APIs work. <i>In REST APIs, the server will not store anything about any client, so <b>we don't store sessions on a REST API</b>.</i></p>
