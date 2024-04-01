@@ -594,11 +594,8 @@ app.listen(port, () => {
         'Middleware functions, <code>next()</code> function & sending a Response with <code>res.send()</code> function',
       sectionSource: '',
       highlights: {
-        highlight2: [
-          'Middleware',
-          '<code>next()</code>',
-          '<code>res.send()</code>',
-        ],
+        highlight1: ['Middleware'],
+        highlight2: ['<code>next()</code>', '<code>res.send()</code>'],
       },
       tooltips: [
         `<h3>Middleware functions are a crucial aspect of Express.js</h3>
@@ -606,7 +603,9 @@ app.listen(port, () => {
         <p>In Express.js <i>an incoming request is automatically funneled through a bunch of functions</i>, so instead of just having one request handler, you will actually have a possibility of hooking in multiple functions which the request will go through until you send a response.</p>
         <p>This allows you to split your code into multiple blocks or pieces, instead of having one huge function that does everything, and this is the pluggable nature of Express.js, where you can easily add other third party packages which simply happen to give you such middleware functions that you can plug into Express.js and add certain functionalities.</p>
         <p>Middleware functions are <i>functions that have access to the <u>request object</u> (req), the <u>response object</u> (res), and <u>the next middleware function</u> in the application's request-response cycle</i>. These functions can execute any code, modify request and response objects, end the request-response cycle, and call the next middleware function in the stack.</p>
-        <p><i>Middleware functions are used to perform tasks</i> like authentication, logging, parsing request bodies, and error handling. They allow you to modularize your application's logic and make it easier to manage and maintain.</p>`,
+        <p><i>Middleware functions are used to perform tasks</i> like authentication, logging, parsing request bodies, and error handling. They allow you to modularize your application's logic and make it easier to manage and maintain.</p>
+        <p><img src="../../src/img/middleware_1.jpg"/></p>
+        `,
         `<h3>Middleware example</h3>
         <p>Here's a simple example of a middleware function in Express.js:</p>
         <pre><code>
@@ -694,6 +693,9 @@ app.use('/api', [middleware1, middleware2]);
     {
       sectionTitle: 'Handling different routes with <code>app.use()</code>',
       sectionSource: '',
+      highlights: {
+        highlight2: ['<code>app.use()</code>'],
+      },
       tooltips: [
         `<pre><code>
 const express = require('express');
@@ -727,6 +729,31 @@ app.listen(3000);
           <li>- <code>HANDLER</code> is the function executed when the route is matched.</li>
         </ul>
         `,
+      ],
+    },
+    {
+      sectionTitle:
+        'Create chainable route handlers for a route path by using <code>app.route()</code>',
+      sectionSource: '',
+      highlights: {
+        highlight1: ['chainable route handlers for a route path'],
+        highlight2: ['<code>app.route()</code>'],
+      },
+      tooltips: [
+        `<p>You can create <i><u>chainable route handlers</u> for a route path</i> by using <code>app.route()</code>.</p>
+        <pre><code>
+<i>app
+  <b>.route</b>('/book')</i>
+  <i>.get</i>((req, res) => {
+      res.send('Get a random book')
+  })
+  <i>.post</i>((req, res) => {
+      res.send('Add a book')
+  })
+  <i>.put</i>((req, res) => {
+      res.send('Update the book')
+  })      
+      </code></pre>`,
       ],
     },
     {
