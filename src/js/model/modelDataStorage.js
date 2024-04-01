@@ -773,6 +773,31 @@ app.listen(3000);
       ],
     },
     {
+      sectionTitle:
+        'Parsing JSON Requests with <code>express.json()</code> middleware',
+      sectionSource: '',
+      highlights: {
+        highlight2: ['express.json()'],
+      },
+      tooltips: [
+        `<h3>An example of parsing an incoming JSON request body</h3>
+        <pre><code>
+const express = require('express');
+
+const app = express();
+
+<i>app.use(<b>express.json()</b>);</i>
+
+app.post('/product', (req, res, next) => {
+    console.log(<i>req.body</i>);
+    res.redirect('/');
+});
+
+app.listen(3000);
+      </code></pre>`,
+      ],
+    },
+    {
       sectionTitle: 'Using Express Router',
       sectionSource: '',
       tooltips: [
@@ -1574,13 +1599,14 @@ const dynamic_routes_and_advanced_models = {
       tooltips: [
         `<p>We need the ability to <i>pass some dynamic data through our routes</i>. We want to be able to <i>encode some information in our URL</i>, so that we can, for example, pass a product ID as part of the URL. In this module, you will learn how you can do that, how you can actually <i>submit or send data through the URL</i>, and when you would not do that and put your data into the request body instead.</p>
         <ul>You will learn about how to:
-         <li>- pass <i><u>Route</u> Params</i>;</li>
+         <li>- pass <i>Route <u>Dynamic</u> Params</i>;</li>
+         <li>- pass <i>Route <u>Optional</u> Params</i>;</li>
          <li>- use <i><u>Query</u> Params</i>;</li>
         </ul>`,
       ],
     },
     {
-      sectionTitle: 'Extracting Dynamic Params',
+      sectionTitle: 'Responding to URL Parameters & Extracting Dynamic Params',
       sectionSource: '',
       highlights: {
         highlight1: ['Dynamic Params'],
@@ -1608,6 +1634,21 @@ exports.getProduct = (req, res, next) => {
   <i>const prodId = <b>req.params</b>.productId;</i>
   console.log(prodId);
   res.redirect('/');
+};      
+      </code></pre>
+      `,
+      ],
+    },
+    {
+      sectionTitle: 'Responding to URL Parameters & Set Optional Params',
+      sectionSource: '',
+      highlights: {
+        highlight1: ['Optional Params'],
+      },
+      tooltips: [
+        `<pre><code>
+app.get('/api/tours/:product/<b>:id?</b>', req, res, next) => {
+  console.log(<i>req.params</i>);
 };      
       </code></pre>
       `,
