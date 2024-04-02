@@ -506,6 +506,13 @@ const development_workflow_and_debugging = {
       tooltips: [``],
     },
     {
+      sectionTitle: 'Setting up ESLint',
+      sectionSource: '',
+      tooltips: [
+        `<p>ESLint is basically a program that constantly scans our code and finds potential coding errors or simply bad coding practices that it thinks are wrong. It's very configurable so that you can really fine tune it to your needs, and coding habits.</p>`,
+      ],
+    },
+    {
       sectionTitle: 'Understanding different Error Types',
       sectionSource: '',
       highlights: {
@@ -929,6 +936,11 @@ app.listen(3000);
       ],
     },
     {
+      sectionTitle: 'Chaining Multiple Middleware Functions for the Same Route',
+      sectionSource: '',
+      tooltips: [``],
+    },
+    {
       sectionTitle: 'Creating HTML Pages',
       sectionSource: '',
       tooltips: [
@@ -1116,7 +1128,7 @@ module.exports = router;
       ],
     },
     {
-      sectionTitle: 'Serving files statically with <code>express.static</code>',
+      sectionTitle: 'Serving static files with <code>express.static</code>',
       highlights: {
         highlight2: ['<code>express.static</code>'],
       },
@@ -1167,6 +1179,55 @@ app.use((req, res, next) => {
 
 app.listen(3000);      
       </code></pre>`,
+      ],
+    },
+    {
+      sectionTitle: 'Environment Variables',
+      sectionSource: '',
+      tooltips: [
+        `<p>In Node.js, environment variables are <i>values that are set outside of the application but can be accessed within the application code</i>. They provide a way to <i>configure and customize how the application behaves without modifying the source code</i>.</p>
+        <p>Environment variables are commonly <i>used to store sensitive information</i> such as API keys, database credentials, or configuration parameters that vary between environments (such as development, testing, and production).</p>`,
+        `<h3>Setting Environment Variables</h3>
+        <ul>Environment variables can be set in various ways:
+          <li>1. <i>Operating System Environment</i>: You can set environment variables directly in your operating system.</li>
+          <li>2. <b><code>.env</code> files</b>: It's common practice to use <code>.env</code> files to store environment variables in Node.js projects. These files are not loaded by default but can be loaded using packages like <code>dotenv</code>. <code>.env</code> files contain key-value pairs in the format KEY=value.</li>
+          <li>3. <i>Command Line</i>: You can also pass environment variables directly through the command line when running Node.js scripts.</li>
+        </ul>
+        `,
+        `<h3>Accessing Environment Variables in Node.js</h3>
+        <p>Once environment variables are set, Node.js applications can access them using the <code>process.env</code> object:
+        <pre><code>
+const myVariable = <b>process.env.MY_VARIABLE</b>;
+        </code></pre>
+        </p>
+        `,
+        `<h3>Best Practices</h3>
+        <p>1. Keep Secrets Secure: Avoid storing sensitive information directly in your code. Instead, use environment variables to store secrets and avoid committing them to version control systems.</p>
+        <p>2. Environment-Specific Configuration: Use environment variables to configure your application for different environments (development, testing, production). This allows you to keep the same codebase but adapt the behavior based on the environment.</p>
+        <p>3. Use <code>.env</code> Files: When working with multiple environment variables, use <code>.env</code> files and a package like <code>dotenv</code> to load them into your application. This makes managing environment variables easier and more organized.</p>
+        <p>4. Document Dependencies: Document all required environment variables and their purpose in your project's documentation to make it easier for developers to set up the application in different environments.</p>
+        `,
+        `<h3>Example</h3>
+        <p>Let's say you have an application that connects to a database. You can use environment variables to specify the database connection details:
+        <pre><code>
+const dbConfig = {
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME
+};
+        </code></pre>
+        </p>
+        <p>Then, you would set these variables either in your operating system environment, a <code>.env</code> file, or pass them through the command line:
+        <pre><code>
+DB_HOST=localhost
+DB_USER=myuser
+DB_PASSWORD=secretpassword
+DB_NAME=mydatabase
+        </code></pre>
+        </p>
+        <p>With this setup, you can easily change the database configuration without modifying your code.</p>
+        `,
       ],
     },
   ],
@@ -2324,7 +2385,7 @@ form action="/admin/edit-product" method="POST" <b>enctype="multipart/form-data"
       ],
     },
     {
-      sectionTitle: 'Serving Images Statically',
+      sectionTitle: 'Serving Static Images',
       sectionSource: '',
       tooltips: [``],
     },
