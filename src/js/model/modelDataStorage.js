@@ -405,7 +405,7 @@ server.listen(3000);
 
 const development_workflow_and_debugging = {
   title: 'Improved Development Workflow and Debugging',
-  titleDescription: 'Fixing Error, Developing Efficiently',
+  titleDescription: 'Developing Efficiently',
   sections: [
     {
       sectionTitle:
@@ -1229,6 +1229,58 @@ DB_NAME=mydatabase
         <p>With this setup, you can easily change the database configuration without modifying your code.</p>
         `,
       ],
+    },
+  ],
+};
+
+const error_handling_with_ExpressJS = {
+  title: 'Error Handling with Express.js',
+  titleDescription: 'Fixing Error',
+  sections: [
+    {
+      sectionTitle: 'Debugging Node.js with ndb',
+      sectionSource: '',
+      tooltips: [``],
+    },
+    {
+      sectionTitle: 'Handling Unhandled Routes',
+      sectionSource: '',
+      tooltips: [``],
+    },
+    {
+      sectionTitle: 'An Overview of Error Handling',
+      sectionSource: '',
+      tooltips: [``],
+    },
+    {
+      sectionTitle: 'Implementing a Global Error Handling Middleware',
+      sectionSource: '',
+      tooltips: [``],
+    },
+    {
+      sectionTitle: 'Catching Errors in Async Functions',
+      sectionSource: '',
+      tooltips: [``],
+    },
+    {
+      sectionTitle: 'Adding 404 Not Found Errors',
+      sectionSource: '',
+      tooltips: [``],
+    },
+    {
+      sectionTitle: 'Errors During Development vs Production',
+      sectionSource: '',
+      tooltips: [``],
+    },
+    {
+      sectionTitle: 'Errors Outside Express: Unhandled Rejections',
+      sectionSource: '',
+      tooltips: [``],
+    },
+    {
+      sectionTitle: 'Catching Uncaught Exceptions',
+      sectionSource: '',
+      tooltips: [``],
     },
   ],
 };
@@ -3488,6 +3540,7 @@ export const dataStorage = [
   understanding_the_basics,
   development_workflow_and_debugging,
   working_with_ExpressJS,
+  error_handling_with_ExpressJS,
   dynamic_content_and_adding_templating_engines,
   mvc,
   dynamic_routes_and_advanced_models,
