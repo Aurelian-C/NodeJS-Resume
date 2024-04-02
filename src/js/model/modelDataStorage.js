@@ -1588,7 +1588,7 @@ app.<b>set</b>('views', 'views');</i>
 };
 
 const mvc = {
-  title: 'The Model View Controller (MVC)',
+  title: 'Intro to Back-End Architecture: MVC and Types of Logic',
   titleDescription: 'Structuring your code',
   sections: [
     {
@@ -1621,6 +1621,10 @@ const mvc = {
           <li>- Should only make sure that the two can communicate (in both directions).</li>
         </ul>
         <p>Controller should do everything that needs to be done to connect your Model and the View, so to get the data from A to B, and that can involve both directions. It can mean that through your View, for example, through a form, some data was sent to your Node.js application, and you now need to send that data to the Model to save it there, or it can of course mean you're fetching data via the Model and send that into a View, which is then returned to the user.</p>
+        `,
+        `<h3>Overview</h3>
+        <p><img src="../../src/img/mvc_arhitecture_1.jpg"/></p>
+        <p><img src="../../src/img/mvc_arhitecture_2.jpg"/></p>
         `,
       ],
     },
