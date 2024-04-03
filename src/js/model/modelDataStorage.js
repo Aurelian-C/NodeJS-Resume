@@ -1247,6 +1247,93 @@ module.exports = class Product {
   ],
 };
 
+const dynamic_routes_and_advanced_models = {
+  title: 'Dynamic Routes',
+  titleDescription: 'Passing & using Dynamic Data',
+  sections: [
+    {
+      sectionTitle: 'Module introduction',
+      sectionSource: '',
+      tooltips: [
+        `<p>We need the ability to <i>pass some dynamic data through our routes</i>. We want to be able to <i>encode some information in our URL</i>, so that we can, for example, pass a product ID as part of the URL. In this module, you will learn how you can do that, how you can actually <i>submit or send data through the URL</i>, and when you would not do that and put your data into the request body instead.</p>
+        <ul>You will learn about how to:
+         <li>- pass <i>Route <u>Dynamic</u> Params</i>;</li>
+         <li>- pass <i>Route <u>Optional</u> Params</i>;</li>
+         <li>- use <i><u>Query</u> Params</i>;</li>
+        </ul>`,
+      ],
+    },
+    {
+      sectionTitle: 'Responding to URL Parameters & Extracting Dynamic Params',
+      sectionSource: '',
+      highlights: {
+        highlight1: ['Dynamic Params'],
+      },
+      tooltips: [
+        `<pre><code>
+const path = require('path');
+const express = require('express');
+const shopController = require('../controllers/shop');
+
+const router = express.Router();
+
+router.get('/', shopController.getIndex);
+router.get('/products', shopController.getProducts);
+<i>router.get('/products/<b>:productId</b>', shopController.getProduct);</i>
+router.get('/cart', shopController.getCart);
+router.get('/orders', shopController.getOrders);
+router.get('/checkout', shopController.getCheckout);
+
+module.exports = router;      
+      </code></pre>
+      
+      <pre><code>
+exports.getProduct = (req, res, next) => {
+  <i>const prodId = <b>req.params</b>.productId;</i>
+  console.log(prodId);
+  res.redirect('/');
+};      
+      </code></pre>
+      `,
+      ],
+    },
+    {
+      sectionTitle: 'Responding to URL Parameters & Set Optional Params',
+      sectionSource: '',
+      highlights: {
+        highlight1: ['Optional Params'],
+      },
+      tooltips: [
+        `<pre><code>
+app.get('/api/tours/:product/<b>:id?</b>', req, res, next) => {
+  console.log(<i>req.params</i>);
+};      
+      </code></pre>
+      `,
+      ],
+    },
+    {
+      sectionTitle: 'Using Query Params',
+      sectionSource: '',
+      highlights: {
+        highlight1: ['Query Params'],
+      },
+      tooltips: [
+        `      <pre><code>
+exports.getProduct = (req, res, next) => {
+  <i>const editMode = <b>req.query</b>.edit;</i>  //The extracted value always is a string!
+  console.log(editMode);
+  res.redirect('/');
+};      
+      </code></pre>
+      
+      <p>IMPORTANT: <i>The extracted value from query params will always be a string!</i> So boolean <code>true</code> or <code>false</code> will be extracted as string "true" or "false".</p>
+      `,
+      ],
+    },
+  ],
+};
+
 const mvc = {
   title: 'Intro to Back-End Architecture: MVC and Types of Logic',
   titleDescription: 'Structuring your code',
@@ -1579,7 +1666,8 @@ exports.deleteTour = <b>catchAsync</b>(<i>async (req, res, next)</i> => {
       ],
     },
     {
-      sectionTitle: 'Errors During Development vs Production',
+      sectionTitle:
+        'Handle Errors During Development vs Production with the help of Environment Variables',
       sectionSource: '',
       tooltips: [
         `<p>The idea behind "Errors During Development vs Production" is to <i>send different error messages for the development and production environment</i>. Is not a good practice to send the same response error message to everyone. In production, we want to leak as little information about our errors to the client as possible. So in that case, we only want to send a nice, human-friendly message so that the user knows what's wrong. On the other hand, when written development, we want to get as much information about the error that occurred as possible.</p>`,
@@ -1647,14 +1735,71 @@ app.listen(3000);
       ],
     },
     {
-      sectionTitle: 'Errors Outside Express: Unhandled Rejections',
+      sectionTitle:
+        'Unhandled Promise Rejections & Catching Uncaught Exceptions',
       sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Catching Uncaught Exceptions',
-      sectionSource: '',
-      tooltips: [``],
+      highlights: {
+        highlight1: ['Promise Rejections', 'Uncaught Exceptions'],
+      },
+      tooltips: [
+        `<p>In Node.js and its frameworks like Express.js, handling asynchronous operations and exceptions are crucial parts of building robust applications. Let's break down the concepts of unhandled Promise rejection and catching uncaught exceptions, especially in the context of Express.js.</p>`,
+        `<h3>Unhandled Promise Rejection</h3>
+        <p>In JavaScript, Promises are used to handle asynchronous operations. <i>When a Promise is rejected due to an error and there is no <code>.catch()</code> block to handle the rejection, it results in an unhandled Promise rejection.</i> This situation is similar to throwing an error in synchronous code without wrapping it in a <code>try/catch</code> block.</p>
+        <p><b>Node.js will emit an <code>unhandledRejection</code> event when a Promise is rejected and no handler is found.</b> If not properly managed, it can lead to memory leaks, inconsistent application state, or application crashes. <i>Starting from Node.js version 15, an unhandled Promise rejection will terminate the Node.js process by default, making it critical to handle them correctly.</i> So each time there is an unhandled rejection (Promise rejection) somewhere in our application, the <code>process</code> object will emit an event called <code>unhandledRejection</code> and so <i>we can subscribe to <code>unhandledRejection</code> event for handling Promise rejection</i>.</p>
+        <pre><code>
+const express = require('express');
+
+const app = express();
+
+const server = app.listen(8000);
+
+process<i>.on('unhandledRejection'</i>, (err) => {
+  console.log(err.name, err.message);
+
+  <i>server.close(() => {
+    process.exit(1);
+  });</i>
+});      
+      </code></pre>
+        `,
+        `<h3>Catching Uncaught Exceptions</h3>
+        <p><i>Uncaught exceptions are errors (bugs) that <u>occur in synchronous code</u> but are not caught by any <code>try/catch</code> block.</i> In a Node.js environment, uncaught exceptions can lead to the program terminating or getting into an <code>undefined</code> state.</p>
+        <p><b>Node.js provides an <code>uncaughtException</code> event that you can listen to for handling uncaught exceptions.</b> However, it's generally recommended to gracefully shut down the process after an uncaught exception, as the application may be in an unknown state.</p>
+        <p>Express.js does not provide built-in handling for uncaught exceptions. You should listen for these at the process level and decide how to handle them, often by logging the error, cleaning up resources, and restarting the application. <i>The <code>uncaughtException</code> handler should be at the very top of our code, or at least before any other code is really executed.</i></p>
+        <pre><code>
+const express = require('express');
+
+process<i>.on('uncaughtException'</i>, (err) => {
+  console.log(err.name, err.message);
+
+  <i>process.exit(1);</i>
+}); 
+
+const app = express();
+
+const server = app.listen(8000);
+
+process.on('unhandledRejection'</i>, (err) => {
+  console.log(err.name, err.message);
+
+  server.close(() => {
+    process.exit(1);
+  });</i>
+});
+      </code></pre>
+      <p>NOTE: While in the Unhandled Rejection crashing the application is optional, when there is an Uncaught Exception, we really, really need to crash our application, because after there was an Uncaught Exception, the entire Node.js process is in a so-called unclean state. So to fix that, the process need to terminate and then to be restarted. In production, we should then have a tool which will restart the application after crashing. And many hosting services already do that out of the box, so completely automatically without us having to do anything.</p>`,
+        `<h3>IMPORTANT</h3>
+      <p><i>In Node.js, it's not really a good practice to just blindly rely on these two error handlers (<code>unhandledRejection</code> & <code>uncaughtException</code>) that we just implemented in the code above. So <b>ideally errors should really be handled right where they occur</b>.</i> Some people even say that we shouldn't use these at all, but I disagree with that.</p>
+      <p>While Express.js does not directly handle Promise rejections for you, you can manage them by <i>ensuring that all Promises in your middleware or route handlers have corresponding <code>.catch()</code> blocks or by using async/await with <code>try/catch</code>.</i></p>
+        `,
+        `<h3>Best Practices</h3>
+      <p>1. <i>Do not ignore Promise rejections</i>. Always have a .catch() for each promise chain or use async/await within a try/catch block.</p>
+      <p>2. <i>Centralize error handling</i> in Express.js by using Express's built-in error-handling middleware to manage errors that occur in your routes.</p>
+      <p>3. <i>Gracefully shutdown on <code>uncaughtException</code></i> to ensure that your application does not continue to run in an unstable state.</p>
+      <p>4. Log errors to help with debugging and maintaining the health of your application.</p>
+      <p>5. Consider using tools or libraries that help with error management and automatic restarts of your Node.js application, such as PM2, which can handle process management and help in scenarios where the application crashes.</p>
+        `,
+      ],
     },
     {
       sectionTitle: 'Types of Errors & Error Handling',
@@ -1695,69 +1840,6 @@ console.log('This works!');
       ],
     },
     {
-      sectionTitle: 'Throwing Errors in Code',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Returning Error Pages',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Using the Express.js Error Handling Middleware',
-      sectionSource: '',
-      highlights: {
-        highlight1: ['Express.js Error Handling Middleware'],
-      },
-      tooltips: [
-        `<p>You can <i>use the Express error handling middleware to <u>handle all unhandled errors</u></i>.</p>
-        <p>Instead of throwing an error in <code>catch()</code>, we can call <code>next(error)</code> with an error passed as an argument. This let Express.js know that an error occurred, and it will skip all other middlewares and move right away to an error handling middleware:</p>
-        <pre><code>
-.then() {
-    //code here
-}
-.catch(err) {
-    const error = new Error(err);
-    error.httpStatusCode = 500;
-    <i>next(error);</i>
-}
-        </code></pre>
-        `,
-        `<pre><code>
-app.use(<i>(error, req, res, next)</i> {
-    //code here
-})
-        </code></pre>
-        <p>NOTE: If you got more than one error-handling middleware, they'll execute from top to bottom. Just like the "normal" middleware.</p>
-        `,
-        `<h3>Using the Error Handling Middleware Correctly</h3>
-        <pre><code>
-app.use((req, res, next) => {
-    if (!req.session.user) {
-      <i>throw new Error('Dummy Error'); //this will work because it is in synchronous function</i>
-    }
-
-    Promise
-      .then(
-        //code here
-      )
-      .catch(error) {
-        <i>// throw new Error(error); //this will not work because it is in asynchronous function
-        next(error);</i>
-      }
-})
-        </code></pre>
-        <pre><code>
-app.use(<i>(error, req, res, next)</i> {
-    //code here
-})
-        </code></pre>
-        <p>In synchronous places, so outside of callbacks and Promises, you throw an error and Express.js will detect it and execute your next error handling middleware. Inside of async code, so inside of <code>then()</code>, <code>catch()</code> or callbacks, throwing an error does not work. <b>Inside of async code, you have to use <code>next(error)</code> with an error included.</b> So inside of async ode snippets, you need to use <code>next(error)</code> wrapping that error, outside of async code you can just throw that error.</p>
-        `,
-      ],
-    },
-    {
       sectionTitle: 'Errors & HTTP Response Status Codes',
       sectionSource: '',
       highlights: {
@@ -1775,573 +1857,6 @@ app.use(<i>(error, req, res, next)</i> {
       <p>When returning responses, it can make sense to also set an appropiate HTTP status code - this lets the browser know what went wrong. Setting status code does NOT mean that the response is incomplete or the app crashed!</p>
       `,
       ],
-    },
-  ],
-};
-
-const dynamic_content_and_adding_templating_engines = {
-  title: 'Working with Dynamic Content & adding Templating Engines',
-  titleDescription: 'Rendering more than Static HTML',
-  sections: [
-    {
-      sectionTitle: 'Sharing Data Across Requests & Users',
-      sectionSource: '',
-      highlights: {
-        highlight1: ['Sharing Data'],
-      },
-      tooltips: [
-        `<pre><code>
-const path = require('path');
-
-const express = require('express');
-
-const rootDir = require('../util/path');
-
-const router = express.Router();
-
-<i>//ALL USERS have access to the "products" array and ANY USER can manipulate "products". The "products" array is shared to ALL USERS. 
-const products = [];</i>
-
-router.get('/add-product', (req, res, next) => {
-  res.sendFile(path.join(rootDir, 'views', 'add-product.html'));
-});
-
-router.post('/add-product', (req, res, next) => {
-  <i>products.push({ title: req.body.title });</i> //ANY USER can manipulate the "products" array, because it's shared to ALL USERS
-  res.redirect('/');
-});
-
-exports.routes = router;
-<i>exports.products = products;</i>      
-      </code></pre>
-      <p>Later we'll learn about a technique to <i>share data in memory in the Node.js app across <u>different requests but only for one and the same user</u></i> and not across all users, because in the above code we have shared data across requests and across users.</p>
-      `,
-      ],
-    },
-    {
-      sectionTitle: 'Templating Engines - An Overview',
-      sectionSource: '',
-      tooltips: [
-        `<p>A template engine enables you to use <i>static template files</i> in your application. <i>At runtime, the template engine replaces variables in a template file with actual values, and transforms the template into an HTML file sent to the client.</i> This approach makes it easier to design an HTML page.</p>
-        <p>Some popular template engines that work with Express are <i>Pug (Jade)</i>, <i>EJS</i> and <i>Handlebars</i>. The Express application generator uses Pug as its default, but it also supports several others.</p>
-        `,
-        `<h3>Reference Links</h3>
-        <p><a href="https://expressjs.com/en/resources/template-engines.html">Template engines</a></p>
-        `,
-      ],
-    },
-    {
-      sectionTitle:
-        'Installing & implementing Pug with <code>app.set()</code> & <code>res.render()</code>',
-      sectionSource: '',
-      highlights: {
-        highlight1: ['Pug'],
-        highlight2: ['<code>app.set()</code>', '<code>res.render()</code>'],
-      },
-      tooltips: [
-        `<h3>Install Pug on your project</h3>
-        <p>You install Pug on your project by run the <i><code>npm install pug</code></i> command in your VS Code terminal.</p>`,
-        `<h3>Implementing Pug - step 1</h3>
-        <ul>To render template files, set the following application setting properties, set in <code>app.js</code> in the default app created by the generator:
-          <li>a) <code>view engine</code>, the template engine to use. For example, to use the Pug template engine: <i><code>app.set('view engine', 'pug')</code></i>.</li>
-          <li>b) <code>views</code>, the directory where the template files are located. Eg: <i><code>app.set('views', './views')</code></i>. This defaults to the <code>views</code> directory in the application root directory.</li>
-        </ul>
-        <pre><code>
-const path = require('path');
-
-const express = require('express');
-const bodyParser = require('body-parser');
-
-const app = express();
-
-<i>app.<b>set</b>('view engine', 'pug');
-app.<b>set</b>('views', 'views');</i>
-
-const adminData = require('./routes/admin');
-const shopRoutes = require('./routes/shop');
-
-app.use(bodyParser.urlencoded({extended: false}));
-app.use(express.static(path.join(__dirname, 'public')));
-
-app.use('/admin', adminData.routes);
-app.use(shopRoutes);
-
-app.use((req, res, next) => {
-    res.status(404).sendFile(path.join(__dirname, 'views', '404.html'));
-});
-
-app.listen(3000);        
-        </code></pre>
-        <p>After the <code>view engine</code> is set, you don't have to specify the engine or load the template engine module in your app; Express loads the module internally, as shown below (for the above example): <code>app.set('view engine', 'pug')</code>.</p>
-        `,
-        `<h3>Implementing Pug - step 2</h3>
-        <p>Create a Pug template file named <code>shop.pug</code> in the views directory, with the following content:</p>
-        <pre><code>
-html
-  head
-    title= title
-  body
-    h1= message
-        </code></pre>
-        `,
-        `<h3>Implementing Pug - step 3</h3>
-        <p>Then create a route to render the <code>shop.pug</code> file. If the <code>view engine</code> property is not set, you must specify the extension of the view file. Otherwise, you can omit it.</p>
-        <pre><code>
-const express = require('express');
-
-const router = express.Router();
-
-router.get('/', (req, res, next) => {
-  <i>res.<b>render</b>('shop');</i>
-});
-
-module.exports = router;
-        </code></pre>
-        <p>When you make a request to the home page, the <code>shop.pug</code> file will be rendered as HTML.</p>
-        <p>NOTE: The view engine cache does not cache the contents of the template's output, only the underlying template itself. The view is still re-rendered with every request even when the cache is on.</p>
-        `,
-        `<h3>More about <code>app.set()</code> function</h3>
-        <p>The <code>app.set()</code> function is used to <i>assign the setting name to value (or to set a <u>global configuration</u> value)</i>. You may store any value that you want, but <i>certain names can be used to <u>configure the behavior of the server</u></i>.</p>
-        <ul>Some of this certain names interesting for you are:
-          <li>- <code>view engine</code>: the default engine extension to use when omitted.</li>
-          <li>- <code>views</code>: a directory or an array of directories for the application's views. If an array, the views are looked up in the order they occur in the array.</li>
-          <p>In other words, <code>view engine</code> allows us to tell Express.js "Hey, for any dynamic templates we're trying to render please use this engine we're registering here", and <code>views</code> allows us to tell Express.js where to find these dynamic views.</p>
-        </ul>
-        `,
-        `<h3>More about <code>res.render()</code> function</h3>
-        <p>The <code>res.render()</code> function <i>renders a <code>view</code> and sends the rendered HTML string to the client</i>.</p>
-        <pre><code>
-//send the rendered view to the client
-res.render('shop')
-        </code></pre>
-        <p>The <code>view</code> argument is <i>a string that is the <u>file path</u> of the view file to render</i>. This can be an absolute path, or a path relative to the <code>views</code> setting. If the path does not contain a file extension, then the <code>view</code> engine setting determines the file extension.</p>
-        <p>NOTE: The <code>view</code> argument performs file system operations like reading a file from disk and evaluating Node.js modules, and as so for security reasons should not contain input from the end-user.</p>
-        `,
-        `<h3>Reference Links</h3>
-        <p><a href="https://expressjs.com/en/guide/using-template-engines.html">Using template engines with Express</a></p>
-        <p><a href="https://expressjs.com/en/api.html#app.set">app.set() function</a></p>
-        <p><a href="https://expressjs.com/en/api.html#res.render">res.render() function</a></p>
-        <p><a href="https://pugjs.org/api/getting-started.html">Pug documentation</a></p>
-        `,
-      ],
-    },
-    {
-      sectionTitle: 'Outputting Dynamic Content with Pug',
-      sectionSource: '',
-      highlights: {
-        highlight1: ['Dynamic Content'],
-      },
-      tooltips: [
-        `<ul>The <code>res.render()</code> function renders a <code>view</code> and sends the rendered HTML string to the client. <i>Optional parameters</i>:
-          <li><i>- <code>locals</code>, an <u>object</u> whose properties define local variables for the view.</i></li>
-          <li>- <code>callback</code>, a callback function. If provided, the method returns both the possible error and rendered string, but does not perform an automated response. When an error occurs, the method invokes next(err) internally.</li>
-        </ul>
-      <pre><code>
-const express = require("express");
-const adminData = require("./admin");
-
-const router = express.Router();
-
-router.get("/", (req, res, next) => {
-  //pass a local variable to the view
-  res.render("shop", <i>{ prods: adminData.products, htmlTitle: "Shop" }</i>); 
-});
-
-module.exports = router;
-      </code></pre>`,
-        `<p>You access local variables in the Pug file like in example below:</p>
-      <pre><code>
-doctype html
-head
-  meta(charset='UTF-8')
-  meta(name='viewport' content='width=device-width, initial-scale=1.0')
-  meta(http-equiv='X-UA-Compatible' content='ie=edge')
-  <i>title <b>#{htmlTitle}</b></i>
-  link(rel='stylesheet' href='/css/main.css')
-header.main-header
-  nav.main-header__nav
-    ul.main-header__item-list
-      li.main-header__item
-        a.active(href='/') Shop
-      li.main-header__item
-        a(href='/admin/add-product') Add Product
-main
-  <b>if prods.length > 0</b>
-    .grid
-      <b>each product in prods</b>
-        article.card.product-item
-          header.card__header
-            <i>h1.product__title <b>#{product.title}</b></i>
-          .card__image
-            img(src='https://cdn.com/photo.png' alt='A Book')
-          .card__content
-            h2.product__price $19.99
-            p.product__description
-              | A very interesting book
-              | things!
-          .card__actions
-            button.btn Add to Cart
-  <b>else</b> 
-    h1 No products
-      </code></pre>
-      `,
-        `<h3>Reference Links</h3>
-    <p><a href="https://expressjs.com/en/api.html#res.render">res.render() function</a></p>
-    <p><a href="https://pugjs.org/api/getting-started.html">Pug documentation</a></p>
-    `,
-      ],
-    },
-    {
-      sectionTitle: 'Adding a Layout with Pug by exteding your .pug files',
-      sectionSource: '',
-      highlights: {
-        highlight1: ['Layout', 'exteding your .pug files'],
-      },
-      tooltips: [
-        `<pre><code>
-<!DOCTYPE html>
-html(lang="en")
-  head
-    meta(charset="UTF-8")
-    meta(name="viewport", content="width=device-width, initial-scale=1.0")
-    meta(http-equiv="X-UA-Compatible", content="ie=edge")
-    title #{pageTitle}
-    link(rel="stylesheet", href="/css/main.css")
-    <i><b>block</b> styles</i>
-  body   
-    header.main-header
-      nav.main-header__nav
-        ul.main-header__item-list
-          li.main-header__item
-            a(href="/", <i>class=(path === '/' ? 'active' : '')</i>) Shop
-          li.main-header__item
-            a(href="/admin/add-product", <i>class=(path === '/admin/add-product' ? 'active' : '')</i>) Add Product
-    <i><b>block</b> content</i>      
-      </code></pre>
-      <p>NOTE: <code>path</code> is a local variable read by "main-layout.png":</p>
-      <pre><code>
-router.get('/', (req, res, next) => {
-  const products = adminData.products;
-  res.render('shop', { prods: products, pageTitle: 'Shop', <i>path: '/'</i> });
-});
-
-router.get('/add-product', (req, res, next) => {
-  res.render('add-product', { pageTitle: 'Add Product', <i>path: '/admin/add-product'</i> });
-});
-      </code></pre>`,
-        `<h3>Extends your <code>.pug</code> files</h3>
-      <pre><code>
-<b>extends</b> layouts/main-layout.pug
-
-<i><b>block</b> content</i>
-    h1 Page Not Found!
-      </code></pre>
-
-      <pre><code>
-<b>extends</b> layouts/main-layout.pug
-
-<i><b>block</b> styles</i>
-  link(rel="stylesheet", href="/css/forms.css")
-  link(rel="stylesheet", href="/css/product.css")
-
-<i><b>block</b> content</i>
-  main
-    form.product-form(action="/admin/add-product", method="POST")
-      .form-control
-        label(for="title") Title
-        input(type="text", name="title")#title
-        button.btn(type="submit") Add Product
-      </code></pre>
-      `,
-      ],
-    },
-    {
-      sectionTitle: 'Working with EJS',
-      sectionSource: '',
-      highlights: {
-        highlight2: ['EJS'],
-      },
-      tooltips: [
-        `<h3>Install EJS on your project</h3>
-      <p>You install EJS on your project by running the <i><code>npm install ejs</code></i> command in your VS Code terminal.</p>`,
-        `<h3>Implementing EJS template engine</h3>
-      <ul>To render template files, set the following application setting properties, set in <code>app.js</code> in the default app created by the generator:
-        <li>a) <code>view engine</code>, the template engine to use. For example, to use the EJS template engine: <i><code>app.set('view engine', 'ejs')</code></i>.</li>
-        <li>b) <code>views</code>, the directory where the template files are located. Eg: <i><code>app.set('views', './views')</code></i>. This defaults to the <code>views</code> directory in the application root directory.</li>
-      </ul>
-      <pre><code>
-const path = require('path');
-
-const express = require('express');
-const bodyParser = require('body-parser');
-
-const app = express();
-
-<i>app.<b>set</b>('view engine', 'ejs');
-app.<b>set</b>('views', 'views');</i>
-
-const adminData = require('./routes/admin');
-const shopRoutes = require('./routes/shop');
-
-app.use(bodyParser.urlencoded({extended: false}));
-app.use(express.static(path.join(__dirname, 'public')));
-
-app.use('/admin', adminData.routes);
-app.use(shopRoutes);
-
-app.use((req, res, next) => {
-  res.status(404).sendFile(path.join(__dirname, 'views', '404.html'));
-});
-
-app.listen(3000);        
-      </code></pre>
-      <p>After the <code>view engine</code> is set, you don't have to specify the engine or load the template engine module in your app; Express loads the module internally, as shown below (for the above example): <code>app.set('view engine', 'ejs')</code>.</p>
-      `,
-        `<h3>Render a .ejs template file</h3>
-      <p>The rendering process of a .ejs template file is the same like .pug template files.</p>
-      <p>As your learn, you render a template file with the special <code>res.render()</code> method provided by Express.js:</p>
-      <pre><code>
-router.get('/', (req, res, next) => {
-  //To .render method you can optionally define an object which will hold the data that is passed as variables into the template file
-  <i>res.<b>render</b>('shop', { pathTitle: 'Shop', otherKey: 'someData' });</i>
-});
-      </code></pre>
-      <p>The <code>res.render()</code> method will always look for the registered <code>view engine</code>, something you do at the beginning in app.js:</p>
-      <pre><code>
-<i>app.<b>set</b>('view engine', 'ejs');
-app.<b>set</b>('views', 'views');</i>
-      </code></pre>
-      `,
-        `<h3>Reference Links</h3>
-      <p><a href="https://ejs.co/">EJS documentation</a></p>
-      `,
-      ],
-    },
-    {
-      sectionTitle: 'Adding a Layout with Partials',
-      sectionSource: '',
-      highlights: {
-        highlight1: ['Partials'],
-      },
-      tooltips: [
-        `<p><i>EJS doesn't have layouts</i> but we can use so-called Partials or Includes, a feature that PUG also have it.</p>
-        <p>The idea is that you have some code blocks which you reuse in different parts of your templates, and you can therefore just share them across your templates. So it's a bit like the opposite of a layout, instead of having one master layout where you put your individual view parts into, you have a couple of separated shared view parts which you can merge into the views you're creating</p>
-        <p>For that you need to create a new subfolder in the <code>views</code> folder which you name it, for example, <code>includes</code>, and that name is up to you. There you will create a couple of shared files or shared code blocks, which you want to share across all your views.</p>
-        `,
-      ],
-    },
-  ],
-};
-
-const dynamic_routes_and_advanced_models = {
-  title: 'Dynamic Routes',
-  titleDescription: 'Passing & using Dynamic Data',
-  sections: [
-    {
-      sectionTitle: 'Module introduction',
-      sectionSource: '',
-      tooltips: [
-        `<p>We need the ability to <i>pass some dynamic data through our routes</i>. We want to be able to <i>encode some information in our URL</i>, so that we can, for example, pass a product ID as part of the URL. In this module, you will learn how you can do that, how you can actually <i>submit or send data through the URL</i>, and when you would not do that and put your data into the request body instead.</p>
-        <ul>You will learn about how to:
-         <li>- pass <i>Route <u>Dynamic</u> Params</i>;</li>
-         <li>- pass <i>Route <u>Optional</u> Params</i>;</li>
-         <li>- use <i><u>Query</u> Params</i>;</li>
-        </ul>`,
-      ],
-    },
-    {
-      sectionTitle: 'Responding to URL Parameters & Extracting Dynamic Params',
-      sectionSource: '',
-      highlights: {
-        highlight1: ['Dynamic Params'],
-      },
-      tooltips: [
-        `<pre><code>
-const path = require('path');
-const express = require('express');
-const shopController = require('../controllers/shop');
-
-const router = express.Router();
-
-router.get('/', shopController.getIndex);
-router.get('/products', shopController.getProducts);
-<i>router.get('/products/<b>:productId</b>', shopController.getProduct);</i>
-router.get('/cart', shopController.getCart);
-router.get('/orders', shopController.getOrders);
-router.get('/checkout', shopController.getCheckout);
-
-module.exports = router;      
-      </code></pre>
-      
-      <pre><code>
-exports.getProduct = (req, res, next) => {
-  <i>const prodId = <b>req.params</b>.productId;</i>
-  console.log(prodId);
-  res.redirect('/');
-};      
-      </code></pre>
-      `,
-      ],
-    },
-    {
-      sectionTitle: 'Responding to URL Parameters & Set Optional Params',
-      sectionSource: '',
-      highlights: {
-        highlight1: ['Optional Params'],
-      },
-      tooltips: [
-        `<pre><code>
-app.get('/api/tours/:product/<b>:id?</b>', req, res, next) => {
-  console.log(<i>req.params</i>);
-};      
-      </code></pre>
-      `,
-      ],
-    },
-    {
-      sectionTitle: 'Using Query Params',
-      sectionSource: '',
-      highlights: {
-        highlight1: ['Query Params'],
-      },
-      tooltips: [
-        `      <pre><code>
-exports.getProduct = (req, res, next) => {
-  <i>const editMode = <b>req.query</b>.edit;</i>  //The extracted value always is a string!
-  console.log(editMode);
-  res.redirect('/');
-};      
-      </code></pre>
-      
-      <p>IMPORTANT: <i>The extracted value from query params will always be a string!</i> So boolean <code>true</code> or <code>false</code> will be extracted as string "true" or "false".</p>
-      `,
-      ],
-    },
-  ],
-};
-
-const sessions_and_cookies = {
-  title: 'Sessions & Cookies',
-  titleDescription: 'Persisting Data across Requests',
-  sections: [
-    {
-      sectionTitle: 'What is a Cookie?',
-      sectionSource: '',
-      highlights: {
-        highlight1: ['Cookie'],
-      },
-      tooltips: [
-        `<h3>What is a cookie when we talk about browsers and servers?</h3>
-        <p>In the context of browsers and servers, a "cookie" refers to <i>a small <b>piece of data</b> sent from a website and stored on the user's device by the user's web browser</i>. Cookies are <i>commonly used to remember information about the user</i>, such as their preferences, login credentials, or items added to a shopping cart.</p>
-        <p><i>When you visit a website, <u>the server sends a cookie to your browser, which then stores it on your device</u>. The next time you visit the same website, <u>your browser sends the stored cookie back to the server along with your request</u>. This allows the server to recognize you and provide personalized content or functionality based on your previous interactions.</i></p>
-        <ul>Cookies can be either <i><b>session</b> cookies</i> or <i><b>persistent</b> cookies</i>:
-          <li>1. Session cookies: these are <i>temporary cookies that are erased when you close your browser</i>. They are typically used to maintain your session state while you navigate a website, such as keeping you logged in.
-          <li>2. Persistent cookies: these cookies <i>remain on your device even after you close your browser</i>. They are <i>used to remember your preferences or login information across multiple sessions</i>, such as language preferences or customization settings.</li></li>
-        </ul>
-        <p>Cookies play a crucial role in enhancing user experience on the web by enabling personalized content and functionality, but they also raise privacy concerns. Some users may be wary of cookies tracking their online behavior, leading to debates over privacy regulations and the development of technologies like browser cookie settings and privacy-focused browsing modes.</p>
-        `,
-      ],
-    },
-    {
-      sectionTitle: 'Setting & manipulating Cookies',
-      sectionSource: '',
-      tooltips: [
-        `<h3>Setting a cookie</h3>
-        <pre><code>
-exports.postLogin = (req, res, next) => {
-  <i>res.<b>setHeader('Set-Cookie', 'loggedIn=true')</b>;</i>
-  res.redirect('/');
-};
-      </code></pre>`,
-        `<h3>Manipulating a cookie</h3>
-        <pre><code>
-exports.getLogin = (req, res, next) => {
-  const isLoggedIn = <b>req
-    .get('Cookie')</b>
-    .split(';')[1]
-    .trim()
-    .split('=')[1];
-  res.render('auth/login', {
-    path: '/login',
-    pageTitle: 'Login',
-    isAuthenticated: isLoggedIn
-  });
-};
-
-exports.postLogin = (req, res, next) => {
-  <b>res.setHeader('Set-Cookie', 'loggedIn=true')</b>;
-  res.redirect('/');
-};      
-      </code></pre>`,
-        `<pre><code>
- const express = require('express');
- const authController = require('../controllers/auth');
- 
- const router = express.Router();
- 
- <i>router.get('/login', authController.getLogin);
- router.post('/login', authController.postLogin);</i>
- 
- module.exports = router;     
-      </code></pre>`,
-        `<h3>Don't store sensitive cookies (data) in the browser</h3>
-        <p>Keep in mind that a <i>user can view and can manipulate some cookies value directly on the client side (browser)</i>. So whilst it is certainly interesting to store some cookies (data) in the client side, especially things that are related to tracking users, advertisements tracking and so on, <i>sensitive cookies (data) should not be stored in the browser because users can edit them</i>. So whilst cookies are generally a good thing for storing data across requests, it might not be the best approach in all scenarios, and that is exactly something where sessions can help us with, and we will learn how sessions can help us with storing sensitive information across requests.</p>`,
-      ],
-    },
-    {
-      sectionTitle: 'What is a Session?',
-      sectionSource: '',
-      highlights: {
-        highlight1: ['Session'],
-      },
-      tooltips: [
-        `<p>Sessions and cookies are both mechanisms used in web development to manage user interactions and maintain stateful information, but they serve different purposes and have distinct characteristics.</p>
-        <ul>Differences:
-          <li>1. <i><u>Storage Location</u>: <b>Sessions store data on the server-side</b>, typically in memory or a database, while <b>cookies store data on the client-side</b>, within the user's browser.</i></li>
-          <li>2. <u>Data Storage Capacity</u>: Sessions can store larger amounts of data since they are not limited by the size constraints of HTTP headers (like cookies are). Cookies, on the other hand, are limited to around 4KB of data per domain.</li>
-          <li>3. <u>Lifetime</u>: Sessions are typically temporary and expire after a certain period of inactivity or when the user closes their browser. Cookies can have varying lifetimes, including session cookies (which expire when the browser is closed) and persistent cookies (which have an expiration date set by the server).</li>
-          <li>4. <i><u>Security</u>: Sessions are generally considered more secure than cookies because session data is stored on the server-side, reducing the risk of data tampering or theft by malicious actors.</i> However, cookies can be encrypted or set with the 'HttpOnly' flag to enhance security.</li>
-        </ul>
-        `,
-        `<h3>When to use each?</h3>
-        <ul>Use Sessions When:
-          <li>- You need to <i>store sensitive information</i> such as user authentication tokens or session-specific data.</li>
-          <li>- You want to <i>minimize the amount of data stored on the client-side for security reasons</i>.</li>
-          <li>- You require a larger storage capacity for session data.</li>
-          <li>- You need to maintain state across multiple HTTP requests within a single browsing session.</li>
-        </ul>
-        <ul>Use Cookies When:
-          <li>- You need to <i>persistently identify users</i> across multiple sessions or visits to the site.</li>
-          <li>- You want to <i>store non-sensitive information</i> such as user preferences or browsing history.</li>
-          <li>- You want to implement features like remembering login credentials, language preferences, or shopping cart contents.</li>
-          <li>- You need to <i>share data between the client and server in a lightweight and efficient manner</i>.</li>
-        </ul>
-        <p>In practice, web developers often use a combination of sessions and cookies to achieve specific functionality and balance security, performance, and usability requirements. For example, <i>sessions may be used for managing user authentication and storing sensitive data, while cookies may be used for personalization and user tracking</i>.</p>
-        <p>In general, use a session for any data that belongs to a user that you don't want to lose after every response you send from the server, and that should not be visible to other users.</p>
-        `,
-      ],
-    },
-    {
-      sectionTitle: 'Initializing the Session Middleware',
-      sectionSource: '',
-      tooltips: [
-        `<p>We handle sessions by installing a third party package called <i><code>express-session</code></i>. <code>express-session</code> package is actually part of the official Express.js suite, but not baked into Express.js itself, that's why we need to install it.</p>`,
-      ],
-    },
-    {
-      sectionTitle: 'Using the Session Middleware',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Using MongoDB to Store Sessions',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Deleting a Cookie',
-      sectionSource: '',
-      tooltips: [``],
     },
   ],
 };
@@ -3214,6 +2729,486 @@ const understanding_async_await_in_NodeJS = {
   ],
 };
 
+const dynamic_content_and_adding_templating_engines = {
+  title: 'Working with Dynamic Content & adding Templating Engines',
+  titleDescription: 'Rendering more than Static HTML',
+  sections: [
+    {
+      sectionTitle: 'Sharing Data Across Requests & Users',
+      sectionSource: '',
+      highlights: {
+        highlight1: ['Sharing Data'],
+      },
+      tooltips: [
+        `<pre><code>
+const path = require('path');
+
+const express = require('express');
+
+const rootDir = require('../util/path');
+
+const router = express.Router();
+
+<i>//ALL USERS have access to the "products" array and ANY USER can manipulate "products". The "products" array is shared to ALL USERS. 
+const products = [];</i>
+
+router.get('/add-product', (req, res, next) => {
+  res.sendFile(path.join(rootDir, 'views', 'add-product.html'));
+});
+
+router.post('/add-product', (req, res, next) => {
+  <i>products.push({ title: req.body.title });</i> //ANY USER can manipulate the "products" array, because it's shared to ALL USERS
+  res.redirect('/');
+});
+
+exports.routes = router;
+<i>exports.products = products;</i>      
+      </code></pre>
+      <p>Later we'll learn about a technique to <i>share data in memory in the Node.js app across <u>different requests but only for one and the same user</u></i> and not across all users, because in the above code we have shared data across requests and across users.</p>
+      `,
+      ],
+    },
+    {
+      sectionTitle: 'Templating Engines - An Overview',
+      sectionSource: '',
+      tooltips: [
+        `<p>A template engine enables you to use <i>static template files</i> in your application. <i>At runtime, the template engine replaces variables in a template file with actual values, and transforms the template into an HTML file sent to the client.</i> This approach makes it easier to design an HTML page.</p>
+        <p>Some popular template engines that work with Express are <i>Pug (Jade)</i>, <i>EJS</i> and <i>Handlebars</i>. The Express application generator uses Pug as its default, but it also supports several others.</p>
+        `,
+        `<h3>Reference Links</h3>
+        <p><a href="https://expressjs.com/en/resources/template-engines.html">Template engines</a></p>
+        `,
+      ],
+    },
+    {
+      sectionTitle:
+        'Installing & implementing Pug with <code>app.set()</code> & <code>res.render()</code>',
+      sectionSource: '',
+      highlights: {
+        highlight1: ['Pug'],
+        highlight2: ['<code>app.set()</code>', '<code>res.render()</code>'],
+      },
+      tooltips: [
+        `<h3>Install Pug on your project</h3>
+        <p>You install Pug on your project by run the <i><code>npm install pug</code></i> command in your VS Code terminal.</p>`,
+        `<h3>Implementing Pug - step 1</h3>
+        <ul>To render template files, set the following application setting properties, set in <code>app.js</code> in the default app created by the generator:
+          <li>a) <code>view engine</code>, the template engine to use. For example, to use the Pug template engine: <i><code>app.set('view engine', 'pug')</code></i>.</li>
+          <li>b) <code>views</code>, the directory where the template files are located. Eg: <i><code>app.set('views', './views')</code></i>. This defaults to the <code>views</code> directory in the application root directory.</li>
+        </ul>
+        <pre><code>
+const path = require('path');
+
+const express = require('express');
+const bodyParser = require('body-parser');
+
+const app = express();
+
+<i>app.<b>set</b>('view engine', 'pug');
+app.<b>set</b>('views', 'views');</i>
+
+const adminData = require('./routes/admin');
+const shopRoutes = require('./routes/shop');
+
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use('/admin', adminData.routes);
+app.use(shopRoutes);
+
+app.use((req, res, next) => {
+    res.status(404).sendFile(path.join(__dirname, 'views', '404.html'));
+});
+
+app.listen(3000);        
+        </code></pre>
+        <p>After the <code>view engine</code> is set, you don't have to specify the engine or load the template engine module in your app; Express loads the module internally, as shown below (for the above example): <code>app.set('view engine', 'pug')</code>.</p>
+        `,
+        `<h3>Implementing Pug - step 2</h3>
+        <p>Create a Pug template file named <code>shop.pug</code> in the views directory, with the following content:</p>
+        <pre><code>
+html
+  head
+    title= title
+  body
+    h1= message
+        </code></pre>
+        `,
+        `<h3>Implementing Pug - step 3</h3>
+        <p>Then create a route to render the <code>shop.pug</code> file. If the <code>view engine</code> property is not set, you must specify the extension of the view file. Otherwise, you can omit it.</p>
+        <pre><code>
+const express = require('express');
+
+const router = express.Router();
+
+router.get('/', (req, res, next) => {
+  <i>res.<b>render</b>('shop');</i>
+});
+
+module.exports = router;
+        </code></pre>
+        <p>When you make a request to the home page, the <code>shop.pug</code> file will be rendered as HTML.</p>
+        <p>NOTE: The view engine cache does not cache the contents of the template's output, only the underlying template itself. The view is still re-rendered with every request even when the cache is on.</p>
+        `,
+        `<h3>More about <code>app.set()</code> function</h3>
+        <p>The <code>app.set()</code> function is used to <i>assign the setting name to value (or to set a <u>global configuration</u> value)</i>. You may store any value that you want, but <i>certain names can be used to <u>configure the behavior of the server</u></i>.</p>
+        <ul>Some of this certain names interesting for you are:
+          <li>- <code>view engine</code>: the default engine extension to use when omitted.</li>
+          <li>- <code>views</code>: a directory or an array of directories for the application's views. If an array, the views are looked up in the order they occur in the array.</li>
+          <p>In other words, <code>view engine</code> allows us to tell Express.js "Hey, for any dynamic templates we're trying to render please use this engine we're registering here", and <code>views</code> allows us to tell Express.js where to find these dynamic views.</p>
+        </ul>
+        `,
+        `<h3>More about <code>res.render()</code> function</h3>
+        <p>The <code>res.render()</code> function <i>renders a <code>view</code> and sends the rendered HTML string to the client</i>.</p>
+        <pre><code>
+//send the rendered view to the client
+res.render('shop')
+        </code></pre>
+        <p>The <code>view</code> argument is <i>a string that is the <u>file path</u> of the view file to render</i>. This can be an absolute path, or a path relative to the <code>views</code> setting. If the path does not contain a file extension, then the <code>view</code> engine setting determines the file extension.</p>
+        <p>NOTE: The <code>view</code> argument performs file system operations like reading a file from disk and evaluating Node.js modules, and as so for security reasons should not contain input from the end-user.</p>
+        `,
+        `<h3>Reference Links</h3>
+        <p><a href="https://expressjs.com/en/guide/using-template-engines.html">Using template engines with Express</a></p>
+        <p><a href="https://expressjs.com/en/api.html#app.set">app.set() function</a></p>
+        <p><a href="https://expressjs.com/en/api.html#res.render">res.render() function</a></p>
+        <p><a href="https://pugjs.org/api/getting-started.html">Pug documentation</a></p>
+        `,
+      ],
+    },
+    {
+      sectionTitle: 'Outputting Dynamic Content with Pug',
+      sectionSource: '',
+      highlights: {
+        highlight1: ['Dynamic Content'],
+      },
+      tooltips: [
+        `<ul>The <code>res.render()</code> function renders a <code>view</code> and sends the rendered HTML string to the client. <i>Optional parameters</i>:
+          <li><i>- <code>locals</code>, an <u>object</u> whose properties define local variables for the view.</i></li>
+          <li>- <code>callback</code>, a callback function. If provided, the method returns both the possible error and rendered string, but does not perform an automated response. When an error occurs, the method invokes next(err) internally.</li>
+        </ul>
+      <pre><code>
+const express = require("express");
+const adminData = require("./admin");
+
+const router = express.Router();
+
+router.get("/", (req, res, next) => {
+  //pass a local variable to the view
+  res.render("shop", <i>{ prods: adminData.products, htmlTitle: "Shop" }</i>); 
+});
+
+module.exports = router;
+      </code></pre>`,
+        `<p>You access local variables in the Pug file like in example below:</p>
+      <pre><code>
+doctype html
+head
+  meta(charset='UTF-8')
+  meta(name='viewport' content='width=device-width, initial-scale=1.0')
+  meta(http-equiv='X-UA-Compatible' content='ie=edge')
+  <i>title <b>#{htmlTitle}</b></i>
+  link(rel='stylesheet' href='/css/main.css')
+header.main-header
+  nav.main-header__nav
+    ul.main-header__item-list
+      li.main-header__item
+        a.active(href='/') Shop
+      li.main-header__item
+        a(href='/admin/add-product') Add Product
+main
+  <b>if prods.length > 0</b>
+    .grid
+      <b>each product in prods</b>
+        article.card.product-item
+          header.card__header
+            <i>h1.product__title <b>#{product.title}</b></i>
+          .card__image
+            img(src='https://cdn.com/photo.png' alt='A Book')
+          .card__content
+            h2.product__price $19.99
+            p.product__description
+              | A very interesting book
+              | things!
+          .card__actions
+            button.btn Add to Cart
+  <b>else</b> 
+    h1 No products
+      </code></pre>
+      `,
+        `<h3>Reference Links</h3>
+    <p><a href="https://expressjs.com/en/api.html#res.render">res.render() function</a></p>
+    <p><a href="https://pugjs.org/api/getting-started.html">Pug documentation</a></p>
+    `,
+      ],
+    },
+    {
+      sectionTitle: 'Adding a Layout with Pug by exteding your .pug files',
+      sectionSource: '',
+      highlights: {
+        highlight1: ['Layout', 'exteding your .pug files'],
+      },
+      tooltips: [
+        `<pre><code>
+<!DOCTYPE html>
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    meta(http-equiv="X-UA-Compatible", content="ie=edge")
+    title #{pageTitle}
+    link(rel="stylesheet", href="/css/main.css")
+    <i><b>block</b> styles</i>
+  body   
+    header.main-header
+      nav.main-header__nav
+        ul.main-header__item-list
+          li.main-header__item
+            a(href="/", <i>class=(path === '/' ? 'active' : '')</i>) Shop
+          li.main-header__item
+            a(href="/admin/add-product", <i>class=(path === '/admin/add-product' ? 'active' : '')</i>) Add Product
+    <i><b>block</b> content</i>      
+      </code></pre>
+      <p>NOTE: <code>path</code> is a local variable read by "main-layout.png":</p>
+      <pre><code>
+router.get('/', (req, res, next) => {
+  const products = adminData.products;
+  res.render('shop', { prods: products, pageTitle: 'Shop', <i>path: '/'</i> });
+});
+
+router.get('/add-product', (req, res, next) => {
+  res.render('add-product', { pageTitle: 'Add Product', <i>path: '/admin/add-product'</i> });
+});
+      </code></pre>`,
+        `<h3>Extends your <code>.pug</code> files</h3>
+      <pre><code>
+<b>extends</b> layouts/main-layout.pug
+
+<i><b>block</b> content</i>
+    h1 Page Not Found!
+      </code></pre>
+
+      <pre><code>
+<b>extends</b> layouts/main-layout.pug
+
+<i><b>block</b> styles</i>
+  link(rel="stylesheet", href="/css/forms.css")
+  link(rel="stylesheet", href="/css/product.css")
+
+<i><b>block</b> content</i>
+  main
+    form.product-form(action="/admin/add-product", method="POST")
+      .form-control
+        label(for="title") Title
+        input(type="text", name="title")#title
+        button.btn(type="submit") Add Product
+      </code></pre>
+      `,
+      ],
+    },
+    {
+      sectionTitle: 'Working with EJS',
+      sectionSource: '',
+      highlights: {
+        highlight2: ['EJS'],
+      },
+      tooltips: [
+        `<h3>Install EJS on your project</h3>
+      <p>You install EJS on your project by running the <i><code>npm install ejs</code></i> command in your VS Code terminal.</p>`,
+        `<h3>Implementing EJS template engine</h3>
+      <ul>To render template files, set the following application setting properties, set in <code>app.js</code> in the default app created by the generator:
+        <li>a) <code>view engine</code>, the template engine to use. For example, to use the EJS template engine: <i><code>app.set('view engine', 'ejs')</code></i>.</li>
+        <li>b) <code>views</code>, the directory where the template files are located. Eg: <i><code>app.set('views', './views')</code></i>. This defaults to the <code>views</code> directory in the application root directory.</li>
+      </ul>
+      <pre><code>
+const path = require('path');
+
+const express = require('express');
+const bodyParser = require('body-parser');
+
+const app = express();
+
+<i>app.<b>set</b>('view engine', 'ejs');
+app.<b>set</b>('views', 'views');</i>
+
+const adminData = require('./routes/admin');
+const shopRoutes = require('./routes/shop');
+
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use('/admin', adminData.routes);
+app.use(shopRoutes);
+
+app.use((req, res, next) => {
+  res.status(404).sendFile(path.join(__dirname, 'views', '404.html'));
+});
+
+app.listen(3000);        
+      </code></pre>
+      <p>After the <code>view engine</code> is set, you don't have to specify the engine or load the template engine module in your app; Express loads the module internally, as shown below (for the above example): <code>app.set('view engine', 'ejs')</code>.</p>
+      `,
+        `<h3>Render a .ejs template file</h3>
+      <p>The rendering process of a .ejs template file is the same like .pug template files.</p>
+      <p>As your learn, you render a template file with the special <code>res.render()</code> method provided by Express.js:</p>
+      <pre><code>
+router.get('/', (req, res, next) => {
+  //To .render method you can optionally define an object which will hold the data that is passed as variables into the template file
+  <i>res.<b>render</b>('shop', { pathTitle: 'Shop', otherKey: 'someData' });</i>
+});
+      </code></pre>
+      <p>The <code>res.render()</code> method will always look for the registered <code>view engine</code>, something you do at the beginning in app.js:</p>
+      <pre><code>
+<i>app.<b>set</b>('view engine', 'ejs');
+app.<b>set</b>('views', 'views');</i>
+      </code></pre>
+      `,
+        `<h3>Reference Links</h3>
+      <p><a href="https://ejs.co/">EJS documentation</a></p>
+      `,
+      ],
+    },
+    {
+      sectionTitle: 'Adding a Layout with Partials',
+      sectionSource: '',
+      highlights: {
+        highlight1: ['Partials'],
+      },
+      tooltips: [
+        `<p><i>EJS doesn't have layouts</i> but we can use so-called Partials or Includes, a feature that PUG also have it.</p>
+        <p>The idea is that you have some code blocks which you reuse in different parts of your templates, and you can therefore just share them across your templates. So it's a bit like the opposite of a layout, instead of having one master layout where you put your individual view parts into, you have a couple of separated shared view parts which you can merge into the views you're creating</p>
+        <p>For that you need to create a new subfolder in the <code>views</code> folder which you name it, for example, <code>includes</code>, and that name is up to you. There you will create a couple of shared files or shared code blocks, which you want to share across all your views.</p>
+        `,
+      ],
+    },
+  ],
+};
+
+const sessions_and_cookies = {
+  title: 'Sessions & Cookies',
+  titleDescription: 'Persisting Data across Requests',
+  sections: [
+    {
+      sectionTitle: 'What is a Cookie?',
+      sectionSource: '',
+      highlights: {
+        highlight1: ['Cookie'],
+      },
+      tooltips: [
+        `<h3>What is a cookie when we talk about browsers and servers?</h3>
+        <p>In the context of browsers and servers, a "cookie" refers to <i>a small <b>piece of data</b> sent from a website and stored on the user's device by the user's web browser</i>. Cookies are <i>commonly used to remember information about the user</i>, such as their preferences, login credentials, or items added to a shopping cart.</p>
+        <p><i>When you visit a website, <u>the server sends a cookie to your browser, which then stores it on your device</u>. The next time you visit the same website, <u>your browser sends the stored cookie back to the server along with your request</u>. This allows the server to recognize you and provide personalized content or functionality based on your previous interactions.</i></p>
+        <ul>Cookies can be either <i><b>session</b> cookies</i> or <i><b>persistent</b> cookies</i>:
+          <li>1. Session cookies: these are <i>temporary cookies that are erased when you close your browser</i>. They are typically used to maintain your session state while you navigate a website, such as keeping you logged in.
+          <li>2. Persistent cookies: these cookies <i>remain on your device even after you close your browser</i>. They are <i>used to remember your preferences or login information across multiple sessions</i>, such as language preferences or customization settings.</li></li>
+        </ul>
+        <p>Cookies play a crucial role in enhancing user experience on the web by enabling personalized content and functionality, but they also raise privacy concerns. Some users may be wary of cookies tracking their online behavior, leading to debates over privacy regulations and the development of technologies like browser cookie settings and privacy-focused browsing modes.</p>
+        `,
+      ],
+    },
+    {
+      sectionTitle: 'Setting & manipulating Cookies',
+      sectionSource: '',
+      tooltips: [
+        `<h3>Setting a cookie</h3>
+        <pre><code>
+exports.postLogin = (req, res, next) => {
+  <i>res.<b>setHeader('Set-Cookie', 'loggedIn=true')</b>;</i>
+  res.redirect('/');
+};
+      </code></pre>`,
+        `<h3>Manipulating a cookie</h3>
+        <pre><code>
+exports.getLogin = (req, res, next) => {
+  const isLoggedIn = <b>req
+    .get('Cookie')</b>
+    .split(';')[1]
+    .trim()
+    .split('=')[1];
+  res.render('auth/login', {
+    path: '/login',
+    pageTitle: 'Login',
+    isAuthenticated: isLoggedIn
+  });
+};
+
+exports.postLogin = (req, res, next) => {
+  <b>res.setHeader('Set-Cookie', 'loggedIn=true')</b>;
+  res.redirect('/');
+};      
+      </code></pre>`,
+        `<pre><code>
+ const express = require('express');
+ const authController = require('../controllers/auth');
+ 
+ const router = express.Router();
+ 
+ <i>router.get('/login', authController.getLogin);
+ router.post('/login', authController.postLogin);</i>
+ 
+ module.exports = router;     
+      </code></pre>`,
+        `<h3>Don't store sensitive cookies (data) in the browser</h3>
+        <p>Keep in mind that a <i>user can view and can manipulate some cookies value directly on the client side (browser)</i>. So whilst it is certainly interesting to store some cookies (data) in the client side, especially things that are related to tracking users, advertisements tracking and so on, <i>sensitive cookies (data) should not be stored in the browser because users can edit them</i>. So whilst cookies are generally a good thing for storing data across requests, it might not be the best approach in all scenarios, and that is exactly something where sessions can help us with, and we will learn how sessions can help us with storing sensitive information across requests.</p>`,
+      ],
+    },
+    {
+      sectionTitle: 'What is a Session?',
+      sectionSource: '',
+      highlights: {
+        highlight1: ['Session'],
+      },
+      tooltips: [
+        `<p>Sessions and cookies are both mechanisms used in web development to manage user interactions and maintain stateful information, but they serve different purposes and have distinct characteristics.</p>
+        <ul>Differences:
+          <li>1. <i><u>Storage Location</u>: <b>Sessions store data on the server-side</b>, typically in memory or a database, while <b>cookies store data on the client-side</b>, within the user's browser.</i></li>
+          <li>2. <u>Data Storage Capacity</u>: Sessions can store larger amounts of data since they are not limited by the size constraints of HTTP headers (like cookies are). Cookies, on the other hand, are limited to around 4KB of data per domain.</li>
+          <li>3. <u>Lifetime</u>: Sessions are typically temporary and expire after a certain period of inactivity or when the user closes their browser. Cookies can have varying lifetimes, including session cookies (which expire when the browser is closed) and persistent cookies (which have an expiration date set by the server).</li>
+          <li>4. <i><u>Security</u>: Sessions are generally considered more secure than cookies because session data is stored on the server-side, reducing the risk of data tampering or theft by malicious actors.</i> However, cookies can be encrypted or set with the 'HttpOnly' flag to enhance security.</li>
+        </ul>
+        `,
+        `<h3>When to use each?</h3>
+        <ul>Use Sessions When:
+          <li>- You need to <i>store sensitive information</i> such as user authentication tokens or session-specific data.</li>
+          <li>- You want to <i>minimize the amount of data stored on the client-side for security reasons</i>.</li>
+          <li>- You require a larger storage capacity for session data.</li>
+          <li>- You need to maintain state across multiple HTTP requests within a single browsing session.</li>
+        </ul>
+        <ul>Use Cookies When:
+          <li>- You need to <i>persistently identify users</i> across multiple sessions or visits to the site.</li>
+          <li>- You want to <i>store non-sensitive information</i> such as user preferences or browsing history.</li>
+          <li>- You want to implement features like remembering login credentials, language preferences, or shopping cart contents.</li>
+          <li>- You need to <i>share data between the client and server in a lightweight and efficient manner</i>.</li>
+        </ul>
+        <p>In practice, web developers often use a combination of sessions and cookies to achieve specific functionality and balance security, performance, and usability requirements. For example, <i>sessions may be used for managing user authentication and storing sensitive data, while cookies may be used for personalization and user tracking</i>.</p>
+        <p>In general, use a session for any data that belongs to a user that you don't want to lose after every response you send from the server, and that should not be visible to other users.</p>
+        `,
+      ],
+    },
+    {
+      sectionTitle: 'Initializing the Session Middleware',
+      sectionSource: '',
+      tooltips: [
+        `<p>We handle sessions by installing a third party package called <i><code>express-session</code></i>. <code>express-session</code> package is actually part of the official Express.js suite, but not baked into Express.js itself, that's why we need to install it.</p>`,
+      ],
+    },
+    {
+      sectionTitle: 'Using the Session Middleware',
+      sectionSource: '',
+      tooltips: [``],
+    },
+    {
+      sectionTitle: 'Using MongoDB to Store Sessions',
+      sectionSource: '',
+      tooltips: [``],
+    },
+    {
+      sectionTitle: 'Deleting a Cookie',
+      sectionSource: '',
+      tooltips: [``],
+    },
+  ],
+};
+
 const websockets_and_socket = {
   title: 'Understanding Websockets & Socket.io',
   titleDescription: 'Pushing Data from Server to Client',
@@ -3813,11 +3808,9 @@ export const dataStorage = [
   understanding_the_basics,
   development_workflow,
   working_with_ExpressJS,
+  dynamic_routes_and_advanced_models,
   mvc,
   error_handling_with_ExpressJS,
-  dynamic_content_and_adding_templating_engines,
-  dynamic_routes_and_advanced_models,
-  sessions_and_cookies,
   adding_authentication,
   advanced_authentication,
   sending_emails,
@@ -3828,6 +3821,8 @@ export const dataStorage = [
   adding_payments,
   working_with_REST_APIs,
   understanding_async_await_in_NodeJS,
+  dynamic_content_and_adding_templating_engines,
+  sessions_and_cookies,
   websockets_and_socket,
   graphQL,
   deploying_our_app,
