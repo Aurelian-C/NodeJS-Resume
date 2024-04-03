@@ -1736,14 +1736,14 @@ app.listen(3000);
     },
     {
       sectionTitle:
-        'Globally Handle Unhandled Promise Rejections & Uncaught Exceptions',
+        'Globally Handle: Unhandled Promise Rejections & Uncaught Exceptions',
       sectionSource: '',
       highlights: {
         highlight1: ['Unhandled Promise Rejections', 'Uncaught Exceptions'],
       },
       tooltips: [
         `<p>In Node.js and its frameworks like Express.js, handling asynchronous operations and exceptions are crucial parts of building robust applications. Let's break down the concepts of unhandled Promise rejection and catching uncaught exceptions, especially in the context of Express.js.</p>`,
-        `<h3>Handle Globally Unhandled Promise Rejection</h3>
+        `<h3>Handle Globally: Unhandled Promise Rejection</h3>
         <p>In JavaScript, Promises are used to handle asynchronous operations. <i>When a Promise is rejected due to an error and <u>there is no <code>.catch()</code> block to handle the rejection</u>, it results in an unhandled Promise rejection.</i> This situation is similar to throwing an error in synchronous code without wrapping it in a <code>try/catch</code> block.</p>
         <p>I want to explain to you how to <i><u>globally</u> handle unhandled rejected Promises</i>, because in a bigger application, it can become a bit more difficult to always keep track of all the Promises that might become rejected at some point. So at some point, you might have some unhandled Promise rejection somewhere I'll show you how to deal with that Promise rejection globally.</p>
         <p><b>Node.js will emit an <code>unhandledRejection</code> event when a Promise is rejected and no handler is found.</b> If not properly managed, it can lead to memory leaks, inconsistent application state, or application crashes. <i>Starting from Node.js version 15, an unhandled Promise rejection will terminate the Node.js process by default, making it critical to handle them correctly.</i> So each time there is an unhandled rejection (Promise rejection) somewhere in our application, the <code>process</code> object will emit an event called <code>unhandledRejection</code> and so <i>we can subscribe to <code>unhandledRejection</code> event for handling Promise rejection</i>.</p>
@@ -1764,7 +1764,7 @@ process<i>.on('unhandledRejection'</i>, (err) => {
 });      
       </code></pre>
         `,
-        `<h3>Handle Globally Uncaught Exceptions</h3>
+        `<h3>Handle Globally: Uncaught Exceptions</h3>
         <p><i>Uncaught exceptions are errors (bugs) that <u>occur in synchronous code</u> but are <u>not caught by any <code>try/catch</code> block</u>.</i> In a Node.js environment, uncaught exceptions can lead to the program terminating or getting into an <code>undefined</code> state.</p>
         <p><b>Node.js provides an <code>uncaughtException</code> event that you can listen to for handling uncaught exceptions.</b> However, it's generally recommended to gracefully shut down the process after an uncaught exception, as the application may be in an unknown state.</p>
         <p>Express.js does not provide built-in handling for uncaught exceptions. You should listen for these at the process level and decide how to handle them, often by logging the error, cleaning up resources, and restarting the application. <i>The <code>uncaughtException</code> handler should be at the very top of our code, or at least before any other code is really executed.</i></p>
@@ -1791,7 +1791,7 @@ process.on('unhandledRejection'</i>, (err) => {
       </code></pre>
       <p>NOTE: While in the Unhandled Rejection crashing the application is optional, when there is an Uncaught Exception, we really, really need to crash our application, because after there was an Uncaught Exception, the entire Node.js process is in a so-called unclean state. So to fix that, the process need to terminate and then to be restarted. In production, we should then have a tool which will restart the application after crashing. And many hosting services already do that out of the box, so completely automatically without us having to do anything.</p>`,
         `<h3>IMPORTANT: handle errors in the place where it happen</h3>
-      <p><i>In Node.js, it's not really a good practice to just blindly rely on these two error handlers (<code>unhandledRejection</code> & <code>uncaughtException</code>) that we just implemented in the code above. So <b>ideally errors should really be handled right where they occur</b>.</i> Some people even say that we shouldn't use these at all, but I disagree with that.</p>
+      <p><i>In Node.js, it's not really a good practice to just blindly rely on these two error handlers (<code>unhandledRejection</code> & <code>uncaughtException</code>) that we just implemented in the code above. So <b>ideally errors should really be handled right where they occur</b>.</i> Some people even say that we shouldn't use these at all, but I disagree with that. I think that as a safety net, they can be very useful and play a part in our application.</p>
       <p>While Express.js does not directly handle Promise rejections for you, you can manage them by <i>ensuring that all Promises in your middleware or route handlers have corresponding <code>.catch()</code> blocks or by using async/await with <code>try/catch</code>.</i></p>
         `,
         `<h3>Best Practices</h3>
