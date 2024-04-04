@@ -86,9 +86,9 @@ class ApplicationView {
 
     return `
       <li class="card__article">
-          ${`<p class="card__article-title" data-title='${
+          ${`<div class="card__article-title" data-title='${
             article.sectionTitle
-          }'>${idx + 1}. ${title}</p>`}
+          }'><div>${idx + 1}.</div> <div>${title}</div></div>`}
       </li>
     `;
   }

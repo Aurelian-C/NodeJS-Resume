@@ -230,14 +230,6 @@ server.listen(3000);
       ],
     },
     {
-      sectionTitle: 'Redirecting Requests',
-      sectionSource: '',
-      highlights: {
-        highlight1: ['Redirecting'],
-      },
-      tooltips: [``],
-    },
-    {
       sectionTitle: 'Using Modules in Node.js: Our Own Modules',
       sectionSource: '',
       highlights: {
@@ -342,9 +334,37 @@ const { add, subtract } = require('./mathFunctions');
       ],
     },
     {
-      sectionTitle: 'Understanding Event Driven code execution',
+      sectionTitle: 'Understanding Event Driven Arhitecture of Node.js',
       sectionSource: '',
-      tooltips: [``],
+      tooltips: [
+        `<p>Event-driven programming is a paradigm in which <b>the flow of the program is determined by events</b> such as user actions (e.g., mouse clicks, key presses), system notifications (e.g., file I/O completion, network requests), or timer expirations. Node.js is a popular runtime environment for JavaScript that is built on an event-driven architecture, allowing developers to write highly scalable and efficient server-side applications.</p>`,
+        `<ul><i>In Node.js, the event-driven model is implemented using the <b><code>EventEmitter</code> class</b>, which provides methods for <b>emitting events</b> and <b>registering listeners</b> for those events.</i> Here's how event-driven code execution works in Node.js:
+          <li>1. <b>Event Emitters</b>: An event emitter is an object that emits named events. It maintains a list of listeners, which are functions that are executed in response to a particular event being emitted.</li>
+          <li>2. <b>Event Listeners</b>: <i>Event listeners are functions that are registered to handle specific events emitted by event emitters. When an event emitter emits an event, all registered listeners for that event are invoked.</i></li>
+          <li>3. <i>Asynchronous Execution: Event-driven programming in Node.js is inherently asynchronous.</i> When an asynchronous operation (e.g., file I/O, network request) is initiated, Node.js does not block the execution of subsequent code. Instead, it continues executing the remaining code and registers a callback function to be invoked once the asynchronous operation completes.</li>
+          <li>4. Non-blocking I/O: Node.js employs non-blocking I/O operations, meaning that it can handle multiple concurrent I/O operations without waiting for each operation to complete before starting the next one. This allows Node.js to efficiently handle a large number of connections without the need for threading.</li>
+          <li>5. <b>Event Loop</b>: <i>The event loop is at the core of Node.js's event-driven architecture. It continuously checks for events in the event queue and dispatches them to event handlers when they occur.</i> This allows Node.js to efficiently handle asynchronous operations and respond to events in a timely manner.</li>
+        </ul>`,
+        `<p>Here's a simple example of event-driven code execution in Node.js:</p>
+        <pre><code>
+const EventEmitter = require('events');
+
+//1. Create an instance of EventEmitter
+const myEmitter = new EventEmitter();
+
+//2. Register a listener for the 'hello' event
+myEmitter.on('hello', () => {
+  console.log('Hello, world!');
+});
+
+//3. Emit the 'hello' event
+myEmitter.emit('hello');
+
+console.log('Event emitted');
+        </code></pre>
+        <p>This demonstrates how event-driven code execution works in Node.js, where the callback function associated with the 'hello' event is executed asynchronously when the event is emitted.</p>
+        `,
+      ],
     },
     {
       sectionTitle: 'Introduction to Streams',
@@ -503,7 +523,40 @@ const development_workflow = {
     {
       sectionTitle: 'Global Features vs Core Modules vs Third-Party Modules',
       sectionSource: '',
-      tooltips: [``],
+      tooltips: [
+        `<p>In Node.js, understanding the distinction between global features, core modules, and third-party modules is essential for effective development.</p>`,
+        `<h3>Global Features</h3>
+        <ul>Global features in Node.js refer to <i>functionalities or objects that are available throughout the application without the need for explicit import or inclusion</i>. These features are built-in and can be accessed directly. Examples include:
+          <li>- <code>console</code>: for logging messages to the console;</li>
+          <li>- <code>process</code>: for accessing information about the current Node.js process;</li>
+          <li>- <code>Buffer</code>: for handling binary data;</li>
+          <li>- <code>setTimeout</code>, <code>setInterval</code>: for scheduling tasks;</li>
+          <li>- <code>require</code>: for importing modules.</li>
+        </ul>
+        <p>While these features are globally available, it's often recommended to avoid over-reliance on them as they can lead to code that is difficult to maintain and debug.</p>
+        `,
+        `<h3>Core Modules</h3>
+        <ul>Core modules in Node.js are <i>modules that are bundled with the Node.js runtime and can be imported into any Node.js application without the need for additional installation</i>. These modules provide essential functionalities for building applications. Examples include:
+          <li>- <code>fs</code>: for file system operations;</li>
+          <li>- <code>http</code> & <code>https</code>: for creating HTTP and HTTPS servers and clients;</li>
+          <li>- <code>path</code>: for handling file paths;</li>
+          <li>- <code>os</code>: for accessing operating system-related information.</li>
+        </ul>
+        <p>Core modules are generally more reliable and efficient compared to third-party modules since they are maintained as part of the Node.js project itself.</p>
+        `,
+        `<h3>Third-Party Modules</h3>
+        <ul>Third-party modules are <i>modules developed by the Node.js community or external developers</i>. These modules extend the functionality of Node.js by <i>providing additional features that are not available in core modules</i>. They are typically published on npm (Node Package Manager) and can be easily installed using npm or yarn. Examples include:
+          <li>- <code>express</code>: a web application framework;</li>
+          <li>- <code>lodash</code>: a utility library;</li>
+          <li>- <code>mongoose</code>: an ORM (Object-Relational Mapping) library for MongoDB;</li>
+          <li>- <code>axios</code>: a promise-based HTTP client.</li>
+        </ul>
+        <p>Third-party modules greatly enhance the productivity of Node.js developers by <i>providing pre-built solutions for common tasks</i>. However, it's important to <i>check third-party modules for quality, security, and maintenance status</i> before including them in a project.</p>
+        `,
+        `<h3>Summary</h3>
+        <p>In summary, global features are <i>built-in functionalities</i> available throughout the application, core modules are <i>essential modules bundled with Node.js</i>, and third-party modules are <i>external modules developed by the community to extend Node.js functionality</i>. Understanding the distinctions between these types of modules is crucial for building robust and efficient Node.js applications.</p>
+        `,
+      ],
     },
   ],
 };
@@ -534,14 +587,9 @@ const working_with_ExpressJS = {
           <li>- much more.</li>
         </ul>
         `,
-      ],
-    },
-    {
-      sectionTitle: 'Installing Express.js',
-      sectionSource: '',
-      tooltips: [
-        `<p>You install Express.js by typing in your VSCode terminal the <b><code>npm i express</code></b> command. This command will <i>install Express.js as a dependency to your project</i>.</p>`,
-        `<p>Once you install Express.js, you need to import it in your <code>app.js</code> file and create your Node.js server. You do this like the example below:</p>
+        `<h3>How to install Express.js</h3>
+        <p>You install Express.js by typing in your VSCode terminal the <b><code>npm i express</code></b> command. This command will <i>install Express.js as a dependency to your project</i>.</p>
+        <p>Once you install Express.js, you need to import it in your <code>app.js</code> file and create your Node.js server. You do this like the example below:</p>
         <pre><code>
 const express = require('express');
 
@@ -556,8 +604,9 @@ app.use((req, res, next) => {
 app.listen(port, () => {
   console.log('App start running!')
 });
-        </code></pre>`,
-        `<p>Express.js handling incoming requests in a certain way called middleware functions. Middleware functions are a key characteristic of Express framework.</p>`,
+        </code></pre>
+        <p>Express.js handling incoming requests in a certain way called middleware functions. Middleware functions are a key characteristic of Express framework.</p>
+        `,
       ],
     },
     {
@@ -571,9 +620,9 @@ app.listen(port, () => {
       tooltips: [
         `<h3>Middleware functions are a crucial aspect of Express.js</h3>
         <p><i>Express.js is all about middleware functions</i>.</p>
-        <p>In Express.js <i>an incoming request is automatically funneled through a bunch of functions</i>, so instead of just having one request handler, you will actually have a possibility of hooking in multiple functions which the request will go through until you send a response.</p>
-        <p>This allows you to split your code into multiple blocks or pieces, instead of having one huge function that does everything, and this is the pluggable nature of Express.js, where you can easily add other third party packages which simply happen to give you such middleware functions that you can plug into Express.js and add certain functionalities.</p>
-        <p>Middleware functions are <i>functions that have access to the <u>request object</u> (req), the <u>response object</u> (res), and <u>the next middleware function</u> in the application's request-response cycle</i>. These functions can execute any code, modify request and response objects, end the request-response cycle, and call the next middleware function in the stack.</p>
+        <p><i>In Express.js, <b>an incoming request is automatically funneled through a bunch of middleware functions</b>, so instead of just having one request handler, you will actually have a possibility of hooking in multiple middleware functions which the request will go through until you send a response.</i></p>
+        <p>This allows you to split your code into multiple blocks/pieces, instead of having one huge middleware function that does everything, and this is the pluggable nature of Express.js, where you can easily add other third party packages which simply happen to give you such middleware functions that you can plug into Express.js and add certain functionalities.</p>
+        <p>Middleware functions are <i>functions that have access to the <u><b>request</b> object</u> (req), the <u><b>response</b> object</u> (res), and <u>the <b>next()</b> middleware function</u> in the application's request-response cycle</i>. These middleware functions can execute any code, modify request and response objects, end the request-response cycle, and call the next middleware function in the stack.</p>
         <p><i>Middleware functions are used to perform tasks</i> like authentication, logging, parsing request bodies, and error handling. They allow you to modularize your application's logic and make it easier to manage and maintain.</p>
         <p><img src="../../src/img/middleware_1.jpg"/></p>
         `,
@@ -902,122 +951,37 @@ app.listen(3000);
     {
       sectionTitle: 'Chaining Multiple Middleware Functions for the Same Route',
       sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Creating HTML Pages',
-      sectionSource: '',
       tooltips: [
-        `<p>You store all your HTML pages in a folder called "views" because you will structure your application folders in a MVC arhitecture.</p>
-        <p>One part of MVC is that you manage your views, so what you serve to the user, in one place of our application, in the "views" folder. So "views" folder will just be a bunch of HTML files.</p>
+        `<p>Chaining multiple middleware functions for the same route in Express.js allows you to <i>perform a series of operations or checks sequentially before finally handling the request</i>. This feature is extremely <i>useful for structuring your application in a modular way, where you can separate concerns</i>, such as authentication, logging, data validation, etc., into different middleware functions.</p>
+        <p>Chaining middleware functions is a powerful feature in Express.js that helps keep your code clean, organized, and modular, making it easier to maintain and scale your application.</p>
         `,
-      ],
-    },
-    {
-      sectionTitle:
-        'Serving HTML Pages with <code>sendFile()</code> function, <code>path.join()</code> method and <code>__dirname</code> global variable',
-      sectionSource: '',
-      highlights: {
-        highlight2: [
-          '<code>sendFile()</code>',
-          '<code>path.join()</code>',
-          '<code>__dirname</code>',
-        ],
-      },
-      tooltips: [
-        `<p>It's important to know that you're not limited to <code>send()</code> dummy text or anything like that, you can <code>sendFiles()</code> to your users, for example HTML files or images.</p>
-        <p>I'll show you how we can return HTML pages (files), more specific HTML files we prepared to our client, instead of writing HTML code in Node.js as we did us far, which wasn't really that great.</p>`,
-        `<pre><code>
-const path = require('path');
-
+        `<h3>Basic Syntax</h3>
+        <ul>The basic syntax for chaining middleware looks like this:
+          <li>
+            <pre><code>
+app.get('/your-route', <i>middlewareFunction1, middlewareFunction2, finalHandlerFunction</i>);
+            </code></pre>
+          </li>
+        </ul>
+        <p>Each middleware function has access to the <code>request</code> object (req), the <code>response</code> object (res), and the <code>next</code> function in the application's request-response cycle. The <code>next</code> function is a function in the Express router which, when invoked, executes the middleware succeeding the current middleware.</p>
+        `,
+        `<h3>Using <code>router</code></h3>
+        <ul>For more complex applications, you might want to use <code>express.Router</code> to organize your routes and middleware. This allows you to define route handlers and middleware in a modular, mountable way. Here's a quick example:
+        <li>
+          <pre><code>
 const express = require('express');
-
 const router = express.Router();
 
-router.get('/add-product', (req, res, next) => {
-  <i>res.<b>sendFile</b>(<b>path.join</b>(<b>__dirname</b>, '..', 'views', 'add-product.html'));</i>
-});
+router.get('/example', middlewareFunction1, middlewareFunction2, finalHandlerFunction);
 
-router.post('/add-product', (req, res, next) => {
-  console.log(req.body);
-  res.redirect('/');
-});
-
-module.exports = router;
-        </code></pre>
+app.use('/', router);
+          </code></pre>
+        </li>
+      </ul>
         `,
-        `<h3>More aboute <code>res.sendFile()</code> function</h3>
-        <p>The <code>res.sendFile()</code> function <i>transfers the file at the given path</i> and <i>it sets the Content-Type response HTTP header field based on the filename extension</i>.</p>
-        <p>Unless the <code>root</code> option is set in the options object, <i>path must be an <u>absolute path</u> to the file</i>.</p>
-        <ul>This API <i>provides access to data on the running file system</i>. Ensure that either:
-          <li>a) the way in which the path argument was constructed into an absolute path is secure if it contains user input or</li>
-          <li>b) set the root option to the absolute path of a directory to contain access within.</li>
-        </ul>
-        <p>When the <code>root</code> option is provided, the path argument is allowed to be a relative path, including containing <code>..</code>. Express.js will validate that the relative path provided as path will resolve within the given <code>root</code> option.</p>
+        `<h3>Error Handling Middleware</h3>
+        <p>Express also allows you to define error-handling middleware functions that have four arguments instead of three (<code>err, req, res, next</code>). These are defined in the same way but are designed to handle errors that occur in the preceding middleware/functions.</p>
         `,
-        `<h3>More aboute <code>path.join()</code> method</h3>
-        <p>The <code>path.join()</code> method <i>joins the specified <u>path segments</u> into <u>one path</u></i>. You can specify as many path segments as you like.</p>
-        <p>The specified <i>path segments must be <u>strings</u></i>, separated by comma <code>,</code>.</p>
-        <p>We're using <code>path.join()</code> because this will automatically build the path in a way that works on both Linux and Windows systems.</p>
-        `,
-        `<h3>More aboute <code>__dirname</code> variable</h3>
-        <p><code>__dirname</code> is a <i>global variable</i> made available by Node.js (environment variable) that tells you <i>the <u>absolute path of the directory</u> containing the currently executing file</i>.</p>
-        `,
-      ],
-    },
-    {
-      sectionTitle: 'Serving a 404 Error HTML Page',
-      sectionSource: '',
-      tooltips: [
-        `<h3><code>app.use("/")</code> is tipically used as "catch all unhandled routes" middleware</h3>
-        <p><i><code>app.use("/")</code> is commonly used at the final of your Node.js code for unhandled routes, because in the case you <u>access a URL path that doesn't exist (a URL path that is not handled by a middleware)</u>, you need to have a middleware function that handle that incoming request and finally send a response that serves a HTML error page.</i></p>
-        <pre><code>
-const path = require('path');
-
-const express = require('express');
-const bodyParser = require('body-parser');
-
-const app = express();
-
-const adminRoutes = require('./routes/admin');
-const shopRoutes = require('./routes/shop');
-
-app.use(bodyParser.urlencoded({extended: false}));
-app.use(express.static(path.join(__dirname, 'public')));
-
-app.use('/admin', adminRoutes);
-app.use(shopRoutes);
-
-<i>app.use((req, res, next) => {
-    res.status(404).sendFile(path.join(__dirname, 'views', '404.html'));
-});</i>
-
-app.listen(3000);
-              </code></pre>
-        
-        <pre><code>
-const path = require('path');
-
-const express = require('express');
-const bodyParser = require('body-parser');
-
-const app = express();
-
-const adminRoutes = require('./routes/admin');
-const shopRoutes = require('./routes/shop');
-
-app.use(bodyParser.urlencoded({extended: false}));
-app.use(express.static(path.join(__dirname, 'public')));
-
-app.use('/admin', adminRoutes);
-app.use(shopRoutes);
-
-<i>app.use((req, res, next) => {
-    res.status(404).sendFile(path.join(__dirname, 'views', '404.html'));
-});</i>
-
-app.listen(3000);
-              </code></pre>`,
       ],
     },
     {
@@ -1390,23 +1354,6 @@ const error_handling_with_ExpressJS = {
       ],
     },
     {
-      sectionTitle: 'Understanding different Error Types',
-      sectionSource: '',
-      highlights: {
-        highlight1: ['Error Types'],
-      },
-      tooltips: [
-        `<ul>Types of errors:
-          <li>- Syntax Errors</li>
-          <li>- Runtime Errors</li>
-          <li>- Logical Errors</li>
-        </ul>
-        <p>Syntax and runtime error throw (helpful) error messages (with line numbers!).</p>
-        <p>Logical error can be fixed with testing and the help of the debugger.</p>
-        `,
-      ],
-    },
-    {
       sectionTitle: 'Debugging errors in Visual Studio Code',
       sectionSource: '',
       tooltips: [
@@ -1439,6 +1386,26 @@ const error_handling_with_ExpressJS = {
       ],
     },
     {
+      sectionTitle:
+        'An Overview of Error Handling: Operational vs Programming Errors',
+      sectionSource: '',
+      tooltips: [
+        `
+      <p>Up until this point we haven't really <i>handled errors in a central place in our application</i>. What we did was to simply send back an error message as JSON in each route handler in case something went wrong.</p>
+      <ul>Let's take a minute to just get a brief overview of error handling in Express.js. There are two types of errors that can occur: 
+        <li>- <i><b>operational</b> errors</i>;</li>
+        <li>- <i><b>programming</b> errors</i>.</li>
+      </ul>
+      <p>Operational errors are problems that we can predict will inevitably happen at some point in the future, so we just need to handle them in advance. <i>They have nothing to do with bugs in our code. Instead, they depend on the user, or the system, or the network.</i> So, things like a user accessing an invalid route, inputting invalid data, or an application failing to connect to the database. All these are operational errors that we will need to handle in order to prepare our application for these cases.</p>
+      <p>On the other hand, we have programming errors. <i>Programming errors are simply bugs that we developers introduce into our code.</i> Like, for example, trying to read properties from an <code>undefined</code> variable, using <code>await</code> without <code>async</code>, accidentally using <code>request.query</code> instead of <code>request.body</code>, or many other errors, really, that we might make. This are really inevitable but also more difficult to find and to handle.</p>
+      <p>It's important that you understand this crucial difference between operational errors and programming errors. When we're talking about error handling with Express.js, we mainly just mean operational errors, because these are the ones that are easy to catch and to handle with our Express.js application.</p>
+      <p>Express.js actually comes with error handling out of the box. So, all we have to do is to <i>write a global Express.js error handling middleware which will then catch errors coming from all over the application</i>. So, no matter if it's an error coming from a route handler, or a model validator or really, someplace else, the goal is that all these errors end up in one central error handling middleware. So that we can send a nice response back to the client letting them know what happened.</p>
+      <p>The beauty of having a global error handling middleware is that it allows for a nice separation of concerns. So, we don't have to worry about error handling right in our business logic or our controllers, or really anywhere in our application. We can simply send the errors down to the error handler which will then decide what to do with them next.</p>
+      <p><img src="../../src/img/error_handling_1.jpg"/></p>
+      `,
+      ],
+    },
+    {
       sectionTitle: 'Handling Unhandled Routes',
       sectionSource: '',
       highlights: {
@@ -1465,25 +1432,6 @@ app.use('/api/v1/users', userRouter);
   })
 });</i>
       </code></pre>`,
-      ],
-    },
-    {
-      sectionTitle: 'An Overview of Error Handling',
-      sectionSource: '',
-      tooltips: [
-        `
-      <p>Up until this point we haven't really <i>handled errors in a central place in our application</i>. What we did was to simply send back an error message as JSON in each route handler in case something went wrong.</p>
-      <ul>Let's take a minute to just get a brief overview of error handling in Express.js. There are two types of errors that can occur: 
-        <li>- <i><b>operational</b> errors</i>;</li>
-        <li>- <i><b>programming</b> errors</i>.</li>
-      </ul>
-      <p>Operational errors are problems that we can predict will inevitably happen at some point in the future, so we just need to handle them in advance. They have nothing to do with bugs in our code. Instead, they depend on the user, or the system, or the network. So, things like a user accessing an invalid route, inputting invalid data, or an application failing to connect to the database. All these are operational errors that we will need to handle in order to prepare our application for these cases.</p>
-      <p>On the other hand, we have programming errors. Programming errors are simply bugs that we developers introduce into our code. Like, for example, trying to read properties from an <code>undefined</code> variable, using <code>await</code> without <code>async</code>, accidentally using <code>request.query</code> instead of <code>request.body</code>, or many other errors, really, that we might make. This are really inevitable but also more difficult to find and to handle.</p>
-      <p>It's important that you understand this crucial difference between operational errors and programming errors. When we're talking about error handling with Express.js, we mainly just mean operational errors, because these are the ones that are easy to catch and to handle with our Express.js application</p>
-      <p>Express.js actually comes with error handling out of the box. So, all we have to do is to <i>write a global Express.js error handling middleware which will then catch errors coming from all over the application</i>. So, no matter if it's an error coming from a route handler, or a model validator or really, someplace else, the goal is that all these errors end up in one central error handling middleware. So that we can send a nice response back to the client letting them know what happened.</p>
-      <p>The beauty of having a global error handling middleware is that it allows for a nice separation of concerns. So, we don't have to worry about error handling right in our business logic or our controllers, or really anywhere in our application. We can simply send the errors down to the error handler which will then decide what to do with them next.</p>
-      <p><img src="../../src/img/error_handling_1.jpg"/></p>
-      `,
       ],
     },
     {
@@ -1583,10 +1531,40 @@ app.use((<b>err</b>, req, res, next) => {
       ],
     },
     {
-      sectionTitle: 'Catching Errors in Async Functions',
+      sectionTitle: 'Handle Synchronous vs Asynchronous Errors',
       sectionSource: '',
       tooltips: [
-        `<p>By implementing the code below, <i>you get rid of <code>try/catch</code> block</i> in your <u>asynchronous</u> functions.</p>
+        `<p>If your server <i>thrown errors</i> and you don't <i>handle them</i>, your server just crashes. Now how can we handle errors?</p>
+        <p>One solution for synchronous code, so code that executes line by line immediately and does not wait for anything (for example where we don't interact with files or where we don't send requests), such code can  be wrapped with try/catch block.</p>
+        <p>We also have async operations that can fail, and such operations when using Promises are handled with <code>then()</code> and <code>catch()</code>.</p>
+        `,
+        `<h3>Synchronous errors: handling errors with <code>try {} catch {}</code> block</h3>
+        <p>To handle errors for synchronous code use <code>try {} catch {}</code> block.</p>
+        <p>With try/catch we <code>try{}</code> a certain code, and then we have to add <code>catch{}</code> where we catch a potential error that might have been thrown, and in <code>catch{}</code> we can handle errors.</p>
+        <pre><code>
+function sum(a, b) {
+    if (a && b) return a + b;
+    throw new Error('Invalid arguments');
+};
+
+// console.log(sum(1));
+
+try {
+    console.log(sum(1));
+} catch (error) {
+    console.log('Error occurred!');
+    console.log(error);
+}
+
+console.log('This works!');
+        </code></pre>
+        <p><i>NOTE: If you don't use try/catch, when a error occurrs, the call stack is blocked and you can't continue after the error line. If you handle errors with try/catch, when a error occurrs, the error is handle in catch block, BUT the call stack can continue to run after the catch block.</i></p>
+        <p>When you use try/catch and handle a error inside of it, the call stack will never be blocked, and it can continue running after the error line.</p>
+        `,
+        `<h3>Asynchronous errors: handling errors with <code>then()</code> and <code>catch()</code></h3>
+        <p>To handle errors for asynchronous code use <code>then()</code> and <code>catch()</code>.</p>`,
+        `<h3>Extra: Catching Errors in Async Functions</h3>
+        <p>By implementing the code below, <i>you get rid of <code>try/catch</code> block</i> in your <u>asynchronous</u> functions.</p>
         <pre><code>
 module.exports = <i>fn</i> => {
   return (req, res, next) => {
@@ -1662,12 +1640,12 @@ exports.deleteTour = <b>catchAsync</b>(<i>async (req, res, next)</i> => {
   });
 });
       </code></pre>
-      `,
+        `,
       ],
     },
     {
       sectionTitle:
-        'Handle Errors During Development vs Production with the help of Environment Variables',
+        'Environment Variables & Handle Errors in Different Environments: Development vs Production',
       sectionSource: '',
       tooltips: [
         `<p>The idea behind "Errors During Development vs Production" is to <i>send different error messages for the development and production environment</i>. Is not a good practice to send the same response error message to everyone. In production, we want to leak as little information about our errors to the client as possible. So in that case, we only want to send a nice, human-friendly message so that the user knows what's wrong. On the other hand, when written development, we want to get as much information about the error that occurred as possible.</p>`,
@@ -1801,44 +1779,6 @@ process.on('unhandledRejection'</i>, (err) => {
       <p>4. Log errors to help with debugging and maintaining the health of your application.</p>
       <p>5. Consider using tools or libraries that help with error management and automatic restarts of your Node.js application, such as PM2, which can handle process management and help in scenarios where the application crashes.</p>
         `,
-      ],
-    },
-    {
-      sectionTitle: 'Types of Errors & Error Handling',
-      sectionSource: '',
-      highlights: {
-        highlight1: ['Error Handling'],
-      },
-      tooltips: [
-        `<p>If your server <i>thrown errors</i> and you don't <i>handle them</i>, your server just crashes. Now how can we handle errors?</p>
-        <p>One solution for synchronous code, so code that executes line by line immediately and does not wait for anything (for example where we don't interact with files or where we don't send requests), such code can  be wrapped with try/catch block.</p>
-        <p>We also have async operations that can fail, and such operations when using Promises are handled with <code>then()</code> and <code>catch()</code>.</p>
-        `,
-        `<h3>Synchronous errors: handling errors with <code>try {} catch {}</code> block</h3>
-        <p>To handle errors for synchronous code use <code>try {} catch {}</code> block.</p>
-        <p>With try/catch we <code>try{}</code> a certain code, and then we have to add <code>catch{}</code> where we catch a potential error that might have been thrown, and in <code>catch{}</code> we can handle errors.</p>
-        <pre></code>
-function sum(a, b) {
-    if (a && b) return a + b;
-    throw new Error('Invalid arguments');
-};
-
-// console.log(sum(1));
-
-try {
-    console.log(sum(1));
-} catch (error) {
-    console.log('Error occurred!');
-    console.log(error);
-}
-
-console.log('This works!');
-        </code></pre>
-        <p><i>NOTE: If you don't use try/catch, when a error occurrs, the call stack is blocked and you can't continue after the error line. If you handle errors with try/catch, when a error occurrs, the error is handle in catch block, BUT the call stack can continue to run after the catch block.</i></p>
-        <p>When you use try/catch and handle a error inside of it, the call stack will never be blocked, and it can continue running after the error line.</p>
-        `,
-        `<h3>Asynchronous errors: handling errors with <code>then()</code> and <code>catch()</code></h3>
-        <p>To handle errors for asynchronous code use <code>then()</code> and <code>catch()</code>.</p>`,
       ],
     },
     {
@@ -2446,7 +2386,9 @@ const working_with_REST_APIs = {
       sectionSource: '',
       tooltips: [
         `<h3>Separate API into logical resources</h3>
+        <p>A resource is an object or representation of something, which has data associated to it. Any information that can be <u>named</u> can be a resource.</p>
         <p><img src="../../src/img/rest_api_arhitecture_1.jpg"/></p>
+        <p><b>Endpoints should contain only resources (nouns)</b>, and use HTTP methods for actions!</p>
         <p><img src="../../src/img/rest_api_arhitecture_2.jpg"/></p>
         `,
         `<h3>Send data as JSON</h3>
@@ -3693,6 +3635,129 @@ const modern_javaScript_and_nodeJS = {
   ],
 };
 
+const server_side_rendering = {
+  title: 'Server Side Rendering',
+  titleDescription: '',
+  sections: [
+    {
+      sectionTitle: 'Creating HTML Pages',
+      sectionSource: '',
+      tooltips: [
+        `<p>You store all your HTML pages in a folder called "views" because you will structure your application folders in a MVC arhitecture.</p>
+        <p>One part of MVC is that you manage your views, so what you serve to the user, in one place of our application, in the "views" folder. So "views" folder will just be a bunch of HTML files.</p>
+        `,
+      ],
+    },
+    {
+      sectionTitle:
+        'Serving HTML Pages with <code>sendFile()</code> function, <code>path.join()</code> method and <code>__dirname</code> global variable',
+      sectionSource: '',
+      highlights: {
+        highlight2: [
+          '<code>sendFile()</code>',
+          '<code>path.join()</code>',
+          '<code>__dirname</code>',
+        ],
+      },
+      tooltips: [
+        `<p>It's important to know that you're not limited to <code>send()</code> dummy text or anything like that, you can <code>sendFiles()</code> to your users, for example HTML files or images.</p>
+        <p>I'll show you how we can return HTML pages (files), more specific HTML files we prepared to our client, instead of writing HTML code in Node.js as we did us far, which wasn't really that great.</p>`,
+        `<pre><code>
+const path = require('path');
+
+const express = require('express');
+
+const router = express.Router();
+
+router.get('/add-product', (req, res, next) => {
+  <i>res.<b>sendFile</b>(<b>path.join</b>(<b>__dirname</b>, '..', 'views', 'add-product.html'));</i>
+});
+
+router.post('/add-product', (req, res, next) => {
+  console.log(req.body);
+  res.redirect('/');
+});
+
+module.exports = router;
+        </code></pre>
+        `,
+        `<h3>More aboute <code>res.sendFile()</code> function</h3>
+        <p>The <code>res.sendFile()</code> function <i>transfers the file at the given path</i> and <i>it sets the Content-Type response HTTP header field based on the filename extension</i>.</p>
+        <p>Unless the <code>root</code> option is set in the options object, <i>path must be an <u>absolute path</u> to the file</i>.</p>
+        <ul>This API <i>provides access to data on the running file system</i>. Ensure that either:
+          <li>a) the way in which the path argument was constructed into an absolute path is secure if it contains user input or</li>
+          <li>b) set the root option to the absolute path of a directory to contain access within.</li>
+        </ul>
+        <p>When the <code>root</code> option is provided, the path argument is allowed to be a relative path, including containing <code>..</code>. Express.js will validate that the relative path provided as path will resolve within the given <code>root</code> option.</p>
+        `,
+        `<h3>More aboute <code>path.join()</code> method</h3>
+        <p>The <code>path.join()</code> method <i>joins the specified <u>path segments</u> into <u>one path</u></i>. You can specify as many path segments as you like.</p>
+        <p>The specified <i>path segments must be <u>strings</u></i>, separated by comma <code>,</code>.</p>
+        <p>We're using <code>path.join()</code> because this will automatically build the path in a way that works on both Linux and Windows systems.</p>
+        `,
+        `<h3>More aboute <code>__dirname</code> variable</h3>
+        <p><code>__dirname</code> is a <i>global variable</i> made available by Node.js (environment variable) that tells you <i>the <u>absolute path of the directory</u> containing the currently executing file</i>.</p>
+        `,
+      ],
+    },
+    {
+      sectionTitle: 'Serving a 404 Error HTML Page',
+      sectionSource: '',
+      tooltips: [
+        `<h3><code>app.use("/")</code> is tipically used as "catch all unhandled routes" middleware</h3>
+        <p><i><code>app.use("/")</code> is commonly used at the final of your Node.js code for unhandled routes, because in the case you <u>access a URL path that doesn't exist (a URL path that is not handled by a middleware)</u>, you need to have a middleware function that handle that incoming request and finally send a response that serves a HTML error page.</i></p>
+        <pre><code>
+const path = require('path');
+
+const express = require('express');
+const bodyParser = require('body-parser');
+
+const app = express();
+
+const adminRoutes = require('./routes/admin');
+const shopRoutes = require('./routes/shop');
+
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use('/admin', adminRoutes);
+app.use(shopRoutes);
+
+<i>app.use((req, res, next) => {
+    res.status(404).sendFile(path.join(__dirname, 'views', '404.html'));
+});</i>
+
+app.listen(3000);
+              </code></pre>
+        
+        <pre><code>
+const path = require('path');
+
+const express = require('express');
+const bodyParser = require('body-parser');
+
+const app = express();
+
+const adminRoutes = require('./routes/admin');
+const shopRoutes = require('./routes/shop');
+
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use('/admin', adminRoutes);
+app.use(shopRoutes);
+
+<i>app.use((req, res, next) => {
+    res.status(404).sendFile(path.join(__dirname, 'views', '404.html'));
+});</i>
+
+app.listen(3000);
+              </code></pre>`,
+      ],
+    },
+  ],
+};
+
 const nodeJS_and_TypeScript = {
   title: 'NodeJS & TypeScript',
   titleDescription: '',
@@ -3823,6 +3888,7 @@ export const dataStorage = [
   adding_payments,
   working_with_REST_APIs,
   understanding_async_await_in_NodeJS,
+  server_side_rendering,
   dynamic_content_and_adding_templating_engines,
   sessions_and_cookies,
   websockets_and_socket,

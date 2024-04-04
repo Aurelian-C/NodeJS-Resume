@@ -141,7 +141,7 @@ body {
 }
 
 .card__article:not(:last-child) {
-  margin-bottom: 12px;
+  margin-bottom: 14px;
 }
 
 .content__icon {
@@ -179,13 +179,14 @@ body {
 }
 
 .card__article-title {
+  display: grid;
+  grid-template-columns: 20px 1fr;
+  gap: 5px;
   letter-spacing: 0.2px;
   word-spacing: 1px;
   line-height: 20px;
-  text-indent: 40px;
   font-size: var(--font-size-article-title);
   font-weight: 400;
-  display: inline-block;
   width: fit-content;
   cursor: pointer;
 }
@@ -279,7 +280,7 @@ code {
   color: #fff;
   border: 1px solid rgb(107, 107, 107);
   border-radius: 6px;
-  padding: 10px 25px;
+  padding: 10px 25px 60px 25px;
   font-size: var(--font-size-article-content);
   font-style: normal;
   overflow-y: scroll;
