@@ -2035,7 +2035,37 @@ const sending_emails = {
       tooltips: [
         `<p><i>Node.js or Express.js won't send emails on its own, you need some third party service for that.</i></p>
         <p>You can use a packages called <code>nodemailer</code> for sending email from Node.js or Express.js</p>
+        <pre><code>
+const nodemailer = require('nodemailer');
+
+const sendEmail = async options => {
+  //1) Create a transporter
+  const transporter = nodemailer.createTransport({
+    host: process.env.EMAIL_HOST,
+    port: process.env.EMAIL_PORT,
+    auth: {
+      user: process.env.EMAIL_USERNAME,
+      pass: process.env.EMAIL_PASSWORD
+    }
+  });
+
+  //2) Define the email options
+  const mailOptions = {
+    from: 'Jonas Schmedtmann <hello@jonas.io>',
+    to: options.email,
+    subject: options.subject,
+    text: options.message
+    // html:
+  };
+
+  //3) Actually send the email
+  await transporter.sendMail(mailOptions);
+};
+
+module.exports = sendEmail;
+        </code></pre>
         `,
+        `<p>Using Gmail for sending emails is not at all a good idea for a production app, because you can only send 500 emails per day, and also, you will probably very quickly be marked as a spammer, and from there, it will only go downhill. So, unless you build a private app, and you just send emails to yourself, or, like 10 friends, well, then you should use another service. Some well-known ones are <b>SendGrid</b> and <b>Mailgun</b>.</p>`,
       ],
     },
     {
@@ -2499,6 +2529,48 @@ fetch('http://localhost:8080/feed/post', {
       ],
     },
     {
+      sectionTitle: 'Protect Routes with JWT Token',
+      sectionSource: '',
+      tooltips: [
+        `<p>To send a JSON Web Token as a header, there's actually a standard for doing that:</p>
+        <pre><code>
+fetch('http://localhost:8080/protected_route', {
+  method: 'POST',
+  <b>headers</b>: {
+    'Content-Type': 'application/json',
+    <b>'Authorization': 'Bearer JWT_TOKEN_VALUE',</b>
+  }
+  body: JSON.stringify({ title: 'A title', content: 'Some content...'})
+})      
+      </code></pre>`,
+        `<p>You can read headers send from client with <code>req.headers</code>:</p>
+        <pre><code>
+<i>const { promisify } = require('util');</i>
+
+app.use(async (req, res, next) => {
+  let token;
+  if (
+    req.headers.authorization && 
+    req.headers.authorization.startsWith('Bearer)
+  ) {
+    token = <i><b>req.headers</b>.authorization</i>.split(' ')[1];
+  }
+
+  if (!token) next(new Error('You are NOT logged in!'));
+
+  try {
+    const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+  } catch(err) {
+    next(new Error(err));
+  }
+  
+  next();
+})
+      </code></pre>
+      `,
+      ],
+    },
+    {
       sectionTitle: 'Static Images & Error Handling',
       sectionSource: '',
       tooltips: [``],
@@ -2542,7 +2614,7 @@ fetch('http://localhost:8080/feed/post', {
         `<h3>How Does Authentication Work?</h3>
     <p>In REST APIs, we still have our client-side and server-side. The client still sends authentication credentials to the server.</p>
   <p>In the past, without building a REST API, we would have checked that credentials on the server and if it is valid, we would have established a session. Now, <i>we don't use a session anymore because REST APIs are stateless</i>, REST APIs don't care about the client. In REST APIs, server and client are strict decoupling and every request should be treated standalone: that means every request should have all the data it needs to authenticate itself. With a session, the server needs to store data about the client, the server then stores that a client is authenticated, and that's just not how REST APIs work. <i>In REST APIs, the server will not store anything about any client, so <b>we don't store sessions on a REST API</b>.</i></p>
-  <p>Instead of using session like we use to do, <i>in REST APIs we return a so-called <b>token</b> to the client</i>. That token will be <i>generated on the server</i> and will hold some information which can only be <i>validated by the server</i>, and this token will then be <i>stored in the client (in storage in the browser)</i>. The client can then attach this token to every subsequent request it sends to the server. <i>So this stored token is then attached to every request that targets a resource on the server which requires authentication.</i></p>
+  <p>Instead of using session like we use to do, <i>in REST APIs we return a so-called <b>token</b> to the client</i>. That token will be <b>generated on the server</b> and will hold some information which can only be <i>validated by the server</i>, and this token will then be <b>stored in the client (in storage in the browser)</b>. The client can then attach this token to every subsequent request it sends to the server. <i>So this stored token is then attached to every request that targets a resource on the server which requires authentication.</i></p>
   <p>That token can only be validated by the server, which created the token, and if you change that token on the frontend or you try to create it to fake that you are authenticated, that will be detected, because the server used a certain algorithm for generating the token which you can't fake, because you don't know the private key used by that server for generating the token.</p>
   <p><img src="../../src/img/token_1.jpg"/></p>
   `,
@@ -2551,13 +2623,15 @@ fetch('http://localhost:8080/feed/post', {
     <p>This JWT is then returned to the client and <i>the signature can only be verified by the server</i>, so you can't edit or create the JWT on the client (well, you can edit it, but then the server will detect this and will treat the token as invalid).</p>
     <p><img src="../../src/img/token_2.jpg"/></p>
     <p>This is how we generate the token or how we do authentication in REST APIs. We have the token which can be checked by the server, but which is NOT stored on the server with a session, instead is stored in the browser storage.</p>
+    <p><img src="../../src/img/token_4.jpg"/></p>
     `,
         `<h3>Summary</h3>
-        <p>- The REST API server does NOT care about the client, request are handled in isolation => No session.</p>
+        <p>- JSON Web Tokens are a stateless solution for authentication: there is no need to store any session state on the server. The REST API server does NOT care about the client, request are handled in isolation => No session.</p>
     <p>- Due to no sessions being used, authentication works differently in REST APIs.</p>
     <p>- Each request needs to be able to send some data that proves that the request is authenticated.</p>
     <p>- JSON Web Tokens ("JWT") are a common way of storing authentication information on the client and providing authentication status.</p>
     <p>- JWTs are signed by the server and can only be validated by the server.</p>
+    <p><img src="../../src/img/token_3.jpg"/></p>
     `,
       ],
     },
@@ -2573,20 +2647,29 @@ fetch('http://localhost:8080/feed/post', {
 const jwt = require('jsonwebtoken');
 
 app.post((req, res, next) => {
-<i>jwt<b>.sign</b>(
+const token = <i>jwt<b>.sign</b>(
   {
     email: 'userEmail',
     userId: 'userId,
   },
-  <b>'secret-key'</b>,
-  { <b>expiresIn</b>: '1h' }
+  <b>processenv.JWT_SECRET</b>,
+  { <b>expiresIn</b>: process.env.JWT_EXPIRES_IN }
 );</i>
 
-res.status(200).json({ token, userId });
+res.status(201).json({
+  status: 'success',
+  <b>token</b>,
+  data: {
+    user: {
+      userId,
+      userEmail
+    }
+  }
+  });
 });
     </code></pre>
     <p><code>jwt.sign()</code> creates a new signature and packs that into a new JSON Web Token.</p>
-    <p>Setting an expiration time to the JWT is a security mechanism you should add. Because the token is stored in the client, that token could be stolen. If the user does not logout, another person copies the token from his browser storage and then he can use it on his own PC forever. If you set an expiration time, the token becomes invalid when that time passed, so setting an expiration time is a good security mechanism and a nice balance between usability, where you would want infinite sessions, and security, where you would want to limit JWT validity to an amount of time.</p>
+    <p><i>Setting an expiration time to the JWT is a security mechanism you should add.</i> Because the token is stored in the client, that token could be stolen. If the user does not logout, another person copies the token from his browser storage and then he can use it on his own PC forever. If you set an expiration time, the token becomes invalid when that time passed, so setting an expiration time is a good security mechanism and a nice balance between usability, where you would want infinite sessions, and security, where you would want to limit JWT validity to an amount of time.</p>
     `,
       ],
     },
