@@ -2727,6 +2727,13 @@ module.exports = (req, res, next) => {
     `,
       ],
     },
+  ],
+};
+
+const security = {
+  title: 'Authentication & Authorization: Security',
+  titleDescription: '',
+  sections: [
     {
       sectionTitle: 'Security Best Practices & Suggestions',
       sectionSource: '',
@@ -2796,11 +2803,11 @@ const createSendToken = (user, statusCode, res) => {
       ],
     },
     {
-      sectionTitle:
-        'Implementing Rate Limiting with <code>express-rate-limit</code>',
+      sectionTitle: 'Implementing Rate Limiting with express-rate-limit',
       sectionSource: '',
       highlights: {
         highlight1: ['Rate Limiting'],
+        highlight2: ['express-rate-limit'],
       },
       tooltips: [
         `<p>In this article we will implement rate limiting, in order to prevent the same IP from making too many requests to our API. This will then help us preventing attacks like Denial-of-Service or Brute Force Attacks.</p>
@@ -2860,6 +2867,7 @@ app.listen(3000);
       sectionSource: '',
       highlights: {
         highlight1: ['Security HTTP Headers'],
+        highlight2: ['Helmet'],
       },
       tooltips: [
         `<pre><code>
@@ -2880,16 +2888,103 @@ app.listen(3000);
     {
       sectionTitle: 'Data Sanitization',
       sectionSource: '',
+      highlights: {
+        highlight1: ['Data Sanitization'],
+      },
       tooltips: [
         `<p>Data sanitization means to clean all the data that comes into the application from malicious code.</p>
         <p>We will do data sanitization against NoSQL Query Injection, and also data sanitization against Cross-Site Scripting Attacks.</p>
+        <p>With NoSQL Query Injection, we were able to log in, without knowing the email address, only the password:</p>
+        <pre><code>
+fetch('http://localhost:8080/users/login', {
+  method</b>: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  }
+  body: JSON.stringify</i>(
+    { email: <b>{"$gt": ""}</b>,
+      password: pass1234
+    }
+  )
+})      
+      </code></pre>
+      <p>This works basically because <code>{"$gt": ""}</code> will always be <code>true</code> and will then select all the usernames. And for passwords it's not really difficult to find a bunch of really popular passwords that are used on every application.</p>
+      <p>To protect against NoSQL Query Injection we need to install a package called <code>express-mongo-sanitize</code>.</p>
+      <pre><code>
+const express = require('express');
+<i>const mongoSanitize = require('express-mongo-sanitize');
+const xss = require('xss-clean');</i>
+
+const app = express();
+
+app.use(express.json({ limit: '10kb' }));
+
+//Data sanitization against NoSQL query injection
+app.use(<b>mongoSanitize()</b>);
+
+//Data sanitization against XSS
+app.use(<b>xss()</b>);
+
+app.listen(3000);
+      </code></pre>
+      <p>What <code>mongoSanitize()</code> middleware does is to look at the request body, the request query string, and also at request params, and then it will filter out all of the dollar signs and dots, because that's how MongoDB operators are written. By removing that, well, these operators are then no longer going to work.</p>
+      <p><code>xss()()</code> will clean any user input from malicious HTML code. Imagine that an attacker would try to insert some malicious HTML code with some JavaScript code attached to it. If that would then later be injected into our HTML site, it could really create some damage then.</p>
         `,
       ],
     },
     {
-      sectionTitle: 'Preventing Parameter Pollution',
+      sectionTitle: 'Preventing Parameter Pollution with hpp',
       sectionSource: '',
-      tooltips: [``],
+      highlights: {
+        highlight1: ['Parameter Pollution'],
+        highlight2: ['hpp'],
+      },
+      tooltips: [
+        `<p><code>hpp</code> package is an express middleware to protect against HTTP Parameter Pollution attacks.</p>
+      <pre><code>
+fetch('http://localhost:8080/tours?<i><u>duration</u>=5&<u>duration</u>=9</i>');
+      </code></pre>
+      <pre><code>
+const express = require('express');
+<i>const hpp = require('hpp');</i>
+
+const app = express();
+
+//Prevent parameter pollution
+<i>app.use(<b>hpp()</b>);</i>
+
+app.listen(3000);
+      </code></pre>
+      <p><i><code>hpp()</code> should be used by the end</i>, because what it does is to clear up the query string.</p>
+      <p>If you want some duplicate query params, you can pass to <code>hpp()</code> an object with a <code>whitelist</code> property. For example, we might want to search for /tours with the duration of nine and five.</p>
+      <p>The <code>whitelist</code> property holds an array of properties for which we actually allow duplicates in the query string.</p>
+      <pre><code>
+fetch('http://localhost:8080/tours?<i><u>duration</u>=5&<u>duration</u>=9</i>');
+      </code></pre>
+      <pre><code>
+const express = require('express');
+<i>const hpp = require('hpp');</i>
+
+const app = express();
+
+//Prevent parameter pollution
+<i>app.use(
+  hpp({
+    <b>whitelist</b>: [
+      'duration',
+      'ratingsQuantity',
+      'ratingsAverage',
+      'maxGroupSize',
+      'difficulty',
+      'price'
+    ]
+  })
+);</i>
+
+app.listen(3000);
+      </code></pre>
+      `,
+      ],
     },
   ],
 };
@@ -4134,6 +4229,7 @@ export const dataStorage = [
   understanding_async_requests,
   adding_payments,
   working_with_REST_APIs,
+  security,
   understanding_async_await_in_NodeJS,
   server_side_rendering,
   dynamic_content_and_adding_templating_engines,
