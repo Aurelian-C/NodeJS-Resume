@@ -2727,6 +2727,170 @@ module.exports = (req, res, next) => {
     `,
       ],
     },
+    {
+      sectionTitle: 'Security Best Practices & Suggestions',
+      sectionSource: '',
+      tooltips: [
+        `<h3>Compromised Database</h3>
+          <p>This means that an attacker gained access to our database. This is an extremely severe problem, but to prevent even bigger problems, we must always encrypt passwords and password reset tokens. This way, the attacker can't at least steal our users passwords and also can't reset them.</p>`,
+        `<h3>Brute Force Attack</h3>
+          <p>The attacker basically tries to guess a password by trying millions and millions of random passwords until they find the right one. To prevent this, we can make the login request really slow, and the <code>bcrypt</code> package actually does just that. Another strategy is to implement rate limiting, which limits the number of requests coming from one single IP. Another strategy is to actually implement a maximum number of login attempts for each user.</p>`,
+        `<h3>Cross-Site Scripting (XSS) Attack</h3>
+          <p>the attacker tries to inject scripts into our page to run his malicious code. On the client side, this is especially dangerous because it allows the attacker to read the local storage, which is the reason why we should never ever store the JSON web token in local storage. Instead, it should be stored in an HTTPOnly cookie that makes it so that the browser can only receive and send the cookie, but cannot access or modify it in any way. That then makes it impossible for any attacker to steal the JSON Web Token that is stored in the cookie.</p>
+          <p>On the backend side, in order to prevent XSS attacks, we should sanitize user input data and set some special HTTP headers which make these attacks a bit more difficult to happen. Express doesn't come with these best practices out of the box, so we're gonna use middleware to set all of these special headers.</p>`,
+        `<h3>Denial-of-Service (DOS) Attacks</h3>
+          <p>Denial-of-Service (DOS) happens when the attacker sends so many requests to a server that it breaks down and the application becomes unavailable. implementing rate limiting is a good solution for this. Also, we should limit the amount of data that can be sent in a body in a POST or a PATCH request.</p>
+          <p>Also, we should avoid using so-called evil regular expressions to be in our code. These are just regular expressions that take an exponential time to run for non-matching inputs and they can be exploited to bring our entire application down.</p>
+          `,
+        `<h3>NoSQL Query Injection Attack</h3>
+          <p>Query injection happens when an attacker, instead of inputting valid data, injects some query in order to create query expressions that are gonna translate to <code>true</code>.</p>`,
+        `<h3>Other Best Practices & Suggestions</h3>
+          <p>In a production application, all communication between server and client needs to happen over HTTPS. Otherwise, anyone can listen into the conversation and steal our JSON Web Token.</p>
+          <p>Never commit a configuration file (.env file), like for environment variables, to a version control like Git. In fact, do not upload it anywhere, because this file contains the most sensitive data of the entire application.</p>
+          <p>Whenever there is an error, do not send the entire error to the client. So, stuff like the stack trace could give the attacker some valuable insights into your system.</p>
+          `,
+        `<p><img src="../../src/img/security_best_practices.jpg"/></p>`,
+      ],
+    },
+    {
+      sectionTitle: 'Sending JWT via Cookie',
+      sectionSource: '',
+      highlights: {
+        highlight1: ['Sending JWT via Cookie'],
+      },
+      tooltips: [
+        `<p>JSON Web Token should be stored in a secure HTTPOnly cookie.</p>
+        <p>A Cookie is basically just a small piece of text that a server can send to client. Then when the client receives a Cookie, it will automatically store it and then automatically send it back along with all future requests to the same server. So a browser automatically stores a Cookie that it receives and sends it back in all future requests to that server where it came from.</p>
+        <p>In order to send a Cookie, it's actually very easy. All we have to do is to basically attach it to the response object.</p>
+        `,
+        `<pre><code>
+const createSendToken = (user, statusCode, res) => {
+  const token = signToken(user._id);
+
+  <i>const cookieOptions = {
+    <b>expires</b>: new Date(
+      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+    ),
+    <b>httpOnly</b>: true
+  };
+
+  if (process.env.NODE_ENV === 'production') cookieOptions.<b>secure</b> = true;</i>
+
+  <i><b>res.cookie</b>('jwt', token, cookieOptions);</i>
+
+  res.status(statusCode).json({
+    status: 'success',
+    token,
+    data: {
+      user
+    }
+  });
+};        
+        </code></pre>
+        <ul><code>res.cookie()</code> has 3 parameters:
+          <li>- the name of the cookie;</li>
+          <li>- the data that we actually want to send in the cookie;</li>
+          <li>- a couple of options for the cookie.</li>
+        </ul>
+        `,
+      ],
+    },
+    {
+      sectionTitle:
+        'Implementing Rate Limiting with <code>express-rate-limit</code>',
+      sectionSource: '',
+      highlights: {
+        highlight1: ['Rate Limiting'],
+      },
+      tooltips: [
+        `<p>In this article we will implement rate limiting, in order to prevent the same IP from making too many requests to our API. This will then help us preventing attacks like Denial-of-Service or Brute Force Attacks.</p>
+        <p>The rate limiter will be implemented as a global middleware function. The rate limiter will count the number of requests coming from one IP and then, when there are too many requests, block these requests.</p>
+        <p>The rate limiter that we're going to use is a third party package called <code>express-rate-limit</code>.</p>
+        <pre><code>
+const express = require('express');
+<i>const rateLimit = require('express-rate-limit');</i>
+
+const app = express();
+
+<i>const limiter = rateLimit({
+  max: 100,
+  windowMs: 60 * 60 * 1000,</i> //1hour
+  <i>message: 'Too many requests from this IP, please try again in an hour!'
+});
+
+//You can rate limit any route
+app.use('/api', limiter);</i>
+
+app.listen(3000);
+        </code></pre>
+        <p>We kind of need to find a balance which works best for our application. For example, if you're building an API, which really needs a lot of requests for one IP, then of course, the <code>max</code> property number should be greater. So don't just follow blindly what I just put in the <code>max</code> property (100), but really adapt it to your own application so that you don't make it unusable because of <code>max</code> property limiter.</p>
+        <ul>The limiter will <i>automatically creates and send some HTTP Headers</i> with the limiter rate number, limiter remaining number and limiter time until is reset:
+          <li>- <code>X-RateLimit-Limit</code>: 100;<li>
+          <li>- <code>X-RateLimit-Remaining</code>: 99;<li>
+          <li>- <code>X-RateLimit-Reset</code>: 1556894073.<li>
+        </ul>
+        <p>For each request, the <code>X-RateLimit-Remaining</code> will decrease. Also with passed time, the <code>X-RateLimit-Reset</code> milliseconds will decrease.</p>
+        `,
+      ],
+    },
+    {
+      sectionTitle:
+        'Limit the amount of data that comes in a <code>req.body</code>',
+      sectionSource: '',
+      highlights: {
+        highlight1: ['Limit the amount of data'],
+      },
+      tooltips: [
+        `<pre><code>
+const express = require('express');
+
+const app = express();
+
+//Body parser, reading data from body into req.body
+app.use(<i>express.json(<b>{ limit: '10kb' }</b>)</i>);
+
+app.listen(3000);
+        </code></pre>
+        <p>Now when we have a body larger than 10 kilobyte, it will basically not be accepted.</p>
+        `,
+      ],
+    },
+    {
+      sectionTitle: 'Setting Security HTTP Headers with Helmet',
+      sectionSource: '',
+      highlights: {
+        highlight1: ['Security HTTP Headers'],
+      },
+      tooltips: [
+        `<pre><code>
+const express = require('express');
+<i>const helmet = require('helmet');</i>
+
+const app = express();
+
+//Set security HTTP headers
+<b>app.use(helmet());</b>
+
+app.listen(3000);
+      </code></pre>
+      <p>It's best to use the <code>helmet</code> package early in the middleware stack, so that these headers are really sure to be set. So don't put it like somewhere at the end, put it right in the beginning</p>
+      `,
+      ],
+    },
+    {
+      sectionTitle: 'Data Sanitization',
+      sectionSource: '',
+      tooltips: [
+        `<p>Data sanitization means to clean all the data that comes into the application from malicious code.</p>
+        <p>We will do data sanitization against NoSQL Query Injection, and also data sanitization against Cross-Site Scripting Attacks.</p>
+        `,
+      ],
+    },
+    {
+      sectionTitle: 'Preventing Parameter Pollution',
+      sectionSource: '',
+      tooltips: [``],
+    },
   ],
 };
 
