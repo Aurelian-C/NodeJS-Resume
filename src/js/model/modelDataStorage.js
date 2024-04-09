@@ -610,41 +610,123 @@ app.listen(port, () => {
       ],
     },
     {
-      sectionTitle:
-        'Middleware functions, <code>next()</code> function & sending a Response with <code>res.send()</code> function',
+      sectionTitle: 'Express.js is all about Middleware Functions',
       sectionSource: '',
       highlights: {
-        highlight1: ['Middleware'],
-        highlight2: ['<code>next()</code>', '<code>res.send()</code>'],
+        highlight1: ['Middleware Functions'],
       },
       tooltips: [
         `<h3>Middleware functions are a crucial aspect of Express.js</h3>
-        <p><i>Express.js is all about middleware functions</i>.</p>
-        <p><i>In Express.js, <b>an incoming request is automatically funneled through a bunch of middleware functions</b>, so instead of just having one request handler, you will actually have a possibility of hooking in multiple middleware functions which the request will go through until you send a response.</i></p>
+        <p>Express.js is all about middleware functions.</p>
+        <p>In Express.js, <b>an incoming request is automatically funneled through a bunch of middleware functions</b>, so instead of just having one request handler, you will actually have a possibility of hooking in multiple middleware functions which the request will go through until you send a response.</p>
         <p>This allows you to split your code into multiple blocks/pieces, instead of having one huge middleware function that does everything, and this is the pluggable nature of Express.js, where you can easily add other third party packages which simply happen to give you such middleware functions that you can plug into Express.js and add certain functionalities.</p>
-        <p>Middleware functions are <i>functions that have access to the <u><b>request</b> object</u> (req), the <u><b>response</b> object</u> (res), and <u>the <b>next()</b> middleware function</u> in the application's request-response cycle</i>. These middleware functions can execute any code, modify request and response objects, end the request-response cycle, and call the next middleware function in the stack.</p>
-        <p><i>Middleware functions are used to perform tasks</i> like authentication, logging, parsing request bodies, and error handling. They allow you to modularize your application's logic and make it easier to manage and maintain.</p>
+        <p>Middleware functions are <i>functions that have access to the <u><b>request</b> object</u> (req), the <u><b>response</b> object</u> (res), and <u>the <b>next()</b> middleware function</u> in the application's request-response cycle</i>.</p>
+        <ul>Middleware functions can perform the following tasks:
+          <li><i>- Execute any code.</i></li>
+          <li><i>- Make changes to the request and the response objects.</i></li>
+          <li>- End the request-response cycle.</li>
+          <li>- Call the next middleware in the stack.</li>
+        </ul>
+        <p><i><b>If the current middleware function does not end the request-response cycle, it must call <code>next()</code> to pass control to the next middleware function.</b> Otherwise, the request will be left hanging.</i></p>
+        <p>Starting with Express 5, <i>middleware functions that return a Promise will call <code>next(value)</code> when they reject or throw an error</i>. <code>next()</code> will be called with either the rejected value or the thrown Error.</p>
         <p><img src="../../src/img/middleware_1.jpg"/></p>
+        <p>NOTE: A middleware function is executed every time an incoming request is received and the route path is matched.</p>
+        <p><i>Middleware functions can be <u>used globally</u>, meaning they are executed for every request, or they can be <u>applied to specific routes or groups of routes</u> using <code>app.use()</code> or <code>router.use()</code>.</i></p>
+        <p>Express.js provides a wide range of <i>middleware modules</i> that can be easily integrated into your application, or you can create <i>custom middleware functions</i> tailored to your specific requirements.</p>
         `,
-        `<h3>Middleware example</h3>
-        <p>Here's a simple example of a middleware function in Express.js:</p>
+        `<h3>How to use middleware functions</h3>
+        <p><b>To load the middleware function, call <code>app.use()</code></b>, specifying the middleware function. For example, the following code loads the <code>myLogger</code> middleware function before the route to the root path (/).
         <pre><code>
+const express = require('express')
+const app = express()
+
+const myLogger = function (req, res, next) {
+  console.log('LOGGED')
+  next()
+}
+
+<i>app.use(myLogger);</i>
+
+app.get('/', (req, res) => {
+  res.send('Hello World!')
+})
+
+app.listen(3000)
+        </code></pre>        
+        <p><i>Every time the app receives a request</i>, it prints the message “LOGGED” to the terminal.</p>`,
+        `<h3>The order of middleware loading</h3>
+<p>The order of middleware loading is important: <b>middleware functions that are loaded first are also executed first</b>.</p>
+<p>If <code>myLogger</code> is loaded after the route to the root path, the request never reaches it and the app doesn't print “LOGGED”, because the route handler of the root path terminates the request-response cycle.</p>
+<p>The middleware function <code>myLogger</code> simply prints a message, then passes on the request to the next middleware function in the stack by calling the next() function.</p>
+`,
+        `<h3>Make changes to the request and the response objects</h3>
+<p>Next, we'll create a middleware function called “timeRequest” and add a property called <code>requestTime</code> to the request object.</p>
+        <pre><code>
+const timeRequest = function (req, res, next) {
+  req.requestTime = Date.now()
+  next()
+}
+        </code></pre>  
+        <p>The app now uses the <code>timeRequest</code> middleware function. Also, the callback function of the root path route uses the property that the middleware function adds to <code>req</code> (the request object).</p>
+        <pre><code>
+const express = require('express')
+const app = express()
+
+const timeRequest = function (req, res, next) {
+  <i>req.requestTime</i> = Date.now()
+  next()
+}
+
+app.use(timeRequest)
+
+app.get('/', (req, res) => {
+  const responseText = 'Hello World!' + <i>req.requestTime</i>
+  res.send(responseText)
+})
+
+app.listen(3000)
+        </code></pre>
+`,
+        `<h3>Configurable middleware</h3>
+<p>If you need your middleware to be configurable, export a function which accepts an options object or other parameters, which, then returns the middleware implementation based on the input parameters.</p>
+        <pre><code>
+module.exports = function (options) {
+  return function (req, res, next) {
+    // Implement the middleware function based on the options object
+    next()
+  }
+}
+        </code></pre>
+        <pre><code>
+const mw = require('./my-middleware.js')
+
+app.use(mw({ option1: '1', option2: '2' }))
+        </code></pre>
+`,
+      ],
+    },
+    {
+      sectionTitle:
+        'More details about app.use(), next() & Sending a Response With res.send() Function',
+      sectionSource: '',
+      highlights: {
+        highlight2: ['app.use()', 'next()', 'res.send()'],
+      },
+      tooltips: [
+        `<pre><code>
 const express = require('express');
 const app = express();
 
-// Middleware function
-app.use(<i>(req, res, next) => {
+<i>app.use</i>((req, res, next) => {
     console.log('Time:', Date.now());
-    next(); //allows the request to continue to the next middleware in line (next middleware function in the stack)
-}</i>);
+    <i>next();</i>
+});
 
-// Another middleware function
-app.use(<i>(req, res, next) => {
+<i>app.use</i>((req, res, next) => {
     console.log('Text:', 'Some text to print!');
-    next(); //allows the request to continue to the next middleware in line (next middleware function in the stack)
-}</i>);
+    <i>next();</i> //
+});
 
-// Route handler
 app.get('/', (req, res) => {
     <i>res.send('Hello World!');</i>
 });
@@ -653,13 +735,11 @@ app.listen(3000, () => {
     console.log('Server is running on port 3000');
 });
         </code></pre>
+        <p>In this example, <i><code>app.use()</code> is used to register a middleware function</i>. This middleware function logs the current timestamp to the console <u>every time a request is received</u>. <i>The <code>next()</code> function is called to pass control to the next middleware function in the stack.</i></p>
+        <p>NOTE: Using <code>next()</code> allows the request to continue to the next middleware in line (next middleware function in the stack).</p>
         `,
-        `<p>In this example, <i><code>app.use()</code> is used to register a middleware function</i>. This middleware function logs the current timestamp to the console <u>every time a request is received</u>. <i>The <code>next()</code> function is called to pass control to the next middleware function in the stack.</i></p>
-        <p>NOTE: A middleware function is executed every time an incoming request is received.</p>
-        <p><i>Middleware functions can be <u>used globally</u>, meaning they are executed for every request, or they can be <u>applied to specific routes or groups of routes</u> using <code>app.use()</code> or <code>router.use()</code>.</i></p>
-        <p>Express.js provides a wide range of <i>middleware modules</i> that can be easily integrated into your application, or you can create <i>custom middleware functions</i> tailored to your specific requirements.</p>`,
         `<h3>More details about <code>app.use()</code> function</h3>
-        <p>The <code>app.use()</code> function in Express.js is <i>used to <u>mount middleware functions</u> at a specified path</i>. These middleware functions will be <i>executed for every request that matches the specified path</i>. It can be used to set up middleware <u>globally</u> for your entire application or to apply middleware to <u>specific routes or groups of routes</u>.</p>
+        <p>The <code>app.use()</code> function in Express.js is <b>used to <u>mount middleware functions</u> at a specified path</b>. These middleware functions will be <b>executed for every request that matches the specified path</b>. It can be used to set up middleware <u>globally</u> for your entire application or to apply middleware to <u>specific routes or groups of routes</u>.</p>
         <ul>The <code>app.use()</code> function takes two arguments:
           <li>1. <code>path</code> (optional): specifies the path for which the middleware function should be executed. If no path is specified, the middleware function will be executed for every incoming request. This is useful for setting up middleware that needs to be applied globally, such as logging, parsing request bodies, or handling authentication.
           <pre><code>
