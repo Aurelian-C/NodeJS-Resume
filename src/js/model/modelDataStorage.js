@@ -892,6 +892,38 @@ const routing = {
   titleDescription: '',
   sections: [
     {
+      sectionTitle: 'Introduction to Routing in Express.js',
+      sectionSource: '',
+      tooltips: [
+        `<p>Routing refers to <i>how an <b>application's endpoints (URIs)</b> respond to <b>client requests</b></i>.</p>
+        <p>You define routing using methods of the Express app object that correspond to HTTP methods: for example, <code>app.get()</code> to handle GET requests and <code>app.post</code> to handle POST requests. You can also use <code>app.all()</code> to handle all HTTP methods and <code>app.use()</code> to specify middleware as the callback function.</p>
+        <p><i>These routing methods specify a callback function (sometimes called “handler functions”) called when the application receives a request to the specified route (endpoint) and HTTP method.</i> In other words, the application “listens” for requests that match the specified route(s) and method(s), and when it detects a match, it calls the specified callback function.</p>
+        <p>In fact, <i>the routing methods can have more than one callback function as arguments</i>. With multiple callback functions, it is important to provide <code>next</code> as an argument to the callback function and then call <code>next()</code> within the body of the function to hand off control to the next callback.</p>`,
+        `<h3>Route methods</h3>
+        <p>A route method is derived from one of the HTTP methods, and is attached to an instance of the express class. Express supports methods that correspond to all HTTP request methods: get, post, and so on.</p>
+        <pre><code>
+// GET method route
+app<b>.get</b>('/', (req, res) => {
+  res.send('GET request to the homepage')
+})
+
+// POST method route
+app<b>.post</b>('/', (req, res) => {
+  res.send('POST request to the homepage')
+})
+      </code></pre>
+      <p>There is a special routing method, <code>app.all()</code>, used to <i>load middleware functions at a path for all HTTP request methods</i>. For example, the following handler is executed for requests to the route “/secret” whether using GET, POST, PUT, DELETE.</p>
+              <pre><code>
+app<b>.all</b>('/secret', (req, res, next) => {
+  console.log('Accessing the secret section ...')
+  next() // pass control to the next handler
+})
+      </code></pre>
+
+      `,
+      ],
+    },
+    {
       sectionTitle: 'Handling different routes with <code>app.use()</code>',
       sectionSource: '',
       highlights: {
@@ -1138,29 +1170,25 @@ const dynamic_routes_and_advanced_models = {
       ],
     },
     {
-      sectionTitle: 'Responding to URL Parameters & Extracting Dynamic Params',
+      sectionTitle: 'Route parameters & Extracting Dynamic Params',
       sectionSource: '',
       highlights: {
         highlight1: ['Dynamic Params'],
       },
       tooltips: [
-        `<pre><code>
-const path = require('path');
-const express = require('express');
-const shopController = require('../controllers/shop');
-
-const router = express.Router();
-
-router.get('/', shopController.getIndex);
-router.get('/products', shopController.getProducts);
-<i>router.get('/products/<b>:productId</b>', shopController.getProduct);</i>
-router.get('/cart', shopController.getCart);
-router.get('/orders', shopController.getOrders);
-router.get('/checkout', shopController.getCheckout);
-
-module.exports = router;      
+        `<p>Route parameters are named URL segments that are used to capture the values specified at their position in the URL. <i>The captured values are populated in the <b><code>req.params</code></b> object</i>, with the name of the route parameter specified in the path as their respective keys.</p>
+        <pre><code>
+Route path: /users/<i>:userId</i>/books/<i>:bookId</i>
+Request URL: http://localhost:3000/users/34/books/8989
+<i>req.params</i>: { "userId": "34", "bookId": "8989" }
+        </code></pre>
+        <p>To define routes with route parameters, simply specify the route parameters in the path of the route as shown below.</p>
+        <pre><code>
+app.get('/users/<i>:userId</i>/books/<i>:bookId</i>', (req, res) => {
+  res.send(req.params)
+})     
       </code></pre>
-      
+      <p>NOTE: The name of route parameters must be made up of “word characters” ([A-Za-z0-9_]).</p>
       <pre><code>
 exports.getProduct = (req, res, next) => {
   <i>const prodId = <b>req.params</b>.productId;</i>
@@ -1172,7 +1200,7 @@ exports.getProduct = (req, res, next) => {
       ],
     },
     {
-      sectionTitle: 'Responding to URL Parameters & Set Optional Params',
+      sectionTitle: 'Route parameters & Set Optional Params',
       sectionSource: '',
       highlights: {
         highlight1: ['Optional Params'],
