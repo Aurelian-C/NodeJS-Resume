@@ -711,280 +711,6 @@ app.use('/api', [middleware1, middleware2]);
       ],
     },
     {
-      sectionTitle: 'Handling different routes with <code>app.use()</code>',
-      sectionSource: '',
-      highlights: {
-        highlight2: ['<code>app.use()</code>'],
-      },
-      tooltips: [
-        `<pre><code>
-const express = require('express');
-
-const app = express();
-        
-app.use(<b>'/'</b>, (req, res, next) => {
-  console.log('This middleware ALWAYS RUNS even if you access "/add-product" path! app.use() that has the "/" path will run for ALL ACCESED PATHS that starts with "/".');
-  <i>next();</i>
-});
-        
-app.use(<b>'/add-product'</b>, (req, res, next) => {
-  console.log('First middleware!');
-  <i>res.send('Add Products Page');</i>
-});
-        
-app.use(<b>'/'</b>, (req, res, next) => {
-  console.log('Second middleware!');
-  <i>res.send('Hello from the other side!');</i>
-});
-        
-app.listen(3000);
-      </code></pre>`,
-        `<h3>Basic routing</h3>
-        <p>Routing refers to determining how an application responds to a client request to a particular endpoint, which is a URI (or path) and a specific HTTP request method (GET, POST, and so on).</p>
-        <p>Each route can have one or more handler functions, which are executed when the route is matched.</p>
-        <ul>Route definition takes the following structure: <code>app.<i>METHOD</i>(PATH, HANDLER)</code>, where:
-          <li>- <code>app</code> is an instance of express;</li>
-          <li>- <code>METHOD</code> is an HTTP request method, in lowercase;</li>
-          <li>- <code>PATH</code> is a path on the server;</li>
-          <li>- <code>HANDLER</code> is the function executed when the route is matched.</li>
-        </ul>
-        `,
-      ],
-    },
-    {
-      sectionTitle:
-        'Create chainable route handlers for a route path by using <code>app.route()</code>',
-      sectionSource: '',
-      highlights: {
-        highlight1: ['chainable route handlers for a route path'],
-        highlight2: ['<code>app.route()</code>'],
-      },
-      tooltips: [
-        `<p>You can create <i><u>chainable route handlers</u> for a route path</i> by using <code>app.route()</code>.</p>
-        <pre><code>
-<i>app
-  <b>.route</b>('/book')</i>
-  <i>.get</i>((req, res) => {
-      res.send('Get a random book')
-  })
-  <i>.post</i>((req, res) => {
-      res.send('Add a book')
-  })
-  <i>.put</i>((req, res) => {
-      res.send('Update the book')
-  })      
-      </code></pre>`,
-      ],
-    },
-    {
-      sectionTitle: 'Parsing incoming Requests with body-parser package',
-      sectionSource: '',
-      highlights: {
-        highlight1: ['Parsing incoming Requests'],
-        highlight2: ['body-parser'],
-      },
-      tooltips: [
-        `<p><i>By default, <code>req.body</code> doesn't try to parse the incoming request.</i> For that, we need to install a 3rd party packages.</p>
-        <p><code>body-parser</code> package is a npm package for Node.js body parsing middleware. You install it with <i><code>npm install body-parser</code></i> command.</p>
-        <p><code>body-parser</code> parse incoming request bodies in a middleware before your handlers, available under the <code>req.body</code> property.</p>
-        <p><i><code>bodyParser.urlencoded()</code> will not parse all kinds of possible bodies</i>, files, json and so on, but will parse bodies like sent through a form. If we have other bodies like files, we'll <u>use different parsers</u>, and this makes Express.js so extensible. If we need something, we can plug it in.</p>
-        `,
-        `<h3>An example of parsing an incoming request body</h3>
-        <pre><code>
-const express = require('express');
-<i>const bodyParser = require('body-parser');</i>
-
-const app = express();
-
-app.use(<i>bodyParser.urlencoded({ extended: false })</i>);
-
-app.use('/', (req, res, next) => {
-    next();
-});
-
-app.get('/add-product', (req, res, next) => {
-     res.send('Form html markup for submiting!');
-});
-
-app.post('/product', (req, res, next) => {
-    console.log(<i>req.body</i>); //by default, request doesn't try to parse the incoming request body
-    res.redirect('/');
-});
-
-app.use('/', (req, res, next) => {
-    res.send('Go to add products page!');
-});
-
-app.listen(3000);
-      </code></pre>`,
-      ],
-    },
-    {
-      sectionTitle:
-        'Parsing JSON Requests with <code>express.json()</code> middleware',
-      sectionSource: '',
-      highlights: {
-        highlight2: ['express.json()'],
-      },
-      tooltips: [
-        `<h3>An example of parsing an incoming JSON request body</h3>
-        <pre><code>
-const express = require('express');
-
-const app = express();
-
-<i>app.use(<b>express.json()</b>);</i>
-
-app.post('/product', (req, res, next) => {
-    console.log(<i>req.body</i>);
-    res.redirect('/');
-});
-
-app.listen(3000);
-      </code></pre>`,
-      ],
-    },
-    {
-      sectionTitle: 'Using Express Router',
-      sectionSource: '',
-      tooltips: [
-        `<p>With Express.js routing we can execute different code for different incoming requests and paths or urls without having to write a bunch of <code>if</code> statements.</p>
-        <p>When the application grows, we want to <i>split our routing code over multiple files</i>. Express.js  gives us a pretty nice way of outsourcing routing into other files. You can <i>use the <code>express.Router</code> to split your routes across files</i>.</p>
-        <p>The convention is to create in your application a new folder called "routes". In this folder youl will store all your files related to Express.js route code that should execute for different paths.</p>
-        `,
-        `<pre><code>
-const express = require('express');
-
-<i>const router = express.Router();</i>
-        
-<i>router.get</i>('/add-product', (req, res, next) => {
-  res.send('Add Product Form');
-});
-        
-<i>router.post</i>('/product', (req, res, next) => {
-  res.redirect('/');
-});
-        
-<i>module.exports = router;</i>
-        </code></pre>
-
-        <pre><code>
-const express = require('express');
-
-<i>const router = express.Router();</i>
-
-<i>router.get</i>('/', (req, res, next) => {
-  res.send('Hello from Express!');
-});
-
-<i>module.exports = router;</i>
-        </code></pre>
-
-        <pre><code>
-const express = require('express');
-
-const app = express();
-
-<i>const adminRoutes = require('./<u>routes</u>/admin');
-const shopRoutes = require('./<u>routes</u>/shop');
-
-app.use(adminRoutes);
-app.use(shopRoutes);</i>
-
-app.listen(3000);
-        </code></pre>
-        `,
-      ],
-    },
-    {
-      sectionTitle:
-        'Limiting middleware execution by filtering Request by paths and methods',
-      sectionSource: '',
-      tooltips: [
-        `<h3>Filtering request by method</h3>
-        <p><i>If you filter requests by method, paths are matched exactly</i>, otherwise, with <code>app.use()</code> the first segment of a URL is matched.</p>
-        <pre><code>
-const express = require("express");
-
-const router = express.Router();
-        
-// The same path (/add-product) can be used if the method is different (.get), because is treated as a different URL path
-// /admin/add-product => GET
-<i>router<b>.get</b>("/add-product"</i>, (req, res, next) => {
-  res.send('Form submision!');
-});
-        
-// The same path (/add-product) can be used if the method is different (.post), because is treated as a different URL path
-// /admin/add-product => POST
-<i>router<b>.post</b>("/add-product"</i>, (req, res, next) => {
-   res.redirect("/");
-});
-
-module.exports = router;
-        </code></pre>`,
-        `<h3>Filtering request by path</h3>
-        <pre><code>
-const express = require('express');
-const bodyParser = require('body-parser');
-
-const app = express();
-
-const adminRoutes = require('./routes/admin');
-const shopRoutes = require('./routes/shop');
-
-app.use(bodyParser.urlencoded({extended: false}));
-
-<i>app.use(<b>'/admin'</b>, adminRoutes);</i>
-app.use(shopRoutes);
-
-app.use((req, res, next) => {
-    res.status(404).send('Page not found!');
-});
-
-app.listen(3000);
-      </code></pre>`,
-        `<h3><code>app.use("/")</code> vs <code>app.get("/")</code></h3>
-      <p><code>app.use("/")</code> will <i>match all the paths</i> but <code>app.get("/")</code> will do an <i>exact match</i>.</p>
-      <p>With <code>app.get("/")</code>, <code>app.post("/")</code> an so on, you make sure that you filter middleware execution not only by a specified HTTP method, but even by an exact match for the <code>/</code> path.</p>`,
-      ],
-    },
-    {
-      sectionTitle: 'Chaining Multiple Middleware Functions for the Same Route',
-      sectionSource: '',
-      tooltips: [
-        `<p>Chaining multiple middleware functions for the same route in Express.js allows you to <i>perform a series of operations or checks sequentially before finally handling the request</i>. This feature is extremely <i>useful for structuring your application in a modular way, where you can separate concerns</i>, such as authentication, logging, data validation, etc., into different middleware functions.</p>
-        <p>Chaining middleware functions is a powerful feature in Express.js that helps keep your code clean, organized, and modular, making it easier to maintain and scale your application.</p>
-        `,
-        `<h3>Basic Syntax</h3>
-        <ul>The basic syntax for chaining middleware looks like this:
-          <li>
-            <pre><code>
-app.get('/your-route', <i>middlewareFunction1, middlewareFunction2, finalHandlerFunction</i>);
-            </code></pre>
-          </li>
-        </ul>
-        <p>Each middleware function has access to the <code>request</code> object (req), the <code>response</code> object (res), and the <code>next</code> function in the application's request-response cycle. The <code>next</code> function is a function in the Express router which, when invoked, executes the middleware succeeding the current middleware.</p>
-        `,
-        `<h3>Using <code>router</code></h3>
-        <ul>For more complex applications, you might want to use <code>express.Router</code> to organize your routes and middleware. This allows you to define route handlers and middleware in a modular, mountable way. Here's a quick example:
-        <li>
-          <pre><code>
-const express = require('express');
-const router = express.Router();
-
-router.get('/example', middlewareFunction1, middlewareFunction2, finalHandlerFunction);
-
-app.use('/', router);
-          </code></pre>
-        </li>
-      </ul>
-        `,
-        `<h3>Error Handling Middleware</h3>
-        <p>Express also allows you to define error-handling middleware functions that have four arguments instead of three (<code>err, req, res, next</code>). These are defined in the same way but are designed to handle errors that occur in the preceding middleware/functions.</p>
-        `,
-      ],
-    },
-    {
       sectionTitle:
         'Using a helper function for navigation: <code>path.dirname()</code> with <code>process.mainModule.filename</code> or <code>require.main.filename</code>',
       sectionSource: '',
@@ -1158,54 +884,238 @@ DB_NAME=mydatabase
         `,
       ],
     },
+  ],
+};
+
+const routing = {
+  title: 'Routing',
+  titleDescription: '',
+  sections: [
     {
-      sectionTitle:
-        'Storing/Feching Data in/from Files with <code>fs.readFile()</code> and <code>fs.writeFile()</code>',
+      sectionTitle: 'Handling different routes with <code>app.use()</code>',
       sectionSource: '',
       highlights: {
-        highlight1: ['Storing/Feching Data in/from Files'],
-        highlight2: [
-          '<code>fs.readFile()</code>',
-          '<code>fs.writeFile()</code>',
-        ],
+        highlight2: ['<code>app.use()</code>'],
       },
       tooltips: [
         `<pre><code>
-<i>const fs = require('<b>fs</b>');</i>
-const path = require('path');
+const express = require('express');
 
-const filePath = path.join(path.dirname(process.mainModule.filename), 'data', 'products.json');
-
-const getProductsFromFile = cb => {
-  <b>fs.readFile</b>(filePath, (err, fileContent) => {
-    if (err) {
-      cb([]);
-    } else {
-      cb(JSON.parse(fileContent));
-    }
-  });
-};
-
-module.exports = class Product {
-  constructor(t) {
-    this.title = t;
-  }
-
-  save() {
-    getProductsFromFile(products => {
-      products.push(this);
-      <b>fs.writeFile</b>(filePath, JSON.stringify(products), err => {
-        console.log(err);
-      });
-    });
-  }
-
-  static fetchAll(cb) {
-    getProductsFromFile(cb);
-  }
-};     
+const app = express();
+        
+app.use(<b>'/'</b>, (req, res, next) => {
+  console.log('This middleware ALWAYS RUNS even if you access "/add-product" path! app.use() that has the "/" path will run for ALL ACCESED PATHS that starts with "/".');
+  <i>next();</i>
+});
+        
+app.use(<b>'/add-product'</b>, (req, res, next) => {
+  console.log('First middleware!');
+  <i>res.send('Add Products Page');</i>
+});
+        
+app.use(<b>'/'</b>, (req, res, next) => {
+  console.log('Second middleware!');
+  <i>res.send('Hello from the other side!');</i>
+});
+        
+app.listen(3000);
       </code></pre>`,
-        `<p>IMPORTANT: It's important to understand that <i>working with <u>files for data storage</u> is suboptimal for bigger amounts of data</i>.</p>`,
+        `<h3>Basic routing</h3>
+        <p>Routing refers to determining how an application responds to a client request to a particular endpoint, which is a URI (or path) and a specific HTTP request method (GET, POST, and so on).</p>
+        <p>Each route can have one or more handler functions, which are executed when the route is matched.</p>
+        <ul>Route definition takes the following structure: <code>app.<i>METHOD</i>(PATH, HANDLER)</code>, where:
+          <li>- <code>app</code> is an instance of express;</li>
+          <li>- <code>METHOD</code> is an HTTP request method, in lowercase;</li>
+          <li>- <code>PATH</code> is a path on the server;</li>
+          <li>- <code>HANDLER</code> is the function executed when the route is matched.</li>
+        </ul>
+        `,
+      ],
+    },
+    {
+      sectionTitle:
+        'Create chainable route handlers for a the same route path by using <code>app.route()</code>',
+      sectionSource: '',
+      highlights: {
+        highlight1: ['chainable route handlers'],
+        highlight2: ['<code>app.route()</code>'],
+      },
+      tooltips: [
+        `<p>You can create <i><u>chainable route handlers</u> for a route path</i> by using <code>app.route()</code>.</p>
+        <pre><code>
+<i>app
+  <b>.route</b>('/book')</i>
+  <i>.get</i>((req, res) => {
+      res.send('Get a random book')
+  })
+  <i>.post</i>((req, res) => {
+      res.send('Add a book')
+  })
+  <i>.put</i>((req, res) => {
+      res.send('Update the book')
+  })      
+      </code></pre>`,
+      ],
+    },
+    {
+      sectionTitle: 'Using Express Router',
+      sectionSource: '',
+      tooltips: [
+        `<p>With Express.js routing we can execute different code for different incoming requests and paths or urls without having to write a bunch of <code>if</code> statements.</p>
+        <p>When the application grows, we want to <i>split our routing code over multiple files</i>. Express.js  gives us a pretty nice way of outsourcing routing into other files. You can <i>use the <code>express.Router</code> to split your routes across files</i>.</p>
+        <p>The convention is to create in your application a new folder called "routes". In this folder youl will store all your files related to Express.js route code that should execute for different paths.</p>
+        `,
+        `<pre><code>
+const express = require('express');
+
+<i>const router = express.Router();</i>
+        
+<i>router.get</i>('/add-product', (req, res, next) => {
+  res.send('Add Product Form');
+});
+        
+<i>router.post</i>('/product', (req, res, next) => {
+  res.redirect('/');
+});
+        
+<i>module.exports = router;</i>
+        </code></pre>
+
+        <pre><code>
+const express = require('express');
+
+<i>const router = express.Router();</i>
+
+<i>router.get</i>('/', (req, res, next) => {
+  res.send('Hello from Express!');
+});
+
+<i>module.exports = router;</i>
+        </code></pre>
+
+        <pre><code>
+const express = require('express');
+
+const app = express();
+
+<i>const adminRoutes = require('./<u>routes</u>/admin');
+const shopRoutes = require('./<u>routes</u>/shop');
+
+app.use(adminRoutes);
+app.use(shopRoutes);</i>
+
+app.listen(3000);
+        </code></pre>
+        `,
+      ],
+    },
+    {
+      sectionTitle:
+        'Limiting middleware execution by filtering a HTTP request by paths and methods',
+      sectionSource: '',
+      highlights: {
+        highlight1: ['filtering a HTTP request by paths and methods'],
+      },
+      tooltips: [
+        `<h3>Filtering request by method</h3>
+        <p><i>If you filter requests by method, paths are matched exactly</i>, otherwise, with <code>app.use()</code> the first segment of a URL is matched.</p>
+        <pre><code>
+const express = require("express");
+
+const router = express.Router();
+        
+// The same path (/add-product) can be used if the method is different (.get), because is treated as a different URL path
+// /admin/add-product => GET
+<i>router<b>.get</b>("/add-product"</i>, (req, res, next) => {
+  res.send('Form submision!');
+});
+        
+// The same path (/add-product) can be used if the method is different (.post), because is treated as a different URL path
+// /admin/add-product => POST
+<i>router<b>.post</b>("/add-product"</i>, (req, res, next) => {
+   res.redirect("/");
+});
+
+module.exports = router;
+        </code></pre>
+        <p>NOTE: You can simplify the above code by using <code>.route()</code>:</p>
+                <pre><code>
+const express = require("express");
+
+const router = express.Router();
+
+<i>router
+  <b>.route</b>("/add-product")
+  <b>.get</b>((req, res, next) => {
+    res.send('Form submision!');
+  })
+  <b>.post</b>((req, res, next) => {
+    res.redirect("/");
+ });</i>
+
+module.exports = router;
+        </code></pre>
+        `,
+        `<h3>Filtering request by path</h3>
+        <pre><code>
+const express = require('express');
+const bodyParser = require('body-parser');
+
+const app = express();
+
+const adminRoutes = require('./routes/admin');
+const shopRoutes = require('./routes/shop');
+
+app.use(bodyParser.urlencoded({extended: false}));
+
+<i>app.use(<b>'/admin'</b>, adminRoutes);</i>
+app.use(shopRoutes);
+
+app.use((req, res, next) => {
+    res.status(404).send('Page not found!');
+});
+
+app.listen(3000);
+      </code></pre>`,
+        `<h3><code>app.use("/")</code> vs <code>app.get("/")</code></h3>
+      <p><code>app.use("/")</code> will <i>match all the paths</i> but <code>app.get("/")</code> will do an <i>exact match</i>.</p>
+      <p>With <code>app.get("/")</code>, <code>app.post("/")</code> an so on, you make sure that you filter middleware execution not only by a specified HTTP method, but even by an exact match for the <code>/</code> path.</p>`,
+      ],
+    },
+    {
+      sectionTitle: 'Chaining Multiple Middleware Functions for the Same Route',
+      sectionSource: '',
+      tooltips: [
+        `<p>Chaining multiple middleware functions for the same route in Express.js allows you to <i>perform a series of operations or checks sequentially before finally handling the request</i>. This feature is extremely <i>useful for structuring your application in a modular way, where you can separate concerns</i>, such as authentication, logging, data validation, etc., into different middleware functions.</p>
+        <p>Chaining middleware functions is a powerful feature in Express.js that helps keep your code clean, organized, and modular, making it easier to maintain and scale your application.</p>
+        `,
+        `<h3>Basic Syntax</h3>
+        <ul>The basic syntax for chaining middleware looks like this:
+          <li>
+            <pre><code>
+app.get('/your-route', <i>middlewareFunction1, middlewareFunction2, finalHandlerFunction</i>);
+            </code></pre>
+          </li>
+        </ul>
+        <p>Each middleware function has access to the <code>request</code> object (req), the <code>response</code> object (res), and the <code>next</code> function in the application's request-response cycle. The <code>next</code> function is a function in the Express router which, when invoked, executes the middleware succeeding the current middleware.</p>
+        `,
+        `<h3>Using <code>router</code></h3>
+        <ul>For more complex applications, you might want to use <code>express.Router</code> to organize your routes and middleware. This allows you to define route handlers and middleware in a modular, mountable way. Here's a quick example:
+        <li>
+          <pre><code>
+const express = require('express');
+const router = express.Router();
+
+router.get('/example', middlewareFunction1, middlewareFunction2, finalHandlerFunction);
+
+app.use('/', router);
+          </code></pre>
+        </li>
+      </ul>
+        `,
+        `<h3>Error Handling Middleware</h3>
+        <p>Express also allows you to define error-handling middleware functions that have four arguments instead of three (<code>err, req, res, next</code>). These are defined in the same way but are designed to handle errors that occur in the preceding middleware/functions.</p>
+        `,
       ],
     },
   ],
@@ -1293,6 +1203,131 @@ exports.getProduct = (req, res, next) => {
       
       <p>IMPORTANT: <i>The extracted value from query params will always be a string!</i> So boolean <code>true</code> or <code>false</code> will be extracted as string "true" or "false".</p>
       `,
+      ],
+    },
+  ],
+};
+
+const parsing_data = {
+  title: 'Parsing Request Body in Express.js',
+  titleDescription: 'Parsing data',
+  sections: [
+    {
+      sectionTitle: 'Parsing incoming Requests with body-parser package',
+      sectionSource: '',
+      highlights: {
+        highlight1: ['Parsing incoming Requests'],
+        highlight2: ['body-parser'],
+      },
+      tooltips: [
+        `<p><i>By default, <code>req.body</code> doesn't try to parse the incoming request.</i> For that, we need to install a 3rd party packages.</p>
+        <p><code>body-parser</code> package is a npm package for Node.js body parsing middleware. You install it with <i><code>npm install body-parser</code></i> command.</p>
+        <p><code>body-parser</code> parse incoming request bodies in a middleware before your handlers, available under the <code>req.body</code> property.</p>
+        <p><i><code>bodyParser.urlencoded()</code> will not parse all kinds of possible bodies</i>, files, json and so on, but will parse bodies like sent through a form. If we have other bodies like files, we'll <u>use different parsers</u>, and this makes Express.js so extensible. If we need something, we can plug it in.</p>
+        `,
+        `<h3>An example of parsing an incoming request body</h3>
+        <pre><code>
+const express = require('express');
+<i>const bodyParser = require('body-parser');</i>
+
+const app = express();
+
+app.use(<i>bodyParser.urlencoded({ extended: false })</i>);
+
+app.use('/', (req, res, next) => {
+    next();
+});
+
+app.get('/add-product', (req, res, next) => {
+     res.send('Form html markup for submiting!');
+});
+
+app.post('/product', (req, res, next) => {
+    console.log(<i>req.body</i>); //by default, request doesn't try to parse the incoming request body
+    res.redirect('/');
+});
+
+app.use('/', (req, res, next) => {
+    res.send('Go to add products page!');
+});
+
+app.listen(3000);
+      </code></pre>`,
+      ],
+    },
+    {
+      sectionTitle:
+        'Parsing JSON Requests with <code>express.json()</code> middleware',
+      sectionSource: '',
+      highlights: {
+        highlight2: ['express.json()'],
+      },
+      tooltips: [
+        `<h3>An example of parsing an incoming JSON request body</h3>
+        <pre><code>
+const express = require('express');
+
+const app = express();
+
+<i>app.use(<b>express.json()</b>);</i>
+
+app.post('/product', (req, res, next) => {
+    console.log(<i>req.body</i>);
+    res.redirect('/');
+});
+
+app.listen(3000);
+      </code></pre>`,
+      ],
+    },
+    {
+      sectionTitle:
+        'Storing/Feching Data in/from Files with <code>fs.readFile()</code> and <code>fs.writeFile()</code>',
+      sectionSource: '',
+      highlights: {
+        highlight1: ['Storing/Feching Data in/from Files'],
+        highlight2: [
+          '<code>fs.readFile()</code>',
+          '<code>fs.writeFile()</code>',
+        ],
+      },
+      tooltips: [
+        `<pre><code>
+<i>const fs = require('<b>fs</b>');</i>
+const path = require('path');
+
+const filePath = path.join(path.dirname(process.mainModule.filename), 'data', 'products.json');
+
+const getProductsFromFile = cb => {
+  <b>fs.readFile</b>(filePath, (err, fileContent) => {
+    if (err) {
+      cb([]);
+    } else {
+      cb(JSON.parse(fileContent));
+    }
+  });
+};
+
+module.exports = class Product {
+  constructor(t) {
+    this.title = t;
+  }
+
+  save() {
+    getProductsFromFile(products => {
+      products.push(this);
+      <b>fs.writeFile</b>(filePath, JSON.stringify(products), err => {
+        console.log(err);
+      });
+    });
+  }
+
+  static fetchAll(cb) {
+    getProductsFromFile(cb);
+  }
+};     
+      </code></pre>`,
+        `<p>IMPORTANT: It's important to understand that <i>working with <u>files for data storage</u> is suboptimal for bigger amounts of data</i>.</p>`,
       ],
     },
   ],
@@ -4298,7 +4333,9 @@ export const dataStorage = [
   understanding_the_basics,
   development_workflow,
   working_with_ExpressJS,
+  routing,
   dynamic_routes_and_advanced_models,
+  parsing_data,
   mvc,
   error_handling_with_ExpressJS,
   sending_emails,
