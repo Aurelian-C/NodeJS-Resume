@@ -2720,6 +2720,34 @@ module.exports = (req, res, next) => {
     `,
       ],
     },
+    {
+      sectionTitle:
+        'Read & parse Cookies from <code>request</code> object with cookie-parser package',
+      sectionSource: '',
+      highlights: {
+        highlight1: ['parse Cookies'],
+        highlight2: ['cookie-parser'],
+      },
+      tooltips: [
+        `<p>In order to get access to the cookies that are in our <code>request</code> object, we need to install an NPM package called <code>cookie-parser</code>. This package will <i>parse all the cookies from the incoming request</i>.</p>
+        <p>With <code>cookie-parser</code>, we're also able to <i>authenticate users based on JWT Tokens sent via Cookies</i>, and not only the Authorization Header.</p>
+        <pre><code>
+const express = require('express');
+<i>const cookieParser = require('cookie-parser');</i>
+
+const app = express();
+
+app.use(<b>cookie-parser()</b>);
+
+app.use('/route', (req, res, next) => {
+  console.log(<i>req.cookies</i>);
+})
+
+app.listen(3000);
+        </code></pre>
+    `,
+      ],
+    },
   ],
 };
 
@@ -2753,10 +2781,10 @@ const security = {
       ],
     },
     {
-      sectionTitle: 'Sending JWT via Cookie',
+      sectionTitle: 'Sending JWT via HTTPOnly Cookie',
       sectionSource: '',
       highlights: {
-        highlight1: ['Sending JWT via Cookie'],
+        highlight1: ['Sending JWT via HTTPOnly Cookie'],
       },
       tooltips: [
         `<p>JSON Web Token should be stored in a secure HTTPOnly cookie.</p>
