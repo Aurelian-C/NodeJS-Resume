@@ -2824,6 +2824,54 @@ const createSendToken = (user, statusCode, res) => {
       ],
     },
     {
+      sectionTitle: 'A Secure Way of Logging Out Users',
+      sectionSource: '',
+      highlights: {
+        highlight1: ['Logging Out Users'],
+      },
+      tooltips: [
+        `<p>Up until this point, when we wanted to logout a user, we would simply delete the cookie from our browser. However, the thing is that we created a cookie as an HttpOnly Cookie. So that means that we cannot manipulate an HttpOnly Cookie in any way in our browser. We cannot change it, and we can also not delete it.</p>
+        <p>If we want to keep using this super secure way of storing cookies on login, then how are we going to be able to logout users on our website? Because usually with JWT authentication we just delete the cookie or the token from local storage, But with an HttpOnly Cookie that's not possible.</p>
+        <p>What we're gonna do instead is to create a very simple <code>/logout</code> route that will <i>send back <b>a new HttpOnly Cookie with the <u>exact same name</u>, but without the token</b></i>. So that will then <i>override the current HttpOnly Cookie</i> that we have in the browser with one that has the same name but no token. So when that HttpOnly Cookie is then sent back along with the next request, then we will not be able to identify the user as being logged in. This will effectively then logout the user, and also were gonna give this HttpOnly Cookie a very <u>short expiration time</u>.</p>
+        `,
+        `<h3>Login Implementation</h3>
+        <pre><code>
+const createSendToken = (user, statusCode, req, res) => {
+  const token = signToken(user._id);
+
+  res.cookie(<b>'jwt'</b>, token, {
+    <i>expires</i>: new Date(
+      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+    ),
+    <i>httpOnly</i>: true,
+    <i>secure</i>: req.secure || req.headers['x-forwarded-proto'] === 'https'
+  });
+
+  res.status(statusCode).json({
+    status: 'success',
+    token,
+    data: {
+      user
+    }
+  });
+};
+      </code></pre>`,
+        `<h3>Logout implementation</h3>
+      <pre><code>
+app.get('/logout', (req, res) => {
+  res.cookie(<b>'jwt'</b>, 'loggedout', {
+    <i>expires: new Date(Date.now() + 10 * 1000)</i>, //10 seconds
+    <i>httpOnly</i>: true
+  });
+
+  res.status(200).json({ status: 'success' });
+});
+        </code></pre>
+        <p>NOTE: We do not need to set it as <code>secure</code> like in the case of login, because in the logout case there is no sensitive data that anyone can get a hold of.</p>
+        `,
+      ],
+    },
+    {
       sectionTitle: 'Implementing Rate Limiting with express-rate-limit',
       sectionSource: '',
       highlights: {
