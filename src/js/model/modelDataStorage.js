@@ -1949,7 +1949,7 @@ const file_upload_and_download = {
   titleDescription: 'Handling Files Correctly',
   sections: [
     {
-      sectionTitle: 'Handling File Uploads with Multer',
+      sectionTitle: 'Handling File Uploads with Multer when Using Forms',
       sectionSource: '',
       highlights: {
         highlight2: ['Multer'],
@@ -1970,6 +1970,27 @@ form action="/admin/edit-product" method="POST" <b>enctype="multipart/form-data"
         <p>4. <i>Storage Engines</i>: Multer supports different storage engines, including disk storage, memory storage, and cloud storage solutions like Amazon S3. You can choose the storage engine that best suits your project's needs.</p>
         <p>5. <i>File Validation</i>: Multer can validate uploaded files based on file type, file size, and other criteria. This helps ensure that only acceptable files are processed.</p>
         `,
+      ],
+    },
+    {
+      sectionTitle: 'Handling File Uploads with Multer in REST APIs',
+      highlights: {
+        highlight1: ['Multer in REST APIs'],
+      },
+      sectionSource: '',
+      tooltips: [
+        `<pre><code>
+<i>const formData = <b>new FormData()</b>;
+<b>formData.append</b>('title', 'someTitle');
+<b>formData.append</b>('image', FileList);</i>
+
+fetch('http://localhost:8080/feed/post', {
+<i><b>method</b>: 'POST',
+<b>body</b>: formData</i>,
+})      
+  </code></pre>
+  <p>NOTE: When we upload images, we won't use JSON data because <i>JSON data is only text</i>, so only data that can be represented as a text. A file can't be, or not easily can be JSON format, it will be very big quickly and very big files are a huge issue or impossible to upload in JSON format. So <b>we can't use JSON for data where we have both a file and normal text data</b>.</p>
+  `,
       ],
     },
     {
@@ -2162,28 +2183,6 @@ function asyncRequest(req, res, next) {
   ],
 };
 
-const adding_payments = {
-  title: 'Adding Payments',
-  titleDescription: 'Creating a Real Shop',
-  sections: [
-    {
-      sectionTitle: 'How Payments Work',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Adding a Checkout Page',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Using Stripe in Your App',
-      sectionSource: '',
-      tooltips: [``],
-    },
-  ],
-};
-
 const working_with_REST_APIs = {
   title: 'Working with REST APIs',
   titleDescription: 'Decoupling Frontend and Backend',
@@ -2256,7 +2255,12 @@ const working_with_REST_APIs = {
       sectionTitle: 'Sending POST Requests From The Client',
       sectionSource: '',
       tooltips: [
-        `<pre><code>
+        `<h3>The old way of submiting forms & sending HTTP "POST" request</h3>
+        <pre><code>
+form <i>action="/feed/post"</i> <i>method="POST"</i>
+        </code></pre>`,
+        `<h3>Sending "POST" requests in REST APIs</h3>
+        <pre><code>
 fetch('http://localhost:8080/feed/post', {
   <i><b>method</b>: 'POST',
   <b>headers</b>: {
@@ -2271,65 +2275,6 @@ fetch('http://localhost:8080/feed/post', {
         <li>- when you would use <i>Axios library</i> in browser-side JavaScript for sending async requests, it would be done automatically</li>
       </ul>
       `,
-      ],
-    },
-    {
-      sectionTitle: 'Static Images & Error Handling',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Image Names & Windows Operating System',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Uploading Images (Files) with Multer',
-      highlights: {
-        highlight1: ['Uploading Images (Files) with Multer'],
-      },
-      sectionSource: '',
-      tooltips: [
-        `<pre><code>
-<i>const formData = <b>new FormData()</b>;
-<b>formData.append</b>('title', 'someTitle');
-<b>formData.append</b>('image', FileList);</i>
-
-fetch('http://localhost:8080/feed/post', {
-<i><b>method</b>: 'POST',
-<b>body</b>: formData</i>,
-})      
-  </code></pre>
-  <p>NOTE: When we upload images, we won't use JSON data because <i>JSON data is only text</i>, so only data that can be represented as a text. A file can't be, or not easily can be JSON format, it will be very big quickly and very big files are a huge issue or impossible to upload in JSON format. So <b>we can't use JSON for data where we have both a file and normal text data</b>.</p>
-  `,
-      ],
-    },
-    {
-      sectionTitle:
-        'Read & parse Cookies from <code>request</code> object with cookie-parser package',
-      sectionSource: '',
-      highlights: {
-        highlight1: ['parse Cookies'],
-        highlight2: ['cookie-parser'],
-      },
-      tooltips: [
-        `<p>In order to get access to the cookies that are in our <code>request</code> object, we need to install an NPM package called <code>cookie-parser</code>. This package will <i>parse all the cookies from the incoming request</i>.</p>
-        <p>With <code>cookie-parser</code>, we're also able to <i>authenticate users based on JWT Tokens sent via Cookies</i>, and not only the Authorization Header.</p>
-        <pre><code>
-const express = require('express');
-<i>const cookieParser = require('cookie-parser');</i>
-
-const app = express();
-
-app.use(<b>cookie-parser()</b>);
-
-app.use('/route', (req, res, next) => {
-  console.log(<i>req.cookies</i>);
-})
-
-app.listen(3000);
-        </code></pre>
-    `,
       ],
     },
   ],
@@ -3228,6 +3173,56 @@ exports.postLogin = (req, res, next) => {
     },
     {
       sectionTitle: 'Deleting a Cookie',
+      sectionSource: '',
+      tooltips: [``],
+    },
+    {
+      sectionTitle:
+        'Read & parse Cookies from <code>request</code> object with cookie-parser package',
+      sectionSource: '',
+      highlights: {
+        highlight1: ['parse Cookies'],
+        highlight2: ['cookie-parser'],
+      },
+      tooltips: [
+        `<p>In order to get access to the cookies that are in our <code>request</code> object, we need to install an NPM package called <code>cookie-parser</code>. This package will <i>parse all the cookies from the incoming request</i>.</p>
+        <p>With <code>cookie-parser</code>, we're also able to <i>authenticate users based on JWT Tokens sent via Cookies</i>, and not only the Authorization Header.</p>
+        <pre><code>
+const express = require('express');
+<i>const cookieParser = require('cookie-parser');</i>
+
+const app = express();
+
+app.use(<b>cookie-parser()</b>);
+
+app.use('/route', (req, res, next) => {
+  console.log(<i>req.cookies</i>);
+})
+
+app.listen(3000);
+        </code></pre>
+    `,
+      ],
+    },
+  ],
+};
+
+const adding_payments = {
+  title: 'Adding Payments',
+  titleDescription: 'Creating a Real Shop',
+  sections: [
+    {
+      sectionTitle: 'How Payments Work',
+      sectionSource: '',
+      tooltips: [``],
+    },
+    {
+      sectionTitle: 'Adding a Checkout Page',
+      sectionSource: '',
+      tooltips: [``],
+    },
+    {
+      sectionTitle: 'Using Stripe in Your App',
       sectionSource: '',
       tooltips: [``],
     },
@@ -4311,7 +4306,6 @@ export const dataStorage = [
   file_upload_and_download,
   adding_pagination,
   understanding_async_requests,
-  adding_payments,
   working_with_REST_APIs,
   adding_authentication,
   authentication_with_JWT,
@@ -4319,6 +4313,7 @@ export const dataStorage = [
   understanding_async_await_in_NodeJS,
   server_side_rendering,
   sessions_and_cookies,
+  adding_payments,
   websockets_and_socket,
   graphQL,
   deploying_our_app,
