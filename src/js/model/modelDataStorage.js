@@ -3803,11 +3803,6 @@ const deploying_our_app = {
   titleDescription: 'From Development to Production',
   sections: [
     {
-      sectionTitle: 'Module Introduction',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
       sectionTitle: 'Deploying Different Kinds of Apps',
       sectionSource: '',
       tooltips: [``],
@@ -3815,7 +3810,41 @@ const deploying_our_app = {
     {
       sectionTitle: 'Deployment Preparations',
       sectionSource: '',
-      tooltips: [``],
+      tooltips: [
+        `<h3>Compress text responses</h3>
+        <p>First thing that we want to do before deployment our app is to <i>install a package called <b><code>compression</code></b> that's gonna compress all our responses</i>, so whenever we send a text response to a client, no matter if that's JSON or HTML code. With the compression package, that text will then be dramatically compressed.</p>
+        <pre><code>
+const express = require('express');
+<i>const compression = require('compression');</i>
+
+const app = express();
+
+app.use(<b>compression()</b>);
+
+app.listen(3000);
+        </code></pre>
+        `,
+        `<h3>Get rid of most of the <code>console.log</code></h3>
+        <p>The next step before deploying our app is to <i>get rid of most of the <code>console.log</code></i> that we still have in our code. That's just because these logins will end up in our hosting platform logs, and so we don't want to pollute these logs in production. You can find these <code>console.log</code></i> by searching them in VSCode with <code>CTRL + SHIFT + F</code>.</p>`,
+        `<h3>Review your package.json file</h3>
+        <p>Another thing you need to do is to change the NPM script from <code>"start": "nodemon server.js"</code> to <b><code>"start": "node server.js"</code></b>. This is because in production you want to run your application with node command. You only use nodemon in development.</p>
+        <pre><code>
+"scripts": {
+  <b>"start": "node server.js",</b>
+  "dev": "nodemon server.js",
+  "prod": "NODE_ENV=production nodemon server.js",
+},
+        </code></pre>
+        <p>Another thing you need to <i>add to your package.json file</i> is:</p>
+        <pre><code>
+"engines": {
+  "node": "^10"
+}
+        </code></pre>
+        `,
+        `<h3>Listen to the port at <code>process.env.PORT</code></h3>
+        <p>Another thing that's really important when you deploy an application to Heroku is that you <i>listen to the port at <code>process.env.PORT</code></i>. Behind the scenes, Heroku will actually assign a random port to <code>process.env.PORT</code> environment variable.<p>`,
+      ],
     },
     {
       sectionTitle: 'Using Environment Variables',
@@ -3858,11 +3887,6 @@ const deploying_our_app = {
       tooltips: [``],
     },
     {
-      sectionTitle: 'Understanding the Project & the Git Setup',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
       sectionTitle: 'A Deployment Example with Heroku',
       sectionSource: '',
       tooltips: [``],
@@ -3874,11 +3898,6 @@ const deploying_our_app = {
     },
     {
       sectionTitle: 'Deploying APIs',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Useful Resources & Links',
       sectionSource: '',
       tooltips: [``],
     },
