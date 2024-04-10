@@ -3063,18 +3063,29 @@ app.listen(8080);
         <p>A Cookie is basically just a small piece of text that a server can send to client. Then when the client receives a Cookie, it will automatically store it and then automatically send it back along with all future requests to the same server. So a browser automatically stores a Cookie that it receives and sends it back in all future requests to that server where it came from.</p>
         <p>In order to send a Cookie, it's actually very easy. All we have to do is to basically attach it to the response object.</p>
         `,
-        `<pre><code>
-const createSendToken = (user, statusCode, res) => {
+        `<p>Testing for Secure HTTPS Connections when you have an app deploy to Heroku:</p>
+        <pre><code>
+const express = require('express');
+
+const app = express();
+
+<b>app.enable('trust proxy');</b>
+
+app.listen(process.env.PORT);
+        </code></pre>
+        <pre><code>
+const createSendToken = (user, statusCode, req, res) => {
   const token = signToken(user._id);
 
-  <i>const cookieOptions = {
+  const cookieOptions = {
     <b>expires</b>: new Date(
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
     ),
-    <b>httpOnly</b>: true
+    <b>httpOnly</b>: true,
+    <b>secure</b>: <i>req.secure</i> || <i>req.headers['x-forwarded-proto'] === 'https'</i>
   };
 
-  if (process.env.NODE_ENV === 'production') cookieOptions.<b>secure</b> = true;</i>
+  //if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
 
   <i><b>res.cookie</b>('jwt', token, cookieOptions);</i>
 
@@ -3574,6 +3585,170 @@ const adding_payments = {
   ],
 };
 
+const deploying_our_app = {
+  title: 'Deploying our App',
+  titleDescription: 'From Development to Production',
+  sections: [
+    {
+      sectionTitle: 'Deploying Different Kinds of Apps',
+      sectionSource: '',
+      tooltips: [``],
+    },
+    {
+      sectionTitle: 'Deployment Preparations',
+      sectionSource: '',
+      tooltips: [
+        `<h3>Compress text responses</h3>
+        <p>First thing that we want to do before deployment our app is to <i>install a package called <b><code>compression</code></b> that's gonna compress all our responses</i>, so whenever we send a text response to a client, no matter if that's JSON or HTML code. With the compression package, that text will then be dramatically compressed.</p>
+        <pre><code>
+const express = require('express');
+<i>const compression = require('compression');</i>
+
+const app = express();
+
+app.use(<b>compression()</b>);
+
+app.listen(3000);
+        </code></pre>
+        `,
+        `<h3>Get rid of most of the <code>console.log</code></h3>
+        <p>The next step before deploying our app is to <i>get rid of most of the <code>console.log</code></i> that we still have in our code. That's just because these logins will end up in our hosting platform logs, and so we don't want to pollute these logs in production. You can find these <code>console.log</code></i> by searching them in VSCode with <code>CTRL + SHIFT + F</code>.</p>`,
+        `<h3>Review your package.json file</h3>
+        <p>Another thing you need to do is to change the NPM script from <code>"start": "nodemon server.js"</code> to <b><code>"start": "node server.js"</code></b>. This is because in production you want to run your application with node command. You only use nodemon in development.</p>
+        <pre><code>
+"scripts": {
+  <b>"start": "node server.js",</b>
+  "dev": "nodemon server.js",
+  "prod": "NODE_ENV=production nodemon server.js",
+},
+        </code></pre>
+        <p>Another thing you need to <i>add to your package.json file</i> is:</p>
+        <pre><code>
+"engines": {
+  "node": "^10"
+}
+        </code></pre>
+        `,
+        `<h3>Listen to the port at <code>process.env.PORT</code></h3>
+        <p>Another thing that's really important when you deploy an application to Heroku is that you <i>listen to the port at <code>process.env.PORT</code></i>. Behind the scenes, Heroku will actually assign a random port to <code>process.env.PORT</code> environment variable.<p>`,
+      ],
+    },
+    {
+      sectionTitle: 'Using Environment Variables',
+      sectionSource: '',
+      tooltips: [``],
+    },
+    {
+      sectionTitle: 'Using Production API Keys',
+      sectionSource: '',
+      tooltips: [``],
+    },
+    {
+      sectionTitle: 'Setting Secure Response Headers with Helmet',
+      sectionSource: '',
+      tooltips: [``],
+    },
+    {
+      sectionTitle: 'Compressing Assets',
+      sectionSource: '',
+      tooltips: [``],
+    },
+    {
+      sectionTitle: 'Implementing CORS with cors package',
+      sectionSource: '',
+      highlights: {
+        highlight2: ['cors'],
+      },
+      tooltips: [
+        `<p>By calling <code>cors()</code>  the <code>Access-Control-Allow-Origin</code> will be set by default to <code>*</code>.</p>
+        <pre><code>
+const express = require('express');
+<i>const cors = require('cors');</i>
+
+const app = express();
+
+// Access-Control-Allow-Origin *
+app.use(<i>cors()</i>);
+
+// app.use(cors({
+//   <b>origin</b>: 'https://www.myWebsite.com'
+// }));
+
+app.listen(process.env.PORT);
+        </code></pre>`,
+        `<p>You can enable CORS for the entire application or for a specific route:</p>
+        <pre><code>
+const express = require('express');
+<i>const cors = require('cors');</i>
+
+const app = express();
+
+app.use('/routePath', <i>cors()</i>, (req, res, next) => {
+  //Code here
+});
+
+app.listen(process.env.PORT);
+        </code></pre>
+        `,
+      ],
+    },
+    {
+      sectionTitle: 'Setting Up Request Logging',
+      sectionSource: '',
+      tooltips: [``],
+    },
+    {
+      sectionTitle: 'More on Logging',
+      sectionSource: '',
+      tooltips: [``],
+    },
+    {
+      sectionTitle: 'Setting Up a SSL Server',
+      sectionSource: '',
+      tooltips: [``],
+    },
+    {
+      sectionTitle: 'Using a Hosting Provider',
+      sectionSource: '',
+      tooltips: [``],
+    },
+    {
+      sectionTitle: 'A Deployment Example with Heroku',
+      sectionSource: '',
+      tooltips: [``],
+    },
+    {
+      sectionTitle: 'Responding to a SIGTERM Signal',
+      sectionSource: '',
+      highlights: {
+        highlight1: ['SIGTERM Signal'],
+      },
+      tooltips: [
+        `<p>Heroku every 24 hours will shut down our application by sending the 'SIGTERM' signal to our application. So then, we shut down the process gracefully, by using <code>server.close()</code>, which allows all the pending requests to still process until the end.</p>
+        <pre><code>
+<i>process.on</i>(<b>'SIGTERM'</b>, () => {
+  console.log('SIGTERM RECEIVED. Shutting down gracefully');
+
+  <i>server.close</i>(() => {
+    console.log('Process terminated!');
+  });
+});     
+      </code></pre>`,
+      ],
+    },
+    {
+      sectionTitle: 'Storing User-generated Files on Heroku',
+      sectionSource: '',
+      tooltips: [``],
+    },
+    {
+      sectionTitle: 'Deploying APIs',
+      sectionSource: '',
+      tooltips: [``],
+    },
+  ],
+};
+
 const websockets_and_socket = {
   title: 'Understanding Websockets & Socket.io',
   titleDescription: 'Pushing Data from Server to Client',
@@ -3792,112 +3967,6 @@ const graphQL = {
     },
     {
       sectionTitle: 'Useful Resources & Links',
-      sectionSource: '',
-      tooltips: [``],
-    },
-  ],
-};
-
-const deploying_our_app = {
-  title: 'Deploying our App',
-  titleDescription: 'From Development to Production',
-  sections: [
-    {
-      sectionTitle: 'Deploying Different Kinds of Apps',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Deployment Preparations',
-      sectionSource: '',
-      tooltips: [
-        `<h3>Compress text responses</h3>
-        <p>First thing that we want to do before deployment our app is to <i>install a package called <b><code>compression</code></b> that's gonna compress all our responses</i>, so whenever we send a text response to a client, no matter if that's JSON or HTML code. With the compression package, that text will then be dramatically compressed.</p>
-        <pre><code>
-const express = require('express');
-<i>const compression = require('compression');</i>
-
-const app = express();
-
-app.use(<b>compression()</b>);
-
-app.listen(3000);
-        </code></pre>
-        `,
-        `<h3>Get rid of most of the <code>console.log</code></h3>
-        <p>The next step before deploying our app is to <i>get rid of most of the <code>console.log</code></i> that we still have in our code. That's just because these logins will end up in our hosting platform logs, and so we don't want to pollute these logs in production. You can find these <code>console.log</code></i> by searching them in VSCode with <code>CTRL + SHIFT + F</code>.</p>`,
-        `<h3>Review your package.json file</h3>
-        <p>Another thing you need to do is to change the NPM script from <code>"start": "nodemon server.js"</code> to <b><code>"start": "node server.js"</code></b>. This is because in production you want to run your application with node command. You only use nodemon in development.</p>
-        <pre><code>
-"scripts": {
-  <b>"start": "node server.js",</b>
-  "dev": "nodemon server.js",
-  "prod": "NODE_ENV=production nodemon server.js",
-},
-        </code></pre>
-        <p>Another thing you need to <i>add to your package.json file</i> is:</p>
-        <pre><code>
-"engines": {
-  "node": "^10"
-}
-        </code></pre>
-        `,
-        `<h3>Listen to the port at <code>process.env.PORT</code></h3>
-        <p>Another thing that's really important when you deploy an application to Heroku is that you <i>listen to the port at <code>process.env.PORT</code></i>. Behind the scenes, Heroku will actually assign a random port to <code>process.env.PORT</code> environment variable.<p>`,
-      ],
-    },
-    {
-      sectionTitle: 'Using Environment Variables',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Using Production API Keys',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Setting Secure Response Headers with Helmet',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Compressing Assets',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Setting Up Request Logging',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'More on Logging',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Setting Up a SSL Server',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Using a Hosting Provider',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'A Deployment Example with Heroku',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Storing User-generated Files on Heroku',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Deploying APIs',
       sectionSource: '',
       tooltips: [``],
     },
@@ -4680,9 +4749,9 @@ export const dataStorage = [
   server_side_rendering,
   sessions_and_cookies,
   adding_payments,
+  deploying_our_app,
   websockets_and_socket,
   graphQL,
-  deploying_our_app,
   testing,
   nodeJS_as_a_build_tool,
   modern_javaScript_and_nodeJS,
