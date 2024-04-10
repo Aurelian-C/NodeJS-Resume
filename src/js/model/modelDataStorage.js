@@ -862,60 +862,6 @@ module.exports = router;
       ],
     },
     {
-      sectionTitle: 'Serving static files with <code>express.static</code>',
-      highlights: {
-        highlight2: ['<code>express.static</code>'],
-      },
-      sectionSource: '',
-      tooltips: [
-        `<p>To serve static files such as images, CSS files, and JavaScript files, use the <code>express.static</code> built-in middleware function in Express.js.</p>
-        <p>The function signature is: <code>express.static(root, [options])</code>. The <code>root</code> argument specifies <i>the root directory from which to serve static assets</i>.</p>
-        <p>For example, use the following code to serve images, CSS files, and JavaScript files in a directory named public:</p>
-        <pre><code>
-app.use(express.static('public'))
-        </code></pre>
-        <p>Now, you can load the files that are in the public directory:</p>
-        <pre><code>
-http://localhost:3000/images/kitten.jpg
-http://localhost:3000/css/style.css
-http://localhost:3000/js/app.js
-http://localhost:3000/images/bg.png
-http://localhost:3000/hello.html
-        </code></pre>
-        <p><i>NOTE: Express.js looks up the files relative to the static directory, so the name of the static directory is not part of the URL.</i></p>
-        <p>To use multiple static assets directories, call the express.static middleware function multiple times:</p>
-        <pre><code>
-app.use(express.static('public'))
-app.use(express.static('files'))
-        </code></pre>
-        <p><i>NOTE: Express.js looks up the files in the order in which you set the static directories with the <code>express.static</code> middleware function.</i></p>
-        `,
-        `<h3>Another example</h3>
-        <pre><code>
-const path = require('path');
-const express = require('express');
-const bodyParser = require('body-parser');
-
-const app = express();
-
-const adminRoutes = require('./routes/admin');
-const shopRoutes = require('./routes/shop');
-
-app.use(bodyParser.urlencoded({extended: false}));
-<i>app.use(express.static(path.join(__dirname, 'public')));</i>
-
-app.use('/admin', adminRoutes);
-app.use(shopRoutes);
-
-app.use((req, res, next) => {
-    res.status(404).sendFile(path.join(__dirname, 'views', '404.html'));
-});
-
-app.listen(3000);      
-      </code></pre>`,
-      ],
-    },
-    {
       sectionTitle: 'Environment Variables',
       sectionSource: '',
       tooltips: [
@@ -2092,26 +2038,18 @@ const file_upload_and_download = {
   titleDescription: 'Handling Files Correctly',
   sections: [
     {
-      sectionTitle: 'Handling File Uploads with Multer when Using Forms',
+      sectionTitle:
+        'Handling File Uploads with Multer when Using Forms Rendered by Server',
       sectionSource: '',
       highlights: {
         highlight2: ['Multer'],
       },
       tooltips: [
-        `<p>Multer is a third party package that <i>parses incoming requests for files</i>, request with mixt data: text and file data.</p>
-        <p>Multer is a Node.js middleware for handling multipart/form-data, which is primarily used for uploading files.</p>
+        `<p>When using forms rendered by server, you need to specify an attribute to the form element called <b><code>enctype="multipart/form-data"</code></b>.</p>
         <p><i>Multer will not process any form which is not multipart (multipart/form-data)</i>:</p>
         <pre><code>
 form action="/admin/edit-product" method="POST" <b>enctype="multipart/form-data"</b>
         </code></pre>
-        `,
-        `<p>Like <code>bodyParser</code> package, <i><code>multer</code> is a middleware which we <u>execute on every incoming request</u></i>, and it then simply has a look at that request, sees if it's multipart/form-data and tries to extract files if that is the case.</p>`,
-        `<h3>Key features and uses of Multer</h3>
-        <p>1. <i>File Uploads</i>: Multer is used to handle file uploads, such as images, videos, documents, and other binary data, from HTML forms. It can process both single and multiple file uploads.</p>
-        <p>2. <i>Configuration</i>: Multer allows you to configure various options, such as where to store uploaded files, how to name them, and size limits for uploaded files.</p>
-        <p>3. <i>Middleware</i>: Multer is typically used as middleware in Express.js applications. It can be added to specific routes to process file uploads. Multer processes the uploaded files and makes them accessible in the request object for further handling.</p>
-        <p>4. <i>Storage Engines</i>: Multer supports different storage engines, including disk storage, memory storage, and cloud storage solutions like Amazon S3. You can choose the storage engine that best suits your project's needs.</p>
-        <p>5. <i>File Validation</i>: Multer can validate uploaded files based on file type, file size, and other criteria. This helps ensure that only acceptable files are processed.</p>
         `,
       ],
     },
@@ -2122,32 +2060,246 @@ form action="/admin/edit-product" method="POST" <b>enctype="multipart/form-data"
       },
       sectionSource: '',
       tooltips: [
-        `<pre><code>
-<i>const formData = <b>new FormData()</b>;
-<b>formData.append</b>('title', 'someTitle');
-<b>formData.append</b>('image', FileList);</i>
+        `<p>Multer is a third party package that <i>parses incoming requests for files</i>, request with mixt data: text and file data.</p>
+        <p>Multer is a Node.js middleware for handling multipart/form-data, which is primarily used for uploading files. <i>Multer will not process any form which is not multipart (multipart/form-data)</i>.</p>
+        <p>Like <code>bodyParser</code> package, <i><code>multer</code> is a middleware which we <u>execute on every incoming request</u></i>, and it then simply has a look at that request, sees if it's multipart/form-data and tries to extract files if that is the case.</p>`,
+        `<h3>Frontend code</h3>
+        <pre><code>
+function submitForm(e) {
+  e.preventDefault();
 
-fetch('http://localhost:8080/feed/post', {
-<i><b>method</b>: 'POST',
-<b>body</b>: formData</i>,
-})      
-  </code></pre>
-  <p>NOTE: When we upload images, we won't use JSON data because <i>JSON data is only text</i>, so only data that can be represented as a text. A file can't be, or not easily can be JSON format, it will be very big quickly and very big files are a huge issue or impossible to upload in JSON format. So <b>we can't use JSON for data where we have both a file and normal text data</b>.</p>
+  <i>const formData = <b>new FormData()</b>;
+  <b>formData.append</b>('userName', 'someUserName');
+  <b>formData.append</b>('photo', FileList);</i>
+  
+  fetch('http://localhost:8080/updatePhoto', {
+    <i><b>method</b>: 'PATCH',
+    <b>body</b>: formData</i>,
+  })   
+}
+        </code></pre>`,
+        `<h3>Server code</h3>
+        <pre><code>
+const express = require('express');
+<i>const multer = require('multer');</i>
+
+const app = express();
+
+<i>const upload = multer({ dest: 'public/img' });</i>
+
+function uploadPhoto(req, res, next) {
+  upload<i>.single</i>('photo');
+}
+
+function updateMe(req, res, next) {
+  console.log(<i>req.file</i>);
+  console.log(<i>req.body</i>);
+}
+
+app.patch('/updatePhoto', uploadPhoto, updateMe)
+
+app.listen(3000);
+        </code></pre>
+        <p>In the code above we included the Multer package and then with that we created an <code>upload</code> variable. The <code>upload</code> is just to define a couple of settings, where in the above example we only define the destination.  Then we use that <code>upload</code> to create a new middleware, and that middleware will handle upload file.</p>
+        <p>We use <code>upload.single()</code> because we only have one single file that we want to upload. <code>upload.single()</code> takes as an argument the name of the field that hold the file. The name must match with the name in the UI form.</p>
+        <p><code>upload.single()</code> will put some information about the file on the request object.</p>
+        <p>NOTE: When we upload images, we won't use JSON data because <i>JSON data is only text</i>, so only data that can be represented as a text. A file can't be, or not easily can be JSON format, it will be very big quickly and very big files are a huge issue or impossible to upload in JSON format. So <b>we can't use JSON for data where we have both a file and normal text data</b>.</p>
+        <p>Uploaded images/videos/big files are not directly uploaded into the database, we just upload them into our file system, and then in the database we put a link basically to that image.</p>
+  `,
+        `<h3>Key features and uses of Multer</h3>
+  <p>1. <i>File Uploads</i>: Multer is used to handle file uploads, such as images, videos, documents, and other binary data, from HTML forms. It can process both single and multiple file uploads.</p>
+  <p>2. <i>Configuration</i>: Multer allows you to configure various options, such as where to store uploaded files, how to name them, and size limits for uploaded files.</p>
+  <p>3. <i>Middleware</i>: Multer is typically used as middleware in Express.js applications. It can be added to specific routes to process file uploads. Multer processes the uploaded files and makes them accessible in the request object for further handling.</p>
+  <p>4. <i>Storage Engines</i>: Multer supports different storage engines, including disk storage, memory storage, and cloud storage solutions like Amazon S3. You can choose the storage engine that best suits your project's needs.</p>
+  <p>5. <i>File Validation</i>: Multer can validate uploaded files based on file type, file size, and other criteria. This helps ensure that only acceptable files are processed.</p>
   `,
       ],
     },
     {
-      sectionTitle: 'Configuring Multer to Adjust Filename & Filepath',
+      sectionTitle:
+        'Configuring Multer to Adjust Filename & Filtering Files by Mimetype',
       sectionSource: '',
-      tooltips: [``],
+      tooltips: [
+        `<pre><code>
+const express = require('express');
+const multer = require('multer');
+      
+const app = express();
+      
+const <b>multerStorage</b> = <i>multer.diskStorage</i>({
+  <i>destination</i>: (req, file, cb) => {
+    cb(null, 'public/img');
+  },
+  <i>filename</i>: (req, file, cb) => {
+    const fileExtension = file.mimetype.split('/)[1];
+    cb(null, 'user-' + req.user.id + '-' + Date.now() + fileExtension)
+})
+      
+//A user can only upload image files
+const <b>multerFilter</b> = (req, file, cb) => {
+  if (file.mimetype.startsWith('image')) {
+    cb(null, true);
+  } else {
+    cb('error', false)
+  }
+}
+      
+const <b>upload</b> = multer({
+  <i>storage</i>: multerStorage,
+  <i>fileFilter</i>: multerFilter
+});
+      
+function uploadPhoto(req, res, next) {
+  upload<i>.single</i>('photo');
+}
+      
+function updateMe(req, res, next) {
+  console.log(req.file);
+  console.log(req.body);
+}
+      
+app.patch('/updatePhoto', uploadPhoto, updateMe)
+      
+app.listen(3000);
+        </code></pre>`,
+      ],
     },
     {
-      sectionTitle: 'Filtering Files by Mimetype',
+      sectionTitle: 'Resize Images with sharp',
       sectionSource: '',
       highlights: {
-        highlight1: ['Mimetype'],
+        highlight1: ['Resize Images'],
+        highlight2: ['sharp'],
       },
-      tooltips: [``],
+      tooltips: [
+        `<p>When doing image processing like resizing images after uploading an image, then it's always best to not even save the image to the disk, but instead save it to memory.</p>
+        <p>For that we need to modify the <code>storage</code> property to configure Multer, and instead of <code>multer.diskStorage</code> to pass <code>multer.memoryStorage</code>.</p>
+        <p>With <code>multer.memoryStorage</code> the image will be stored as a buffer, and that buffer is then available at <code>req.file.buffer</code>.</p>
+        <p>Calling the <code>sharp()</code> function will create an object on which we can chain multiple methods in order to do our image processing.</p>
+        <pre><code>
+const express = require('express');
+const multer = require('multer');
+<i>const sharp = require('sharp');</i>
+
+const app = express();
+
+const multerStorage = <i>multer.memoryStorage()</i>;
+
+const multerFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith('image')) {
+    cb(null, true);
+  } else {
+    cb('error', false);
+  }
+}
+
+const upload = multer({
+  storage: multerStorage,
+  fileFilter: multerFilter
+});
+
+function uploadPhoto(req, res, next) {
+  upload.single('photo');
+}
+
+<i>const resizePhoto = async (req, res, next) => {
+  if (!req.file) return next();
+
+  req.file.filename = 'user-' + req.user.id + '-' + Date.now();
+
+  await <b>sharp(req.file.buffer)
+    .resize</b>(500, 500)
+    <b>.toFormat</b>('jpeg')
+    <b>.jpeg</b>({ quality: 90 })
+    <b>.toFile</b>('public/img/' + req.file.filename)
+
+  next();
+}</i>
+
+function updateMe(req, res, next) {
+  console.log(req.file);
+  console.log(req.body);
+}
+
+app.patch('/updatePhoto', uploadPhoto, resizePhoto, updateMe)
+
+app.listen(3000);
+        </code></pre>
+        `,
+      ],
+    },
+    {
+      sectionTitle: 'Uploading & Proccessing Multiple Images',
+      sectionSource: '',
+      tooltips: [
+        `        <pre><code>
+const express = require('express');
+const multer = require('multer');
+const sharp = require('sharp');
+
+const app = express();
+
+const multerStorage = multer.memoryStorage();
+
+const multerFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith('image')) {
+    cb(null, true);
+  } else {
+    cb('error', false);
+  }
+}
+
+const upload = multer({
+  storage: multerStorage,
+  fileFilter: multerFilter
+});
+
+<i>function uploadPhotos(req, res, next) {
+  //When we have multiple images with the <u>same HTML "name" attribute</u>
+  <b>upload.array</b>('images', 8);
+
+  //When we have multiple images with <u>mixed HTML "name" attribute</u>
+  // <b>upload.fields</b>([
+  //   {name: 'imageCover', maxCount: 1},
+  //   {name: 'images', maxCount: 8}
+  // ]);
+
+
+  //When we have only one <u>image</u>
+  //<b>upload.single</b>('image');
+}</i>
+
+const resizePhotos = async (req, res, next) => {
+  if (!<b>req.files</b>) return next();
+
+  <i>req.body.images = [];</i>
+  <b>await Promise.all</b>(
+    <i>req.files.images</i>.map(async (file, idx) => {
+      const filename = 'user-' + req.user.id + '-' + Date.now() + '-' + idx + '.jpeg';
+      
+      await sharp(file.buffer)
+        .resize(500, 500)
+        .toFormat('jpeg')
+        .jpeg({ quality: 90 })
+        .toFile('public/img/' + filename)
+        
+      <i>req.body.images.push(filename);</i>
+    })
+  );
+
+  next();
+}
+
+function updatePhotos(req, res, next) {
+  console.log(req.file);
+  console.log(req.body);
+}
+
+app.patch('/updatePhotos', uploadPhotos, resizePhotos, updatePhotos)
+
+app.listen(3000);
+        </code></pre>`,
+      ],
     },
     {
       sectionTitle: 'Storing File Data in the Database',
@@ -2157,9 +2309,58 @@ fetch('http://localhost:8080/feed/post', {
       ],
     },
     {
-      sectionTitle: 'Serving Static Images',
+      sectionTitle: 'Serving static files with express.static()',
+      highlights: {
+        highlight2: ['express.static()'],
+      },
       sectionSource: '',
-      tooltips: [``],
+      tooltips: [
+        `<p>To serve static files such as images, CSS files, and JavaScript files, use the <code>express.static</code> built-in middleware function in Express.js.</p>
+        <p>The function signature is: <code>express.static(root, [options])</code>. The <code>root</code> argument specifies <i>the root directory from which to serve static assets</i>.</p>
+        <p>For example, use the following code to serve images, CSS files, and JavaScript files in a directory named public:</p>
+        <pre><code>
+app.use(express.static('public'))
+        </code></pre>
+        <p>Now, you can load the files that are in the public directory:</p>
+        <pre><code>
+http://localhost:3000/images/kitten.jpg
+http://localhost:3000/css/style.css
+http://localhost:3000/js/app.js
+http://localhost:3000/images/bg.png
+http://localhost:3000/hello.html
+        </code></pre>
+        <p><i>NOTE: Express.js looks up the files relative to the static directory, so the name of the static directory is not part of the URL.</i></p>
+        <p>To use multiple static assets directories, call the express.static middleware function multiple times:</p>
+        <pre><code>
+app.use(express.static('public'))
+app.use(express.static('files'))
+        </code></pre>
+        <p><i>NOTE: Express.js looks up the files in the order in which you set the static directories with the <code>express.static</code> middleware function.</i></p>
+        `,
+        `<h3>Another example</h3>
+        <pre><code>
+const path = require('path');
+const express = require('express');
+const bodyParser = require('body-parser');
+
+const app = express();
+
+const adminRoutes = require('./routes/admin');
+const shopRoutes = require('./routes/shop');
+
+app.use(bodyParser.urlencoded({extended: false}));
+<i>app.use(express.static(path.join(__dirname, 'public')));</i>
+
+app.use('/admin', adminRoutes);
+app.use(shopRoutes);
+
+app.use((req, res, next) => {
+    res.status(404).sendFile(path.join(__dirname, 'views', '404.html'));
+});
+
+app.listen(3000);      
+      </code></pre>`,
+      ],
     },
     {
       sectionTitle: 'Downloading Files with Authentication',
@@ -2359,6 +2560,7 @@ const working_with_REST_APIs = {
         <p><img src="../../src/img/rest_api_arhitecture_3.jpg"/></p>`,
         `<h3>REST APIs are stateless</h3>
         <p>In REST APIs all state is handled <i>on the client</i>. This means that each request must contain <u>all</u> the information necessary to process a certain request from the server. <i>The server should <u>not</u> have to remember previous requests in order to process the current request.</i></p>
+        <p>In REST APIs the server does not save response history between requests.</p>
         <p><img src="../../src/img/rest_api_arhitecture_4.jpg"/></p>`,
       ],
     },
