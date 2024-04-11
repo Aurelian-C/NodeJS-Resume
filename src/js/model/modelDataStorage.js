@@ -3678,13 +3678,6 @@ app.listen(3000);
   "dev": "nodemon server.js",
   "prod": "NODE_ENV=production nodemon server.js",
 },
-        </code></pre>
-        <p>Another thing you need to <i>add to your package.json file</i> is:</p>
-        <pre><code>
-"engines": {
-  "node": "^10"
-}
-        </code></pre>
         `,
       ],
     },
@@ -3704,7 +3697,25 @@ app.listen(3000);
     {
       sectionTitle: 'A Deployment Example with Heroku',
       sectionSource: '',
-      tooltips: [``],
+      tooltips: [
+        `<p>Heroku use it's <b>CLI (Command Line Interface)</b>, and that is heroku specific. On other hosting providers, you might simply be able to drag and drop your code to deploy it. Heroku just doesn't use such a drag and drop alternative, instead <i>Heroku uses that command line interface which allows you to run or to deploy your code through the command line by typing on commands</i>.</p>
+        <p>To use Heroku CLI, you need to download and install it on your computer. Once you did install it, you can run all Heroku commands in your VSCode terminal or command prompt.</p>
+        <ul>Heroku commands:
+          <li>- <code>heroku login</code></li>
+          <li>- <code>heroku create -a example-app</code>: creates a new empty application on Heroku, along with an associated empty Git repository. If you run this command from your app's root directory, the empty Heroku Git repository is automatically set as a remote for your local repository.</li>
+          <li>- <code>git remote -v</code>: you can use this command to confirm that a remote named heroku has been set for your app</li>
+          <li>- <code>git push heroku master</code>: to deploy your app to Heroku, use this command to push the code from your local repository's main branch to your heroku remote.</li>
+        </ul>
+        </code></pre>
+        <p>Another thing you need to <i>add to your package.json file</i> when using Heroku is the version of Node.js you are using. Heroku will now use the specified version (^10) when it installs your Node.js app on the remote server:</p>
+        <pre><code>
+"engines": {
+  "node": "^10"
+}
+        </code></pre>
+        <p>NOTE: You can detect your Node.js version by running <code>node -v</code> in your project folder or anywhere on your computer.</p>
+        `,
+      ],
     },
     {
       sectionTitle: 'Responding to a Heroku SIGTERM Signal',
