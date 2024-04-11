@@ -865,8 +865,8 @@ module.exports = router;
       sectionTitle: 'Environment Variables',
       sectionSource: '',
       tooltips: [
-        `<p>In Node.js, environment variables are <i>values that are set outside of the application but can be accessed within the application code</i>. They provide a way to <i>configure and customize how the application behaves without modifying the source code</i>.</p>
-        <p>Environment variables are commonly <i>used to store sensitive information</i> such as API keys, database credentials, or configuration parameters that vary between environments (such as development, testing, and production).</p>`,
+        `<p>In Node.js, environment variables are <i><b>values that are set outside of the application</b> but <b>can be accessed within the application</b> code</i>. They provide a way to <i>configure and customize how the application behaves without modifying the source code</i>.</p>
+        <p>Environment variables are commonly <b>used to store sensitive information</b> such as API keys, database credentials, or configuration parameters that vary between environments (such as development, testing, and production).</p>`,
         `<h3>Setting Environment Variables</h3>
         <ul>Environment variables can be set in various ways:
           <li>1. <i>Operating System Environment</i>: You can set environment variables directly in your operating system.</li>
@@ -3025,6 +3025,37 @@ app.listen(8080);
       <p>CORS errors occur when the API and your client are sitting on different servers, different domains, and they want to exchange data. You "fix them" in quotation marks, because they are a security mechanism, but you can bypass that on purpose by setting the right <u>CORS headers</u>, which basically tell the client "Hey, it's fine, I'm a public API! You may use my data!".</p>
       <p>So <b>CORS errors occur when using an API that does NOT set CORS headers!</b></p>
       `,
+        `<h3>Implementing CORS with cors package</h3>
+      <p>By calling <code>cors()</code>  the <code>Access-Control-Allow-Origin</code> will be set by default to <code>*</code>.</p>
+      <pre><code>
+const express = require('express');
+<i>const cors = require('cors');</i>
+
+const app = express();
+
+// Access-Control-Allow-Origin *
+app.use(<i>cors()</i>);
+
+// app.use(cors({
+//   <b>origin</b>: 'https://www.myWebsite.com'
+// }));
+
+app.listen(process.env.PORT);
+      </code></pre>
+      <p>You can enable CORS for the entire application or for a specific route:</p>
+      <pre><code>
+const express = require('express');
+<i>const cors = require('cors');</i>
+
+const app = express();
+
+app.use('/routePath', <i>cors()</i>, (req, res, next) => {
+//Code here
+});
+
+app.listen(process.env.PORT);
+      </code></pre>
+      `,
       ],
     },
     {
@@ -3592,14 +3623,36 @@ const deploying_our_app = {
     {
       sectionTitle: 'Deploying Different Kinds of Apps',
       sectionSource: '',
-      tooltips: [``],
+      tooltips: [
+        `<p>How do we deploy apps build with <i>Server Side Rendered Views</i> and apps build as <i>REST APIs or GraphQL APIs</i>? So there are two types of applications, one with views and one without views.</p>
+      <p>First of all we have to keep in mind that how the application behaves, what it does with incoming requests and which data it accepts and returns. In the end, when we look at those apps from a technical perspective, in both kinds of applications, we start a normal Node.js server and we use Express.js framework, and therefore <i>these types of applications have <u>the same hosting requirements</u></i>.</p>
+      <p>We don't have to make a difference because in the end when we move our code to a web server, then there we also just want to do the exact same thing we did locally. We'll start our Node server and wait for incoming requests, and therefore we don't have to differentiate between these kinds of applications. When it comes to deployment we simply deploy our code, start the node server and we are good to go.</p>
+      <p><img src="../../src/img/deploy_1.jpg"/></p>
+      `,
+      ],
     },
     {
       sectionTitle: 'Deployment Preparations',
       sectionSource: '',
       tooltips: [
-        `<h3>Compress text responses</h3>
-        <p>First thing that we want to do before deployment our app is to <i>install a package called <b><code>compression</code></b> that's gonna compress all our responses</i>, so whenever we send a text response to a client, no matter if that's JSON or HTML code. With the compression package, that text will then be dramatically compressed.</p>
+        `<p><img src="../../src/img/deploy_2.jpg"/></p>
+        <p>It's worth mentioning that the last three points, compression logging and SSL are often handled by your hosting provider. When we choose a hosting provider we want to use some managed service where these things are also managed for us, so that we don't have to worry too much about that.</p>
+        `,
+        `<h3>Use Environment Variables: most important <code>process.env.PORT</code></h3>
+        <p>How do we prepare the code for production? In general, you want to use something which is called Environment Variables. Use Environment Variables instead of hardcoding certain values like API keys, port numbers, passwords and so on into your code.<p>
+        <p>Another thing that's really important when you deploy an application to Heroku is that you <i>listen to the port at <code>process.env.PORT</code></i>. Behind the scenes, Heroku will actually assign a random port to <code>process.env.PORT</code> environment variable.<p>
+        `,
+        `<h3>Use Production API Keys</h3>
+        <p>Also make sure that if you are using some third party services like Stripe, that you use the production API keys and not the development keys. For example Stripe gave us a testing API key, while that is obviously what we want to use as long as we test the application, as soon as we deploy it we want to use the production ready API, and that is something that also depends on the third parties or on the third party APIs you might be using.</p>`,
+        `<h3>Reduce the error output details and get rid of most of the <code>console.log</code></h3>
+        <p>We might have some mechanisms to handle errors or to log something, and there we want to make sure that we reduce the error output details. We don't want to send sensitive info to our users, so if something fails, if some error message is thrown, we want to make sure that it does contain as little information as possible because the users of our website should of course not get any insights into our source code.</p>
+        <p>The next step before deploying our app is to <i>get rid of most of the <code>console.log</code></i> that we still have in our code. That's just because these logins will end up in our hosting platform logs, and so we don't want to pollute these logs in production. You can find these <code>console.log</code></i> by searching them in VSCode with <code>CTRL + SHIFT + F</code>.</p>
+        `,
+        `<h3>Setting Secure Response Headers with Helmet</h3>
+        <p>Regarding the responses your application sends, you want to make sure that you set secure response headers.</p>`,
+        `<h3>Compressing Assets</h3>
+        <p>In a typical node application, you might also be serving some assets, some JavaScript, some CSS files and there, or therefore also your response time, because the client has to download less, and most modern browsers are able to download compressed, so zipped assets and unzip them on the fly directly in the browser.</p>
+        <p>You need to <i>install a package called <b><code>compression</code></b> that's gonna compress all our responses</i>, so whenever we send a text response to a client, no matter if that's JSON or HTML code. With the compression package, that text will then be dramatically compressed.</p>
         <pre><code>
 const express = require('express');
 <i>const compression = require('compression');</i>
@@ -3611,8 +3664,12 @@ app.use(<b>compression()</b>);
 app.listen(3000);
         </code></pre>
         `,
-        `<h3>Get rid of most of the <code>console.log</code></h3>
-        <p>The next step before deploying our app is to <i>get rid of most of the <code>console.log</code></i> that we still have in our code. That's just because these logins will end up in our hosting platform logs, and so we don't want to pollute these logs in production. You can find these <code>console.log</code></i> by searching them in VSCode with <code>CTRL + SHIFT + F</code>.</p>`,
+        `<h3>Setting Up Request Logging</h3>
+        <p>You also want to configure logging so that you are aware of what's happening on your server. Since we're now not testing the server anymore but real users do interact with it, we certainly want to log interactions into log files that we can look into at any time we feel like it.</p>`,
+        `<h3>Setting Up a SSL Server</h3>
+        <p>SSL/TLS, so encryption of data in transit is also something we might want to look into. Thus far we used the normal HTTP server and therefore our communication with the server was not encrypted. For development this is obviously fine, now for a production ready app, it's strongly recommended that you do encrypt your connections</p>
+        <p>SSL/TLS is all about securing your data that is sent from a client to the server, because when we communicate between client-server, we typically exchange data.</p>
+        `,
         `<h3>Review your package.json file</h3>
         <p>Another thing you need to do is to change the NPM script from <code>"start": "nodemon server.js"</code> to <b><code>"start": "node server.js"</code></b>. This is because in production you want to run your application with node command. You only use nodemon in development.</p>
         <pre><code>
@@ -3629,88 +3686,20 @@ app.listen(3000);
 }
         </code></pre>
         `,
-        `<h3>Listen to the port at <code>process.env.PORT</code></h3>
-        <p>Another thing that's really important when you deploy an application to Heroku is that you <i>listen to the port at <code>process.env.PORT</code></i>. Behind the scenes, Heroku will actually assign a random port to <code>process.env.PORT</code> environment variable.<p>`,
       ],
-    },
-    {
-      sectionTitle: 'Using Environment Variables',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Using Production API Keys',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Setting Secure Response Headers with Helmet',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Compressing Assets',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Implementing CORS with cors package',
-      sectionSource: '',
-      highlights: {
-        highlight2: ['cors'],
-      },
-      tooltips: [
-        `<p>By calling <code>cors()</code>  the <code>Access-Control-Allow-Origin</code> will be set by default to <code>*</code>.</p>
-        <pre><code>
-const express = require('express');
-<i>const cors = require('cors');</i>
-
-const app = express();
-
-// Access-Control-Allow-Origin *
-app.use(<i>cors()</i>);
-
-// app.use(cors({
-//   <b>origin</b>: 'https://www.myWebsite.com'
-// }));
-
-app.listen(process.env.PORT);
-        </code></pre>`,
-        `<p>You can enable CORS for the entire application or for a specific route:</p>
-        <pre><code>
-const express = require('express');
-<i>const cors = require('cors');</i>
-
-const app = express();
-
-app.use('/routePath', <i>cors()</i>, (req, res, next) => {
-  //Code here
-});
-
-app.listen(process.env.PORT);
-        </code></pre>
-        `,
-      ],
-    },
-    {
-      sectionTitle: 'Setting Up Request Logging',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'More on Logging',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Setting Up a SSL Server',
-      sectionSource: '',
-      tooltips: [``],
     },
     {
       sectionTitle: 'Using a Hosting Provider',
       sectionSource: '',
-      tooltips: [``],
+      tooltips: [
+        `<p>The alternative to a Hosting Provider always is that you build your own computer and you set it up such that it is connected to the Internet, that you expose the right ports ,and that people can send requests to your computer which might be running in your room, and that is not a solution I recommend unless you really know what you are doing, otherwise it's very likely to be insecure, not scalable at all, if your app is doing really well then you will quickly need a new computer, a second computer, a third computer, and it only gets more complex and expensive and therefore, we typically use Hosting Providers like Heroku, AWS or others.</p>
+      <p>There we take our code and we deploy it onto <i>managed spaces</i> on their computers, also often called <i>virtual servers</i>, and this means that these providers have very large and powerful machines in their data centers, and you typically don't rent an entire machine, though you could do that, but a part on that machine, so a part of the hard drive and some resources which are then provisioned for your managed space and your code runs totally separated from the other apps which might be running on the same computer on the same server, your app runs separated from them.</p>
+      <p>Now you want to connect your app running on that virtual server with your users. Typically you don't directly connect your space on that machine to your servers, though that is also possible on some providers, but instead a lot of providers manage a lot of the heavy lifting for you and they give you their own managed servers you could say in front of your server, where you can conveniently add SSL encryption, compression, logging or load balancing. Load balancing means that when you have multiple virtual servers because your app is doing really well and you need more resources, that in such a case incoming requests are sent to servers with available capacities in an efficient way. So that is all handled by so-called managed servers which are typically invisible to you, which you don't configure, but which are part of the hosting provider package and you just use a nice user interface provided by the hosting provider to set up how your app behaves regarding SSL or regarding logging and so on.</p>
+      <p>Now this all runs in a private network which means that your own virtual server and your code is not directly exposed to the web, but it's exposed to that managed server which then in turn talks to the web, and therefore to your users through a public server gateway, and that essentially is like a door where requests can come in there and then forwarded to your server, to your virtual server, and the responses are also forwarded.</p>
+      <p>So this is how most hosting providers work, that is what happens behind the scenes, just important for you to know, not really a lot of stuff you have to do on that.</p>
+      <p><img src="../../src/img/deploy_3.jpg"/></p>
+      `,
+      ],
     },
     {
       sectionTitle: 'A Deployment Example with Heroku',
@@ -3718,7 +3707,7 @@ app.listen(process.env.PORT);
       tooltips: [``],
     },
     {
-      sectionTitle: 'Responding to a SIGTERM Signal',
+      sectionTitle: 'Responding to a Heroku SIGTERM Signal',
       sectionSource: '',
       highlights: {
         highlight1: ['SIGTERM Signal'],
@@ -4750,12 +4739,12 @@ export const dataStorage = [
   sessions_and_cookies,
   adding_payments,
   deploying_our_app,
-  websockets_and_socket,
-  graphQL,
-  testing,
-  nodeJS_as_a_build_tool,
-  modern_javaScript_and_nodeJS,
-  nodeJS_and_TypeScript,
+  // websockets_and_socket,
+  // graphQL,
+  // testing,
+  // nodeJS_as_a_build_tool,
+  // modern_javaScript_and_nodeJS,
+  // nodeJS_and_TypeScript,
 ];
 
 const allSections = dataStorage.map(el => el.sections).flat();
