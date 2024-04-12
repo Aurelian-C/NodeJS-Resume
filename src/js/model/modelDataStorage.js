@@ -428,11 +428,10 @@ const development_workflow = {
   titleDescription: 'Developing Efficiently',
   sections: [
     {
-      sectionTitle:
-        'Understanding <code>package.json</code> file and NPM Scripts',
+      sectionTitle: 'Understanding package.json file and NPM Scripts',
       sectionSource: '',
       highlights: {
-        highlight1: ['<code>package.json</code>', 'NPM Scripts'],
+        highlight1: ['package.json', 'NPM Scripts'],
       },
       tooltips: [
         `<p>NPM is a software that we use to manage the 3rd party open-source packages that we choose to include and use in our project.</p>
@@ -634,8 +633,16 @@ app.listen(port, () => {
         <p><i>Middleware functions can be <u>used globally</u>, meaning they are executed for every request, or they can be <u>applied to specific routes or groups of routes</u> using <code>app.use()</code> or <code>router.use()</code>.</i></p>
         <p>Express.js provides a wide range of <i>middleware modules</i> that can be easily integrated into your application, or you can create <i>custom middleware functions</i> tailored to your specific requirements.</p>
         `,
-        `<h3>How to use middleware functions</h3>
-        <p><b>To load the middleware function, call <code>app.use()</code></b>, specifying the middleware function. For example, the following code loads the <code>myLogger</code> middleware function before the route to the root path (/).
+      ],
+    },
+    {
+      sectionTitle: 'How to use middleware function: app.use()',
+      sectionSource: '',
+      highlights: {
+        highlight2: ['app.use()'],
+      },
+      tooltips: [
+        `<p><b>To load the middleware function, call <code>app.use()</code></b>, specifying the middleware function. For example, the following code loads the <code>myLogger</code> middleware function before the route to the root path (/).
         <pre><code>
 const express = require('express')
 const app = express()
@@ -651,69 +658,11 @@ app.get('/', (req, res) => {
   res.send('Hello World!')
 })
 
-app.listen(3000)
+app.listen(process.env.PORT)
         </code></pre>        
         <p><i>Every time the app receives a request</i>, it prints the message “LOGGED” to the terminal.</p>`,
-        `<h3>The order of middleware loading</h3>
-<p>The order of middleware loading is important: <b>middleware functions that are loaded first are also executed first</b>.</p>
-<p>If <code>myLogger</code> is loaded after the route to the root path, the request never reaches it and the app doesn't print “LOGGED”, because the route handler of the root path terminates the request-response cycle.</p>
-<p>The middleware function <code>myLogger</code> simply prints a message, then passes on the request to the next middleware function in the stack by calling the next() function.</p>
-`,
-        `<h3>Make changes to the request and the response objects</h3>
-<p>Next, we'll create a middleware function called “timeRequest” and add a property called <code>requestTime</code> to the request object.</p>
+        `<h3>Another example</h3>
         <pre><code>
-const timeRequest = function (req, res, next) {
-  req.requestTime = Date.now()
-  next()
-}
-        </code></pre>  
-        <p>The app now uses the <code>timeRequest</code> middleware function. Also, the callback function of the root path route uses the property that the middleware function adds to <code>req</code> (the request object).</p>
-        <pre><code>
-const express = require('express')
-const app = express()
-
-const timeRequest = function (req, res, next) {
-  <i>req.requestTime</i> = Date.now()
-  next()
-}
-
-app.use(timeRequest)
-
-app.get('/', (req, res) => {
-  const responseText = 'Hello World!' + <i>req.requestTime</i>
-  res.send(responseText)
-})
-
-app.listen(3000)
-        </code></pre>
-`,
-        `<h3>Configurable middleware</h3>
-<p>If you need your middleware to be configurable, export a function which accepts an options object or other parameters, which, then returns the middleware implementation based on the input parameters.</p>
-        <pre><code>
-module.exports = function (options) {
-  return function (req, res, next) {
-    // Implement the middleware function based on the options object
-    next()
-  }
-}
-        </code></pre>
-        <pre><code>
-const mw = require('./my-middleware.js')
-
-app.use(mw({ option1: '1', option2: '2' }))
-        </code></pre>
-`,
-      ],
-    },
-    {
-      sectionTitle:
-        'More details about app.use(), next() & Sending a Response With res.send() Function',
-      sectionSource: '',
-      highlights: {
-        highlight2: ['app.use()', 'next()', 'res.send()'],
-      },
-      tooltips: [
-        `<pre><code>
 const express = require('express');
 const app = express();
 
@@ -791,74 +740,104 @@ app.use('/api', [middleware1, middleware2]);
       ],
     },
     {
-      sectionTitle:
-        'Using a helper function for navigation: <code>path.dirname()</code> with <code>process.mainModule.filename</code> or <code>require.main.filename</code>',
+      sectionTitle: 'The order of middleware loading',
       sectionSource: '',
-      highlights: {
-        highlight2: [
-          '<code>path.dirname()</code>',
-          '<code>process.mainModule.filename</code>',
-          '<code>require.main.filename</code>',
-        ],
-      },
       tooltips: [
-        `<h3>The <code>path.dirname()</code> method</h3>
-        <p>The <code>path.dirname()</code> method <i>return the directory name of a file path</i>.</p>`,
-        `<h3>The <code>process.mainModule</code> property</h3>
-        <p><i><code>process</code> is a global variable</i> provided by Node.js, you don't need to import it.</p>
-        <p>The <code>process.mainModule</code> property is an inbuilt application programming interface of the processing module which is <i>used to get the main module</i>. This is <i>an alternative way to get <code>require.main</code></i> but unlike <code>require.main</code>, <code>process.mainModule</code> dynamically changes in runtime. Generally, we can assume those two modules are the same.</p>
-        `,
-        `<h3>The <code>require.main.filename</code></h3>
-        <p><code>require.main.filename</code> is great for <i>figuring out the entry point for the current application</i>.</p>
-        <p>Unfortunately, <code>require.main.filename</code> sometimes fails when an application is executed with an alternative process manager, e.g., iisnode.</p>`,
-        `<pre><code>
-const path = require("path");
-
-<i>module.exports = path.dirname(process.mainModule.filename);</i>
-
-// If you get a deprecation warning for above code - in that case, you can simply switch to the code below:
-<i>// module.exports = path.dirname(require.main.filename);</i>
-
-// With path.dirname(process.mainModule.filename) or path.dirname(require.main.filename) you <i>get the parent directory path</i>
-      </code></pre>
-
+        `
+      <p>The order of middleware loading is important: <b>middleware functions that are loaded first are also executed first</b>.</p>
+      <p>If <code>myLogger</code> is loaded after the route to the root path, the request never reaches it and the app doesn't print “LOGGED”, because the route handler of the root path terminates the request-response cycle.</p>
+      <p>The middleware function <code>myLogger</code> simply prints a message, then passes on the request to the next middleware function in the stack by calling the <code>next()</code> function.</p>
       <pre><code>
-const path = require('path');
-const express = require('express');
-<i>const rootDir = require('../util/path');</i>
+const express = require('express')
+const app = express()
 
-const router = express.Router();
+const myLogger = function (req, res, next) {
+  console.log('LOGGED')
+  next()
+}
 
-router.get('/add-product', (req, res, next) => {
-  res.sendFile(path.join(<i>rootDir</i>, 'views', 'add-product.html'));
-});
+<i>app.use(myLogger);</i>
 
-router.post('/add-product', (req, res, next) => {
-  console.log(req.body);
-  res.redirect('/');
-});
+app.get('/', (req, res) => {
+  res.send('Hello World!')
+})
 
-module.exports = router;
-      </code></pre>
-
-      <pre><code>
-const path = require('path');
-const express = require('express');
-<i>const rootDir = require('../util/path');</i>
-      
-const router = express.Router();
-      
-router.get('/add-product', (req, res, next) => {
-  res.sendFile(path.join(<i>rootDir</i>, 'views', 'add-product.html'));
-});
-      
-router.post('/add-product', (req, res, next) => {
-  res.redirect('/');
-});
-      
-module.exports = router;
-      </code></pre>
+app.listen(process.env.PORT)
+      </code></pre> 
       `,
+      ],
+    },
+    {
+      sectionTitle: 'Make changes to the request and the response objects',
+      sectionSource: '',
+      tooltips: [
+        `
+<p>Next, we'll create a middleware function called “timeRequest” and add a property called <code>requestTime</code> to the request object.</p>
+        <pre><code>
+const timeRequest = function (req, res, next) {
+  req.requestTime = Date.now()
+  next()
+}
+        </code></pre>  
+        <p>The app now uses the <code>timeRequest</code> middleware function. Also, the callback function of the root path route uses the property that the middleware function adds to <code>req</code> (the request object).</p>
+        <pre><code>
+const express = require('express')
+const app = express()
+
+const timeRequest = function (req, res, next) {
+  <i>req.requestTime</i> = Date.now()
+  next()
+}
+
+app.use(timeRequest)
+
+app.get('/', (req, res) => {
+  const responseText = 'Hello World!' + <i>req.requestTime</i>
+  res.send(responseText)
+})
+
+app.listen(process.env.PORT)
+        </code></pre>
+`,
+      ],
+    },
+    {
+      sectionTitle: 'Configurable middleware',
+      sectionSource: '',
+      tooltips: [
+        `
+<p>If you need your middleware to be configurable, export a function which accepts an <code>options</code> object or other parameters, which, then returns the middleware implementation based on the input parameters.</p>
+        <pre><code>
+module.exports = function (<i>options</i>) {
+  return function (req, res, next) {
+    // Implement the middleware function based on the <i>options</i> object
+    next()
+  }
+}
+        </code></pre>
+        <pre><code>
+const mw = require('./my-middleware.js')
+
+app.use(mw(<i>{ option1: '1', option2: '2' }</i>))
+        </code></pre>
+`,
+      ],
+    },
+    {
+      sectionTitle: 'Response methods',
+      sectionSource: '',
+      tooltips: [
+        `<ul>The methods on the response object (<code>res</code>) can <i>send a response to the client, and terminate the request-response cycle</i>. If none of these methods are called from a route handler, the client request will be left hanging.
+          <li>- <code>res.download()</code>:	Prompt a file to be downloaded.</li>
+          <li>- <code>res.<i>end()</i></code>:	End the response process.</li>
+          <li>- <code>res.<i>json()</i></code>:	Send a JSON response.</li>
+          <li>- <code>res.jsonp()</code>:	Send a JSON response with JSONP support.</li>
+          <li>- <code>res.<i>redirect()</i></code>:	Redirect a request.</li>
+          <li>- <code>res.<i>render()</i></code>:	Render a view template.</li>
+          <li>- <code>res.<i>send()</i></code>:	Send a response of various types.</li>
+          <li>- <code>res.sendFile()</code>:	Send a file as an octet stream.</li>
+          <li>- <code>res.sendStatus()</code>: Set the response status code and send its string representation as the response body.</li>
+        </ul>`,
       ],
     },
     {
@@ -952,9 +931,6 @@ app<b>.all</b>('/secret', (req, res, next) => {
     {
       sectionTitle: 'Handling different routes with <code>app.use()</code>',
       sectionSource: '',
-      highlights: {
-        highlight2: ['<code>app.use()</code>'],
-      },
       tooltips: [
         `<pre><code>
 const express = require('express');
@@ -976,7 +952,7 @@ app.use(<b>'/'</b>, (req, res, next) => {
   <i>res.send('Hello from the other side!');</i>
 });
         
-app.listen(3000);
+app.listen(process.env.PORT);
       </code></pre>`,
         `<h3>Basic routing</h3>
         <p>Routing refers to determining how an application responds to a client request to a particular endpoint, which is a URI (or path) and a specific HTTP request method (GET, POST, and so on).</p>
@@ -992,11 +968,11 @@ app.listen(3000);
     },
     {
       sectionTitle:
-        'Create chainable route handlers for a the same route path by using <code>app.route()</code>',
+        'Create chainable route handlers for a the same route path by using app.route()',
       sectionSource: '',
       highlights: {
         highlight1: ['chainable route handlers'],
-        highlight2: ['<code>app.route()</code>'],
+        highlight2: ['app.route()'],
       },
       tooltips: [
         `<p>You can create <i><u>chainable route handlers</u> for a route path</i> by using <code>app.route()</code>.</p>
@@ -1012,33 +988,47 @@ app.listen(3000);
   <i>.put</i>((req, res) => {
       res.send('Update the book')
   })      
-      </code></pre>`,
+      </code></pre>
+      <p>Because the path is specified at a single location, creating modular routes is helpful, as is reducing redundancy and typos.</p>
+      `,
       ],
     },
     {
       sectionTitle: 'Using Express Router',
       sectionSource: '',
       tooltips: [
-        `<p>With Express.js routing we can execute different code for different incoming requests and paths or urls without having to write a bunch of <code>if</code> statements.</p>
+        `<p>With Express.js routing we can <i>execute different code for different incoming requests and paths</i>.</p>
         <p>When the application grows, we want to <i>split our routing code over multiple files</i>. Express.js  gives us a pretty nice way of outsourcing routing into other files. You can <i>use the <code>express.Router</code> to split your routes across files</i>.</p>
-        <p>The convention is to create in your application a new folder called "routes". In this folder youl will store all your files related to Express.js route code that should execute for different paths.</p>
+        <p>The convention is to create in your application a new folder called "routes". In this folder you will store all your files related to Express.js routes code that should execute for different paths.</p>
+        <p>Use the <code>express.Router</code> class to create modular, mountable route handlers. A Router instance is a complete middleware and routing system; for this reason, it is often referred to as a “mini-app”.</p>
         `,
-        `<pre><code>
-const express = require('express');
+        `<p>Create a router file named birds.js in the app directory, with the following content:</p>
+        <pre><code>
+const express = require('express')
+const router = express.Router()
 
-<i>const router = express.Router();</i>
-        
-<i>router.get</i>('/add-product', (req, res, next) => {
-  res.send('Add Product Form');
-});
-        
-<i>router.post</i>('/product', (req, res, next) => {
-  res.redirect('/');
-});
-        
-<i>module.exports = router;</i>
+// middleware that is specific to this router
+const timeLog = (req, res, next) => {
+  console.log('Time: ', Date.now())
+  next()
+}
+
+router.use(timeLog)
+
+// define the home page route
+router.get('/', (req, res) => {
+  res.send('Birds home page')
+})
+
+// define the about route
+router.get('/about', (req, res) => {
+  res.send('About birds')
+})
+
+module.exports = router
         </code></pre>
 
+        <p>Then, load the router module in the app:</p>
         <pre><code>
 const express = require('express');
 
@@ -1053,17 +1043,15 @@ const express = require('express');
 
         <pre><code>
 const express = require('express');
+<i>const birds = require('./birds')</i>
 
 const app = express();
 
-<i>const adminRoutes = require('./<u>routes</u>/admin');
-const shopRoutes = require('./<u>routes</u>/shop');
+<i>app.use('/birds', birds);</i>
 
-app.use(adminRoutes);
-app.use(shopRoutes);</i>
-
-app.listen(3000);
+app.listen(process.env.PORT);
         </code></pre>
+        <p>The app will now be able to handle requests to <code>/birds</code> and <code>/birds/about</code>, as well as call the <code>timeLog</code> middleware function that is specific to the route.</p>
         `,
       ],
     },
@@ -1133,7 +1121,7 @@ app.use((req, res, next) => {
     res.status(404).send('Page not found!');
 });
 
-app.listen(3000);
+app.listen(process.env.PORT);
       </code></pre>`,
         `<h3><code>app.use("/")</code> vs <code>app.get("/")</code></h3>
       <p><code>app.use("/")</code> will <i>match all the paths</i> but <code>app.get("/")</code> will do an <i>exact match</i>.</p>
@@ -1262,9 +1250,158 @@ exports.getProduct = (req, res, next) => {
   ],
 };
 
+const working_with_files = {
+  title: 'Working with Local Files',
+  titleDescription: 'Fetch/store local files & handling files paths',
+  sections: [
+    {
+      sectionTitle:
+        'Storing/Feching Data in/from Files with fs.readFile() and fs.writeFile()',
+      sectionSource: '',
+      highlights: {
+        highlight2: ['fs.readFile()', 'fs.writeFile()'],
+      },
+      tooltips: [
+        `<pre><code>
+<i>const fs = require('<b>fs</b>');</i>
+const path = require('path');
+
+const filePath = path.join(path.dirname(process.mainModule.filename), 'data', 'products.json');
+
+const getProductsFromFile = cb => {
+  <b>fs.readFile</b>(filePath, (err, fileContent) => {
+    if (err) {
+      cb([]);
+    } else {
+      cb(JSON.parse(fileContent));
+    }
+  });
+};
+
+module.exports = class Product {
+  constructor(t) {
+    this.title = t;
+  }
+
+  save() {
+    getProductsFromFile(products => {
+      products.push(this);
+      <b>fs.writeFile</b>(filePath, JSON.stringify(products), err => {
+        console.log(err);
+      });
+    });
+  }
+
+  static fetchAll(cb) {
+    getProductsFromFile(cb);
+  }
+};     
+      </code></pre>`,
+        `<p>IMPORTANT: It's important to understand that <i>working with <u>files for data storage</u> is suboptimal for bigger amounts of data</i>.</p>`,
+      ],
+    },
+    {
+      sectionTitle: 'Get a file path with path.join() and __dirname',
+      sectionSource: '',
+      highlights: {
+        highlight2: ['path.join()', '__dirname'],
+      },
+      tooltips: [
+        `<pre><code>
+const express = require('express');
+<i>const path = require('path');</i>
+
+app.use('/someRoute', (req, res, next) => {
+  res.sendFile(<b>path.join</b>(<b>__dirname</b>, '..', 'views', 'htmlFile.html'));
+});
+
+app.listen(process.env.PORT);
+        </code></pre>
+        `,
+        `<h3>More aboute <code>path.join()</code> method</h3>
+        <p>The <code>path.join()</code> method <i>joins the specified <u>path segments</u> into <b>one path</b></i>.</p>
+        <p>You can specify as many path segments as you like. The specified <b>path segments must be <u>strings</u></b>, separated by comma <code>,</code>.</p>
+        <p>We're using <code>path.join()</code> because this will automatically build the path in a way that works on both Linux and Windows systems.</p>
+        `,
+        `<h3>More aboute <code>__dirname</code> variable</h3>
+        <p><code>__dirname</code> is a <b>global variable</b> made available by Node.js (environment variable) that tells you <i>the <u>absolute path of the directory</u> containing the currently executing file</i>.</p>
+        `,
+      ],
+    },
+    {
+      sectionTitle:
+        'Using a helper function for navigation: path.dirname() with process.mainModule.filename or require.main.filename',
+      sectionSource: '',
+      highlights: {
+        highlight1: ['process.mainModule.filename', 'require.main.filename'],
+        highlight2: ['path.dirname()'],
+      },
+      tooltips: [
+        `<h3>The <code>path.dirname()</code> method</h3>
+        <p>The <code>path.dirname()</code> method <i>return the directory name of a file path</i>.</p>`,
+        `<h3>The <code>process.mainModule</code> property</h3>
+        <p><i><code>process</code> is a global variable</i> provided by Node.js, you don't need to import it.</p>
+        <p>The <code>process.mainModule</code> property is an inbuilt application programming interface of the processing module which is <i>used to get the main module</i>. This is <i>an alternative way to get <code>require.main</code></i> but unlike <code>require.main</code>, <code>process.mainModule</code> dynamically changes in runtime. Generally, we can assume those two modules are the same.</p>
+        `,
+        `<h3>The <code>require.main.filename</code></h3>
+        <p><code>require.main.filename</code> is great for <i>figuring out the entry point for the current application</i>.</p>
+        <p>Unfortunately, <code>require.main.filename</code> sometimes fails when an application is executed with an alternative process manager, e.g., iisnode.</p>`,
+        `<pre><code>
+const path = require("path");
+
+<i>module.exports = path.dirname(process.mainModule.filename);</i>
+
+// If you get a deprecation warning for above code - in that case, you can simply switch to the code below:
+<i>// module.exports = path.dirname(require.main.filename);</i>
+
+// With path.dirname(process.mainModule.filename) or path.dirname(require.main.filename) you <i>get the parent directory path</i>
+      </code></pre>
+
+      <pre><code>
+const path = require('path');
+const express = require('express');
+<i>const rootDir = require('../util/path');</i>
+
+const router = express.Router();
+
+router.get('/add-product', (req, res, next) => {
+  res.sendFile(path.join(<i>rootDir</i>, 'views', 'add-product.html'));
+});
+
+router.post('/add-product', (req, res, next) => {
+  console.log(req.body);
+  res.redirect('/');
+});
+
+module.exports = router;
+      </code></pre>
+
+      <pre><code>
+const path = require('path');
+const express = require('express');
+<i>const rootDir = require('../util/path');</i>
+      
+const router = express.Router();
+      
+router.get('/add-product', (req, res, next) => {
+  res.sendFile(path.join(<i>rootDir</i>, 'views', 'add-product.html'));
+});
+      
+router.post('/add-product', (req, res, next) => {
+  res.redirect('/');
+});
+      
+module.exports = router;
+      </code></pre>
+      `,
+      ],
+    },
+  ],
+};
+
 const parsing_data = {
   title: 'Parsing Request Body in Express.js',
-  titleDescription: 'Parsing data',
+  titleDescription: 'Parsing incoming request data',
   sections: [
     {
       sectionTitle: 'Parsing incoming Requests with body-parser package',
@@ -1305,13 +1442,13 @@ app.use('/', (req, res, next) => {
     res.send('Go to add products page!');
 });
 
-app.listen(3000);
+app.listen(process.env.PORT);
       </code></pre>`,
       ],
     },
     {
       sectionTitle:
-        'Parsing JSON Requests with <code>express.json()</code> middleware',
+        'Parsing JSON Requests with express.json() build-in middleware',
       sectionSource: '',
       highlights: {
         highlight2: ['express.json()'],
@@ -1330,58 +1467,8 @@ app.post('/product', (req, res, next) => {
     res.redirect('/');
 });
 
-app.listen(3000);
+app.listen(process.env.PORT);
       </code></pre>`,
-      ],
-    },
-    {
-      sectionTitle:
-        'Storing/Feching Data in/from Files with <code>fs.readFile()</code> and <code>fs.writeFile()</code>',
-      sectionSource: '',
-      highlights: {
-        highlight1: ['Storing/Feching Data in/from Files'],
-        highlight2: [
-          '<code>fs.readFile()</code>',
-          '<code>fs.writeFile()</code>',
-        ],
-      },
-      tooltips: [
-        `<pre><code>
-<i>const fs = require('<b>fs</b>');</i>
-const path = require('path');
-
-const filePath = path.join(path.dirname(process.mainModule.filename), 'data', 'products.json');
-
-const getProductsFromFile = cb => {
-  <b>fs.readFile</b>(filePath, (err, fileContent) => {
-    if (err) {
-      cb([]);
-    } else {
-      cb(JSON.parse(fileContent));
-    }
-  });
-};
-
-module.exports = class Product {
-  constructor(t) {
-    this.title = t;
-  }
-
-  save() {
-    getProductsFromFile(products => {
-      products.push(this);
-      <b>fs.writeFile</b>(filePath, JSON.stringify(products), err => {
-        console.log(err);
-      });
-    });
-  }
-
-  static fetchAll(cb) {
-    getProductsFromFile(cb);
-  }
-};     
-      </code></pre>`,
-        `<p>IMPORTANT: It's important to understand that <i>working with <u>files for data storage</u> is suboptimal for bigger amounts of data</i>.</p>`,
       ],
     },
   ],
@@ -1797,7 +1884,7 @@ app.use('/api/v1/users', userRouter);
 
 <i>app.use(globalErrorHandler);</i>
 
-app.listen(3000);
+app.listen(process.env.PORT);
         </code></pre>`,
       ],
     },
@@ -1999,11 +2086,10 @@ const understanding_validation = {
       ],
     },
     {
-      sectionTitle:
-        'Setup & Basic Validation: <code>express-validator</code> package',
+      sectionTitle: 'Setup & Basic Validation: express-validator package',
       sectionSource: '',
       highlights: {
-        highlight1: ['<code>express-validator</code>'],
+        highlight1: ['express-validator'],
       },
       tooltips: [
         `<p>To add validation, we'll use a third party package. The package we'll be using is called <i><code>express-validator</code></i>.</p>
@@ -2098,7 +2184,7 @@ function updateMe(req, res, next) {
 
 app.patch('/updatePhoto', uploadPhoto, updateMe)
 
-app.listen(3000);
+app.listen(process.env.PORT);
         </code></pre>
         <p>In the code above we included the Multer package and then with that we created an <code>upload</code> variable. The <code>upload</code> is just to define a couple of settings, where in the above example we only define the destination.  Then we use that <code>upload</code> to create a new middleware, and that middleware will handle upload file.</p>
         <p>We use <code>upload.single()</code> because we only have one single file that we want to upload. <code>upload.single()</code> takes as an argument the name of the field that hold the file. The name must match with the name in the UI form.</p>
@@ -2160,7 +2246,7 @@ function updateMe(req, res, next) {
       
 app.patch('/updatePhoto', uploadPhoto, updateMe)
       
-app.listen(3000);
+app.listen(process.env.PORT);
         </code></pre>`,
       ],
     },
@@ -2223,7 +2309,7 @@ function updateMe(req, res, next) {
 
 app.patch('/updatePhoto', uploadPhoto, resizePhoto, updateMe)
 
-app.listen(3000);
+app.listen(process.env.PORT);
         </code></pre>
         `,
       ],
@@ -2297,7 +2383,7 @@ function updatePhotos(req, res, next) {
 
 app.patch('/updatePhotos', uploadPhotos, resizePhotos, updatePhotos)
 
-app.listen(3000);
+app.listen(process.env.PORT);
         </code></pre>`,
       ],
     },
@@ -2358,7 +2444,7 @@ app.use((req, res, next) => {
     res.status(404).sendFile(path.join(__dirname, 'views', '404.html'));
 });
 
-app.listen(3000);      
+app.listen(process.env.PORT);      
       </code></pre>`,
       ],
     },
@@ -3253,7 +3339,7 @@ const app = express();
 //You can rate limit any route
 app.use('/api', limiter);</i>
 
-app.listen(3000);
+app.listen(process.env.PORT);
         </code></pre>
         <p>We kind of need to find a balance which works best for our application. For example, if you're building an API, which really needs a lot of requests for one IP, then of course, the <code>max</code> property number should be greater. So don't just follow blindly what I just put in the <code>max</code> property (100), but really adapt it to your own application so that you don't make it unusable because of <code>max</code> property limiter.</p>
         <ul>The limiter will <i>automatically creates and send some HTTP Headers</i> with the limiter rate number, limiter remaining number and limiter time until is reset:
@@ -3281,7 +3367,7 @@ const app = express();
 //Body parser, reading data from body into req.body
 app.use(<i>express.json(<b>{ limit: '10kb' }</b>)</i>);
 
-app.listen(3000);
+app.listen(process.env.PORT);
         </code></pre>
         <p>Now when we have a body larger than 10 kilobyte, it will basically not be accepted.</p>
         `,
@@ -3304,7 +3390,7 @@ const app = express();
 //Set security HTTP headers
 <b>app.use(helmet());</b>
 
-app.listen(3000);
+app.listen(process.env.PORT);
       </code></pre>
       <p>It's best to use the <code>helmet</code> package early in the middleware stack, so that these headers are really sure to be set. So don't put it like somewhere at the end, put it right in the beginning</p>
       `,
@@ -3350,7 +3436,7 @@ app.use(<b>mongoSanitize()</b>);
 //Data sanitization against XSS
 app.use(<b>xss()</b>);
 
-app.listen(3000);
+app.listen(process.env.PORT);
       </code></pre>
       <p>What <code>mongoSanitize()</code> middleware does is to look at the request body, the request query string, and also at request params, and then it will filter out all of the dollar signs and dots, because that's how MongoDB operators are written. By removing that, well, these operators are then no longer going to work.</p>
       <p><code>xss()()</code> will clean any user input from malicious HTML code. Imagine that an attacker would try to insert some malicious HTML code with some JavaScript code attached to it. If that would then later be injected into our HTML site, it could really create some damage then.</p>
@@ -3378,7 +3464,7 @@ const app = express();
 //Prevent parameter pollution
 <i>app.use(<b>hpp()</b>);</i>
 
-app.listen(3000);
+app.listen(process.env.PORT);
       </code></pre>
       <p><i><code>hpp()</code> should be used by the end</i>, because what it does is to clear up the query string.</p>
       <p>If you want some duplicate query params, you can pass to <code>hpp()</code> an object with a <code>whitelist</code> property. For example, we might want to search for /tours with the duration of nine and five.</p>
@@ -3406,7 +3492,7 @@ const app = express();
   })
 );</i>
 
-app.listen(3000);
+app.listen(process.env.PORT);
       </code></pre>
       `,
       ],
@@ -3586,7 +3672,7 @@ app.use('/route', (req, res, next) => {
   console.log(<i>req.cookies</i>);
 })
 
-app.listen(3000);
+app.listen(process.env.PORT);
         </code></pre>
     `,
       ],
@@ -3661,7 +3747,7 @@ const app = express();
 
 app.use(<b>compression()</b>);
 
-app.listen(3000);
+app.listen(process.env.PORT);
         </code></pre>
         `,
         `<h3>Setting Up Request Logging</h3>
@@ -4158,15 +4244,10 @@ const server_side_rendering = {
       ],
     },
     {
-      sectionTitle:
-        'Serving HTML Pages with <code>sendFile()</code> function, <code>path.join()</code> method and <code>__dirname</code> global variable',
+      sectionTitle: 'Serving HTML Pages with sendFile() function',
       sectionSource: '',
       highlights: {
-        highlight2: [
-          '<code>sendFile()</code>',
-          '<code>path.join()</code>',
-          '<code>__dirname</code>',
-        ],
+        highlight2: ['sendFile()'],
       },
       tooltips: [
         `<p>It's important to know that you're not limited to <code>send()</code> dummy text or anything like that, you can <code>sendFiles()</code> to your users, for example HTML files or images.</p>
@@ -4236,7 +4317,7 @@ app.use(shopRoutes);
     res.status(404).sendFile(path.join(__dirname, 'views', '404.html'));
 });</i>
 
-app.listen(3000);
+app.listen(process.env.PORT);
               </code></pre>
         
         <pre><code>
@@ -4260,7 +4341,7 @@ app.use(shopRoutes);
     res.status(404).sendFile(path.join(__dirname, 'views', '404.html'));
 });</i>
 
-app.listen(3000);
+app.listen(process.env.PORT);
               </code></pre>`,
       ],
     },
@@ -4313,11 +4394,11 @@ exports.routes = router;
     },
     {
       sectionTitle:
-        'Installing & implementing Pug with <code>app.set()</code> & <code>res.render()</code>',
+        'Installing & implementing Pug with app.set() & res.render()',
       sectionSource: '',
       highlights: {
         highlight1: ['Pug'],
-        highlight2: ['<code>app.set()</code>', '<code>res.render()</code>'],
+        highlight2: ['app.set()', 'res.render()'],
       },
       tooltips: [
         `<h3>Install Pug on your project</h3>
@@ -4351,7 +4432,7 @@ app.use((req, res, next) => {
     res.status(404).sendFile(path.join(__dirname, 'views', '404.html'));
 });
 
-app.listen(3000);        
+app.listen(process.env.PORT);        
         </code></pre>
         <p>After the <code>view engine</code> is set, you don't have to specify the engine or load the template engine module in your app; Express loads the module internally, as shown below (for the above example): <code>app.set('view engine', 'pug')</code>.</p>
         `,
@@ -4574,7 +4655,7 @@ app.use((req, res, next) => {
   res.status(404).sendFile(path.join(__dirname, 'views', '404.html'));
 });
 
-app.listen(3000);        
+app.listen(process.env.PORT);        
       </code></pre>
       <p>After the <code>view engine</code> is set, you don't have to specify the engine or load the template engine module in your app; Express loads the module internally, as shown below (for the above example): <code>app.set('view engine', 'ejs')</code>.</p>
       `,
@@ -4733,6 +4814,7 @@ export const dataStorage = [
   working_with_ExpressJS,
   routing,
   dynamic_routes_and_advanced_models,
+  working_with_files,
   parsing_data,
   mvc,
   error_handling_with_ExpressJS,
