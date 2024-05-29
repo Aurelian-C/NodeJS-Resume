@@ -45,6 +45,9 @@ const introduction = {
         `<h3>Cookies, Sessions, and Authentication</h3>
         <p><i>Cookies are small <u>pieces of data stored by the browser</u> and sent with each request</i>, enabling websites to track user sessions and store user preferences. <i>Sessions allow servers to maintain stateful interactions with clients across multiple requests.</i> Authentication mechanisms such as username/password or token-based authentication are used to verify the identity of users accessing restricted resources.</p>`,
         `<p>This overview covers the fundamental concepts behind how the web works, though the actual implementation can be more complex due to factors like caching, content delivery networks (CDNs), and web application frameworks.</p>`,
+        `<p><img src="../../src/img/how_the_web_works_01.jpg"/></p>
+        <p><img src="../../src/img/how_the_web_works_02.jpg"/></p>
+        `,
       ],
     },
     {
