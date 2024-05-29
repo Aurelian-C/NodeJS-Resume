@@ -98,70 +98,6 @@ const fs = <b>require("fs")</b>;
       ],
     },
     {
-      sectionTitle:
-        'Blocking and Non-Blocking Code: Asynchronous Nature of Node.js',
-      sectionSource: '',
-      highlights: {
-        highlight1: ['Asynchronous Nature of Node.js'],
-      },
-      tooltips: [
-        `<p>Node.js has only <b>one single thread</b>, which means that all the users accessing your web server application are all using the same thread. And so, whenever they're interacting with the application, the code that is run for each user will be executed all in the same thread, at the same place, in the computer running the application. And that happen no matter if you have 5, 5.000 or 5.000.000 users. What this also means is that <i>when one user blocks the single thread with synchronous code, then all other users will have to wait for that execution to finish</i>.</p>
-        <p>Imagine there's a user accessing your application and there's a huge synchronous file read in your code that will take like one second to load. This will mean that for that one second, all other users will have to wait because the entire execution is blocked for that one second. So if those other users want to do some simple tasks, like logging into your application or just requesting some data, they won't be able to do so. They will have to wait until the file is finished reading. Only when that happens they will finally be able to perform the simpler tasks, one after another.</p>
-        <p>This is how the situation would play out with synchronous blocking code, which is obviously a terrible experience for your users. And so, it's really your job as a developer to avoid these kinds of situations by using asynchronous code.</p>
-        <p><img src="../../src/img/synchronous_vs_asynchronous_01.jpg"/></p>
-        `,
-        `<h3>Synchronous vs Asynchronous Node.js code</h3>
-        <p>Being a single thread, synchronous code become a problem especially with slow operations, because each line of code blocks the execution of the rest of the code. So we say that <i>synchronous code is also called blocking code</i> because a certain operation can only be executed after the one before has finished.</p>
-        <p>An example of synchronous code:</p>
-        <pre><code>
-const fs = require('fs');
-
-//Blocking code execution
-const textFile = <b>fs.readFileSync</b>('./textFolder/textFile.text', 'utf-8');
-
-console.log(textFile);
-        </code></pre>
-        <p>Because of the way Node.js was designed, synchronous code turns into a huge problem. The solution to synchronous code problem in Node.js is to <i>use asynchronous code (non-blocking code)</i>:</p>
-        <pre><code>
-const fs = require('fs');
-
-//Non-blocking code execution
-const textFile = <b>fs.readFile</b>('./textFolder/textFile.text', 'utf-8', <i>(err, data) => {
-    console.log(data);
-}</i>);
-        
-console.log('Reading file...');
-        </code></pre>
-        `,
-        `<h3><code>fs.readFileSync</code> (Synchronous) vs <code>fs.readFile</code> (Asynchronous)</h3>
-        <p><i><code>fs.readFileSync</code> is a <u>synchronous</u> function</i> that blocks the code execution until it's finish execution. On the other hand, <i><code>fs.readFile</code> is an <u>asynchronous</u> function</i> that receives a callback function as a parameter, and this callback will be called with the data (result) when <code>fs.readFile</code> finish it's execution. In that time, the code execution is NOT blocked.</p>
-        <p>IMPORTANT: It's YOUR job as a developer to avoid blocking code execution by using asynchronous code. This is actually the whole reason why <b>Node.js is completely designed around callbacks to implement asynchronous behavior</b>.</p>`,
-        `<h3>Node.js asynchronous functions</h3>
-        <p>It's important to know that, <i>when we use callbacks in our code, that doesn't automatically make it asynchronous</i>. So, passing functions around into other functions is quite common in JavaScript, but that doesn't make them asynchronous automatically. It only works this way for some functions in the Node.js, such as the <code>fs.readFile</code> function and many others.</p>
-        `,
-        `<h3>Node.js vs other programming languages</h3>
-        <p>In other programming languages, like PHP, it works very differently, because you get one new thread for each new user, which really works completely different. But the creator of Node.js found this model to be the best solution for building highly performant and scalable web applications.</p>`,
-        `<h3>Node.js top-level code it's <u>only executed once</u> when the server starts</h3>
-        <p>The code that is outside the callback functions, so the so called <i><b>top level code is <u>only executed once</u> we start the server</b>, and so in that situation, it doesn't matter at all if it blocks the code execution, because it happens only once, and only when the server actually starts:</i></p>
-        <pre><code>
-const http = require('http');
-const fs = require('fs');
-
-<i>//Top-level code it's only executed once, only when the server starts, so you can use here synchronous code even it's block the code execution</i>
-const textFile = fs<b>.readFileSync</b>('./textFolder/textFile.text', 'utf-8');
-
-const server = http.createServer((req, res) => {
-    <i>//Here you need to use asynchoronous code because it's executed over and over, for every incoming request</i>
-});
-
-server.listen(3000);
-        </code></pre>
-        <p>You gone use this technique when you want to handle data right when a server start. So maybe you want to use some data and to be avaible right when the server starts.</p>
-        <p>The secret is simply to know which code is only executed once and only at the beginning, when the server starts, and which code gets executed over and over again, and is therefore problematic when blocking the Event Loop.</p>
-        `,
-      ],
-    },
-    {
       sectionTitle: 'Creating a Simple Web Server',
       sectionSource: '',
       highlights: {
@@ -398,6 +334,70 @@ const { add, subtract } = require('./mathFunctions');
       ],
     },
     {
+      sectionTitle:
+        'Blocking and Non-Blocking Code: Asynchronous Nature of Node.js',
+      sectionSource: '',
+      highlights: {
+        highlight1: ['Asynchronous Nature of Node.js'],
+      },
+      tooltips: [
+        `<p>Node.js has only <b>one single thread</b>, which means that all the users accessing your web server application are all using the same thread. And so, whenever they're interacting with the application, the code that is run for each user will be executed all in the same thread, at the same place, in the computer running the application. And that happen no matter if you have 5, 5.000 or 5.000.000 users. What this also means is that <i>when one user blocks the single thread with synchronous code, then all other users will have to wait for that execution to finish</i>.</p>
+        <p>Imagine there's a user accessing your application and there's a huge synchronous file read in your code that will take like one second to load. This will mean that for that one second, all other users will have to wait because the entire execution is blocked for that one second. So if those other users want to do some simple tasks, like logging into your application or just requesting some data, they won't be able to do so. They will have to wait until the file is finished reading. Only when that happens they will finally be able to perform the simpler tasks, one after another.</p>
+        <p>This is how the situation would play out with synchronous blocking code, which is obviously a terrible experience for your users. And so, it's really your job as a developer to avoid these kinds of situations by using asynchronous code.</p>
+        <p><img src="../../src/img/synchronous_vs_asynchronous_01.jpg"/></p>
+        `,
+        `<h3>Synchronous vs Asynchronous Node.js code</h3>
+        <p>Being a single thread, synchronous code become a problem especially with slow operations, because each line of code blocks the execution of the rest of the code. So we say that <i>synchronous code is also called blocking code</i> because a certain operation can only be executed after the one before has finished.</p>
+        <p>An example of synchronous code:</p>
+        <pre><code>
+const fs = require('fs');
+
+//Blocking code execution
+const textFile = <b>fs.readFileSync</b>('./textFolder/textFile.text', 'utf-8');
+
+console.log(textFile);
+        </code></pre>
+        <p>Because of the way Node.js was designed, synchronous code turns into a huge problem. The solution to synchronous code problem in Node.js is to <i>use asynchronous code (non-blocking code)</i>:</p>
+        <pre><code>
+const fs = require('fs');
+
+//Non-blocking code execution
+const textFile = <b>fs.readFile</b>('./textFolder/textFile.text', 'utf-8', <i>(err, data) => {
+    console.log(data);
+}</i>);
+        
+console.log('Reading file...');
+        </code></pre>
+        `,
+        `<h3><code>fs.readFileSync</code> (Synchronous) vs <code>fs.readFile</code> (Asynchronous)</h3>
+        <p><i><code>fs.readFileSync</code> is a <u>synchronous</u> function</i> that blocks the code execution until it's finish execution. On the other hand, <i><code>fs.readFile</code> is an <u>asynchronous</u> function</i> that receives a callback function as a parameter, and this callback will be called with the data (result) when <code>fs.readFile</code> finish it's execution. In that time, the code execution is NOT blocked.</p>
+        <p>IMPORTANT: It's YOUR job as a developer to avoid blocking code execution by using asynchronous code. This is actually the whole reason why <b>Node.js is completely designed around callbacks to implement asynchronous behavior</b>.</p>`,
+        `<h3>Node.js asynchronous functions</h3>
+        <p>It's important to know that, <i>when we use callbacks in our code, that doesn't automatically make it asynchronous</i>. So, passing functions around into other functions is quite common in JavaScript, but that doesn't make them asynchronous automatically. It only works this way for some functions in the Node.js, such as the <code>fs.readFile</code> function and many others.</p>
+        `,
+        `<h3>Node.js vs other programming languages</h3>
+        <p>In other programming languages, like PHP, it works very differently, because you get one new thread for each new user, which really works completely different. But the creator of Node.js found this model to be the best solution for building highly performant and scalable web applications.</p>`,
+        `<h3>Node.js top-level code it's <u>only executed once</u> when the server starts</h3>
+        <p>The code that is outside the callback functions, so the so called <i><b>top level code is <u>only executed once</u> we start the server</b>, and so in that situation, it doesn't matter at all if it blocks the code execution, because it happens only once, and only when the server actually starts:</i></p>
+        <pre><code>
+const http = require('http');
+const fs = require('fs');
+
+<i>//Top-level code it's only executed once, only when the server starts, so you can use here synchronous code even it's block the code execution</i>
+const textFile = fs<b>.readFileSync</b>('./textFolder/textFile.text', 'utf-8');
+
+const server = http.createServer((req, res) => {
+    <i>//Here you need to use asynchoronous code because it's executed over and over, for every incoming request</i>
+});
+
+server.listen(3000);
+        </code></pre>
+        <p>You gone use this technique when you want to handle data right when a server start. So maybe you want to use some data and to be avaible right when the server starts.</p>
+        <p>The secret is simply to know which code is only executed once and only at the beginning, when the server starts, and which code gets executed over and over again, and is therefore problematic when blocking the Event Loop.</p>
+        `,
+      ],
+    },
+    {
       sectionTitle: 'The Node Lifecycle & Event Loop',
       sectionSource: '',
       highlights: {
@@ -575,17 +575,17 @@ const development_workflow = {
 }
         </code></pre>
         <ul>What symbols means:
-          <li>- <code>~</code> means that we only accept <i>patch (bug fixes)</i> releases (~1.5.<i>7</i>);</li>
-          <li>- <code>^</code> means that we only accept <i>minor</i> releases (^1.<i>5</i>.7);</li>
-          <li>- <code>*</code> means that we accept <i>all</i> releases: major, minor & patch (bug fixes) (*1.5.7).</li>
+          <li>- <b><code>~</code></b> means that we only accept <i><b>patch (bug fixes)</b> releases</i> (~1.5.<i>7</i>). The patch releases includes only bug fixes that will not break our code;</li>
+          <li>- <b><code>^</code></b> means that we only accept <i><b>minor</b> releases</i> (^1.<i>5</i>.7). The minor releases includes some new features added to the package that will not break our code;</li>
+          <li>- <b><code>*</code></b> means that we accept <i><b>all</b> releases</i>: major, minor & patch (bug fixes) (*1.5.7). The major releases includes huge new releases which can have breaking changes to previous versions (break our code).</li>
         </ul>
-        <p>You can uninstall a npm package by running <code>npm uninstall packageName</code>.</p>
         <p>In the context of npm dependencies, version numbers and the symbols preceding them (<code>~</code>, <code>^</code> or <code>*</code>) signify <i>different strategies for updating dependencies</i>. Understanding these symbols helps <i>manage package versions</i> and <i>ensures compatibility</i> within projects.</p>
+        <p>You can uninstall a npm package by running <code>npm uninstall packageName</code>.</p>
         `,
         `<h3>Symbols and Their Meanings: Explanation in detail</h3>
         <p>1. Tilde (<code>~</code>): When a version number is preceded by a tilde (<code>~</code>), it indicates that updates are allowed only to the latest PATCH version of the specified MINOR version. For example, <code>~1.5.7</code> allows updates to any version <code>1.5.x</code> where x >= 7. This is more restrictive and aims to reduce the risk of introducing breaking changes with new patches.</p>
-        <p>2. Caret (<code>^</code>): The caret symbol (<code>^</code>) allows updates that do not modify the left-most non-zero digit in the semver string. For <code>^2.8.1</code>, this means any version <code>2.x.x</code> is allowed as long as x >= 8.1 for the MINOR version, and any PATCH version updates. This is more permissive than the tilde, allowing for minor updates that should be backwards compatible.</p>        
-        </p>3. Asterisk (<code>*</code>) or Star: An asterisk (<code>*</code>) indicates that any version is allowed. It's the most permissive option, essentially ignoring versioning and always fetching the latest version. This can be risky as it might pull in incompatible updates.</p>`,
+        <p>2. Caret (<code>^</code>): The caret symbol (<code>^</code>) allows updates that do not modify the left-most non-zero digit in the semver string. For <code>^2.8.1</code>, this means any version <code>2.x.x</code> is allowed as long as x >= 8.1 for the MINOR version, and any PATCH version updates. This is more permissive than the tilde, allowing for minor updates that should be backwards compatible. The minor releases include some new features that will not break our code.</p>        
+        </p>3. Asterisk (<code>*</code>) or Star: An asterisk (<code>*</code>) indicates that any version is allowed. It's the most permissive option, essentially ignoring versioning and always fetching the latest version. This can be risky as it might pull in incompatible updates. The major releases includes huge new releases which can have breaking changes to previous versions (break our code), so be aware that when there is a new version it might usually affect the code that you already have.</p>`,
       ],
     },
     {
@@ -611,7 +611,7 @@ const development_workflow = {
       <p>NOTE: You can differentiate between <u>production</u> dependecies (<code>--save</code>), <u>development</u> dependencies (<code>--save-dev</code>) and <u>global</u> dependencies (<code>-g</code>).</p>
       `,
         `<h3>Using 3rd Party Modules (Packages)</h3>
-      <p>To use a 3rd Party Module (Package) that you already install, all you have to do is to <code>require('moduleName')</code> without specifying a path to it. Then Node.js will automatically know that it will have to go into the node_modules folder where all the dependencies are, and search for that module there.</p>
+      <p>To use a 3rd Party Module (Package) that you already install, all you have to do is to <code>const moduleVariable = <i>require('moduleName')</i></code> without specifying a path to it. Then Node.js will automatically know that it will have to go into the node_modules folder where all the dependencies are, and search for that module there.</p>
       `,
       ],
     },
@@ -648,7 +648,8 @@ npm run start
       ],
     },
     {
-      sectionTitle: 'Global Features vs Core Modules vs Third-Party Modules',
+      sectionTitle:
+        'Global Features vs Core (Build-In) Modules vs 3rd Party Modules',
       sectionSource: '',
       tooltips: [
         `<p>In Node.js, understanding the distinction between global features, core modules, and third-party modules is essential for effective development.</p>`,
@@ -662,7 +663,7 @@ npm run start
         </ul>
         <p>While these features are globally available, it's often recommended to avoid over-reliance on them as they can lead to code that is difficult to maintain and debug.</p>
         `,
-        `<h3>Core Modules</h3>
+        `<h3>Core (Build-In) Modules</h3>
         <ul>Core modules in Node.js are <i>modules that are bundled with the Node.js runtime and can be imported into any Node.js application without the need for additional installation</i>. These modules provide essential functionalities for building applications. Examples include:
           <li>- <code>fs</code>: for file system operations;</li>
           <li>- <code>http</code> & <code>https</code>: for creating HTTP and HTTPS servers and clients;</li>
@@ -671,7 +672,7 @@ npm run start
         </ul>
         <p>Core modules are generally more reliable and efficient compared to third-party modules since they are maintained as part of the Node.js project itself.</p>
         `,
-        `<h3>Third-Party Modules</h3>
+        `<h3>3rd Party Modules</h3>
         <ul>Third-party modules are <i>modules developed by the Node.js community or external developers</i>. These modules extend the functionality of Node.js by <i>providing additional features that are not available in core modules</i>. They are typically published on npm (Node Package Manager) and can be easily installed using npm or yarn. Examples include:
           <li>- <code>express</code>: a web application framework;</li>
           <li>- <code>lodash</code>: a utility library;</li>
