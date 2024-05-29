@@ -8,14 +8,17 @@ const introduction = {
       tooltips: [
         `<h3>What is Node.js?</h3>
         <p>If you are used to run JavaScript in the browser, then the browser is a runtime environment for JavaScript.</p>
-        <p>Node.js is just another <b>runtime environment</b> build on Google's open-source V8 JavaScript Engine that <i>allows you to run JavaScript code outside of a web browser</i>, without all the restrictions that are in the browser.</p>
+        <p>Node.js is just another <b>JavaScript runtime environment</b> build on Google's open-source V8 JavaScript Engine that <i>allows you to run JavaScript code outside of a web browser</i>, without all the restrictions that are in the browser.</p>
+        <p><img src="../../src/img/what_is_node_01.jpg"/></p>
         <p>Node.js provides a set of build-in modules, libraries and tools for <i>building server-side and networking applications</i>.</p>`,
         `<h3>What is it used for?</h3>
         <p>Node.js is commonly used for building <i>web servers</i>, <i>APIs</i> (Application Programming Interfaces), real-time chat applications, streaming applications, and other networked applications.</p>
+        <p><img src="../../src/img/what_is_node_02.jpg"/></p>
         <p>Don't use Node.js if you want to build applications with heavy server-side processing (CPU-intensive) like image manipulations, video conversion, file compression or anything like that.</p>
         `,
         `<h3>Node.js characteristics</h3>
-        <p>It's <i>single-threaded</i>, <i>non-blocking I/O model</i>, <i>event-driven architecture</i> makes it particularly well-suited for building scalable and high-performance applications that <i>can handle a large number of simultaneous connections</i>.</p>
+        <p><img src="../../src/img/what_is_node_03.jpg"/></p>
+        <p>It's <b>single-threaded</b>, <b>non-blocking I/O model</b>, <b>event-driven architecture</b> makes it particularly well-suited for building scalable and high-performance applications that <i>can handle a large number of simultaneous connections</i>.</p>
         <p>Additionally, it has a vibrant ecosystem of libraries and frameworks, such as Express.js, that make it easy to develop web applications with Node.js.</p>
         `,
       ],
@@ -79,11 +82,11 @@ const understanding_the_basics = {
       },
       tooltips: [
         `<p><i>Node.js is built around a concept of modules</i>, where all kinds of <i><u>additional functionality</u> are stored in a module</i>. For example, if you want to read a file from your system, you will use a module called "fs" (fs stands for file system).</p>
-        <p>How do we open up these modules, or how can we use them? Well, we do <b><code>require()</code></b> them into our code, and then store the result of the <code>require()</code> function in a variable. For example:
+        <p>How do we open up these modules, or how can we use them? Well, we do <b><code>require()</code></b> them into our code, and then store the result of the <code>require()</code> function into a variable. For example:
         <pre><code>
-const fs = require("fs");
+const fs = <b>require("fs")</b>;
         </code></pre>
-        <p>By requiring and using the <code>fs</code> module, we will get access to functions for reading data and writing data right to the file system.</p>
+        <p>By requiring and using the <code>fs</code> module, we will get access to functions for reading/writing data right to the file system.</p>
         <ul>Besides <code>fs</code> module, there are some other module that will help you use additional functionalities:
           <li>- <code>http</code>: creates an HTTP server in Node.js;</li>
           <li>- <code>https</code>: creates an HTTPS server in Node.js;</li>
@@ -102,24 +105,28 @@ const fs = require("fs");
         highlight1: ['Asynchronous Nature of Node.js'],
       },
       tooltips: [
+        `<p>Node.js has only <b>one single thread</b>, which means that all the users accessing your web server application are all using the same thread. And so, whenever they're interacting with the application, the code that is run for each user will be executed all in the same thread, at the same place, in the computer running the application. And that happen no matter if you have 5, 5.000 or 5.000.000 users. What this also means is that <i>when one user blocks the single thread with synchronous code, then all other users will have to wait for that execution to finish</i>.</p>
+        <p>Imagine there's a user accessing your application and there's a huge synchronous file read in your code that will take like one second to load. This will mean that for that one second, all other users will have to wait because the entire execution is blocked for that one second. So if those other users want to do some simple tasks, like logging into your application or just requesting some data, they won't be able to do so. They will have to wait until the file is finished reading. Only when that happens they will finally be able to perform the simpler tasks, one after another.</p>
+        <p>This is how the situation would play out with synchronous blocking code, which is obviously a terrible experience for your users. And so, it's really your job as a developer to avoid these kinds of situations by using asynchronous code.</p>
+        <p><img src="../../src/img/synchronous_vs_asynchronous_01.jpg"/></p>
+        `,
         `<h3>Synchronous vs Asynchronous Node.js code</h3>
-        <p>Node.js has only <b>one single thread</b>, which means that all the users accessing your web server application are all using the same thread. Being a single thread, synchronous code become a problem especially with slow operations, because each line of code blocks the execution of the rest of the code. So we say that <i>synchronous code is also called blocking code</i> because a certain operation can only be executed after the one before has finished.</p>
-        <p>For example, when one user of your web server application locks the single thread with synchronous code, then all other users will have to wait for that execution to finish.</p>
+        <p>Being a single thread, synchronous code become a problem especially with slow operations, because each line of code blocks the execution of the rest of the code. So we say that <i>synchronous code is also called blocking code</i> because a certain operation can only be executed after the one before has finished.</p>
         <p>An example of synchronous code:</p>
         <pre><code>
 const fs = require('fs');
 
 //Blocking code execution
-const input = <b>fs.readFileSync</b>('input.text', 'utf-8');
+const textFile = <b>fs.readFileSync</b>('./textFolder/textFile.text', 'utf-8');
 
-console.log(input);
+console.log(textFile);
         </code></pre>
         <p>Because of the way Node.js was designed, synchronous code turns into a huge problem. The solution to synchronous code problem in Node.js is to <i>use asynchronous code (non-blocking code)</i>:</p>
         <pre><code>
 const fs = require('fs');
 
 //Non-blocking code execution
-const input = <b>fs.readFile</b>('input.text', 'utf-8', <i>(err, data) => {
+const textFile = <b>fs.readFile</b>('./textFolder/textFile.text', 'utf-8', <i>(err, data) => {
     console.log(data);
 }</i>);
         
@@ -127,23 +134,21 @@ console.log('Reading file...');
         </code></pre>
         `,
         `<h3><code>fs.readFileSync</code> (Synchronous) vs <code>fs.readFile</code> (Asynchronous)</h3>
-        <p><i><code>fs.readFileSync</code> is a <u>synchronous</u> function</i> that blocks the code execution until it's finish execution.</p>
-        <p>On the other hand, <i><code>fs.readFile</code> is an <u>asynchronous</u> function</i> that receives a callback function as a parameter, and this callback will be called with the data (result) when <code>fs.readFile</code> finish it's execution. In that time, the code execution is NOT blocked.</p>
+        <p><i><code>fs.readFileSync</code> is a <u>synchronous</u> function</i> that blocks the code execution until it's finish execution. On the other hand, <i><code>fs.readFile</code> is an <u>asynchronous</u> function</i> that receives a callback function as a parameter, and this callback will be called with the data (result) when <code>fs.readFile</code> finish it's execution. In that time, the code execution is NOT blocked.</p>
         <p>IMPORTANT: It's YOUR job as a developer to avoid blocking code execution by using asynchronous code. This is actually the whole reason why <b>Node.js is completely designed around callbacks to implement asynchronous behavior</b>.</p>`,
-        `<h3>Node.js vs other programming languages</h3>
-        <p>In other programming languages, like PHP, it works very differently, because you get one new thread for each new user, which is a and really works completely different. But the creator of Node.js found this model to be the best solution for building highly performant and scalable web applications.</p>`,
-
         `<h3>Node.js asynchronous functions</h3>
-        <p>It's important to know that, when we use callbacks in our code, that doesn't automatically make it asynchronous. So, passing functions around into other functions is quite common in JavaScript, but that doesn't make them asynchronous automatically. It only works this way for some functions in the Node.js, such as the <code>fs.readFile</code> function and many others.</p>
+        <p>It's important to know that, <i>when we use callbacks in our code, that doesn't automatically make it asynchronous</i>. So, passing functions around into other functions is quite common in JavaScript, but that doesn't make them asynchronous automatically. It only works this way for some functions in the Node.js, such as the <code>fs.readFile</code> function and many others.</p>
         `,
-        `<h3>Node.js top-level code it's only executed once when the server starts</h3>
-        <p><b>Top-level code is only executed once we start the server</b>, and so in that situation, it doesn't matter at all if it blocks the code execution, because it happens only once, and only when the server actually starts:</p>
+        `<h3>Node.js vs other programming languages</h3>
+        <p>In other programming languages, like PHP, it works very differently, because you get one new thread for each new user, which really works completely different. But the creator of Node.js found this model to be the best solution for building highly performant and scalable web applications.</p>`,
+        `<h3>Node.js top-level code it's <u>only executed once</u> when the server starts</h3>
+        <p><i><b>Top-level code is only executed once we start the server</b>, and so in that situation, it doesn't matter at all if it blocks the code execution, because it happens only once, and only when the server actually starts:</i></p>
         <pre><code>
 const http = require('http');
 const fs = require('fs');
 
 <i>//Top-level code it's only executed once, only when the server starts, so you can use here synchronous code even it's block the code execution</i>
-const input = fs.readFileSync('input.text', 'utf-8');
+const textFile = fs.readFileSync('./textFolder/textFile.text', 'utf-8');
 
 const server = http.createServer((req, res) => {
     <i>//Here you need to use asynchoronous code because it's executed over and over, for every incoming request</i>
@@ -151,7 +156,7 @@ const server = http.createServer((req, res) => {
 
 server.listen(3000);
         </code></pre>
-        <p>The secret is simply to know which code is only executed once and only at the beginning, when the server starts, and which code gets executed over and over again, and is therefore problematic when blocking the Event Loop.</p>
+        <p><b>The secret is simply to know which code is only executed once and only at the beginning, when the server starts, and which code gets executed over and over again, and is therefore problematic when blocking the Event Loop.</b></p>
         `,
       ],
     },
