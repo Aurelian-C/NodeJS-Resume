@@ -353,8 +353,8 @@ server.listen(3000);
         highlight1: [],
       },
       tooltips: [
-        `<p>We can create our own modules and export something from them, like for example, a function. Thenwe can import this function into another module, and then use that function there.</p>
-        <p>You need to know that in Node.js every single file is treated as a module.</p>
+        `<p>We can create our own modules and export something from them, like for example, a function. Then we can import this function into another module, and then use that function there.</p>
+        <p>You need to know that <b>in Node.js every single file is treated as a module</b>.</p>
         <p>Node.js uses the <i>CommonJS module system</i> for importing and exporting modules within and across files. This system is primarily used for server-side development and is native to Node.js.</p>
         `,
         `<h3>Exporting in Node.js</h3>
@@ -362,18 +362,18 @@ server.listen(3000);
         `<h3>Export a <u>single</u> entity</h3>
         <p>If you want to <i>export a <u>single</u> function, object, or class</i> from a file, you can assign it directly to <code>module.exports</code>:</p>
         <pre><code>
-module.exports = function sayHello(name) {
+<b>module.exports</b> = function sayHello(name) {
   return "Hello world!";
 };
         </code></pre>`,
         `<h3>Export <u>multiple</u> entities</h3>
         <p>To <i>export <u>multiple</u> entities</i>, you can add them as properties of the <code>module.exports</code> object or <code>module.exports</code> object:</p>
         <pre><code>
-exports.add = function(a, b) {
+<b>exports.</b>add = function(a, b) {
   return a + b;
 };
 
-exports.subtract = function(a, b) {
+<b>exports.</b>subtract = function(a, b) {
   return a - b;
 };
         </code></pre>
@@ -610,6 +610,9 @@ const development_workflow = {
       <p>There also is a third option by the way, <i><code>-g</code> we'll not install a package on a specific project, but globally on your machine so that you can use it anywhere</i>.</p>
       <p>NOTE: You can differentiate between <u>production</u> dependecies (<code>--save</code>), <u>development</u> dependencies (<code>--save-dev</code>) and <u>global</u> dependencies (<code>-g</code>).</p>
       `,
+        `<h3>Using 3rd Party Modules (Packages)</h3>
+      <p>To use a 3rd Party Module (Package) that you already install, all you have to do is to <code>require('moduleName')</code> without specifying a path to it. Then Node.js will automatically know that it will have to go into the node_modules folder where all the dependencies are, and search for that module there.</p>
+      `,
       ],
     },
     {
@@ -619,7 +622,8 @@ const development_workflow = {
         highlight2: ['nodemon package'],
       },
       tooltips: [
-        `<pre><code> 
+        `<p>nodemon is a very nice tool that helps us develop Node.js applications by <i>automatically restarting the Node.js application whenever we change some files in our working directory</i>.</p>
+        <pre><code> 
 {
   "name": "js-project-1", 
   "version": "1.0.0",
@@ -635,7 +639,12 @@ const development_workflow = {
       <i>"nodemon": "^3.1.0"</i>
   }
 }
-       </code></pre>`,
+       </code></pre>
+       <p>To use nodemon, in your terminal you run the command that will execute the npm script called "start":</p>
+       <pre><code>
+npm run start
+       </code></pre>
+       `,
       ],
     },
     {
