@@ -53,7 +53,14 @@ const introduction = {
     {
       sectionTitle: 'Static vs Dynamic vs API',
       sectionSource: '',
-      tooltips: [`<p><img src="../../src/img/static_dynamic_api_1.jpg"/></p>`],
+      tooltips: [
+        `<h3>Static Websites</h3>
+        <p>Static websites or simple websites is when a developer upload ready to be served files of a website onto a web server. These files usually contains HTML, CSS, JavaScript, images and more. These are the exact files that the server will later send to the browser when the website is requested. The browser will then take these files and render them as they are. This means that <i>there is no work done on the server, there is no backend code, and there's also no Node.js application running</i>. So it's just <i>static web server serving static files</i>.</p>
+        `,
+        `
+      <p><img src="../../src/img/static_dynamic_api_1.jpg"/></p>
+      `,
+      ],
     },
     {
       sectionTitle: 'Working with the REPL',
