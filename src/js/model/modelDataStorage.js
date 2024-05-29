@@ -142,13 +142,13 @@ console.log('Reading file...');
         `<h3>Node.js vs other programming languages</h3>
         <p>In other programming languages, like PHP, it works very differently, because you get one new thread for each new user, which really works completely different. But the creator of Node.js found this model to be the best solution for building highly performant and scalable web applications.</p>`,
         `<h3>Node.js top-level code it's <u>only executed once</u> when the server starts</h3>
-        <p><i><b>Top-level code is only executed once we start the server</b>, and so in that situation, it doesn't matter at all if it blocks the code execution, because it happens only once, and only when the server actually starts:</i></p>
+        <p>The code that is outside the callback functions, so the so called <i><b>top level code is <u>only executed once</u> we start the server</b>, and so in that situation, it doesn't matter at all if it blocks the code execution, because it happens only once, and only when the server actually starts:</i></p>
         <pre><code>
 const http = require('http');
 const fs = require('fs');
 
 <i>//Top-level code it's only executed once, only when the server starts, so you can use here synchronous code even it's block the code execution</i>
-const textFile = fs.readFileSync('./textFolder/textFile.text', 'utf-8');
+const textFile = fs<b>.readFileSync</b>('./textFolder/textFile.text', 'utf-8');
 
 const server = http.createServer((req, res) => {
     <i>//Here you need to use asynchoronous code because it's executed over and over, for every incoming request</i>
@@ -156,7 +156,8 @@ const server = http.createServer((req, res) => {
 
 server.listen(3000);
         </code></pre>
-        <p><b>The secret is simply to know which code is only executed once and only at the beginning, when the server starts, and which code gets executed over and over again, and is therefore problematic when blocking the Event Loop.</b></p>
+        <p>You gone use this technique when you want to handle data right when a server start. So maybe you want to use some data and to be avaible right when the server starts.</p>
+        <p>The secret is simply to know which code is only executed once and only at the beginning, when the server starts, and which code gets executed over and over again, and is therefore problematic when blocking the Event Loop.</p>
         `,
       ],
     },
@@ -167,15 +168,33 @@ server.listen(3000);
         highlight1: ['Web Server'],
       },
       tooltips: [
-        `<pre><code>
+        `<p>Built-in <code>http</code> module gives us networking capabilities, such as building an http server.</p>
+        <ul>In order to build a server, we have to do two things:
+          <li>1. <b>Create a server</b>;</li>
+          <li>2. <i><b>Start the server</b>, so that we can actually <b>listen to incoming requests</b>.</i></li>
+        </ul>
+        <pre><code>
 const http = <i>require('http')</i>;
 
-const server = <i>http.createServer</i>((req, res) => {
+// 1. Create the server
+const server = <i>http<b>.createServer</b></i>((<i>req</i>, <i>res</i>) => {
     //Your server side code here
 });
 
-server.listen(3000);
+// 2. Start the server
+<i>server<b>.listen</b></i>(3000);
       </code></pre>
+      <p>Let's analyze what the code above does: we created our server, using <code>createServer()</code> and passed in it a callback function that is executed each time that a new request hits the server. Then we started listening for incoming requests on the on port 3000.</p>
+      <p>NOTE: <code>http.createServer</code> will accept a callback function, which will be <i>fired off each time a new request hits our server</i>. And this callback function gets access to two very important and fundamental objects: it is the request (<code>req</code>) object, and a response (<code>res</code>) object.</p>
+      `,
+        `<h3>Request (<code>req</code>) and Response (<code>res</code>) objects</h3>
+      <p>The request (<code>req</code>) and response (<code>res</code>) objects are fundamental components used to <i>handle HTTP requests and responses</i>.</p>
+      <p>The <code>req</code> object represents the HTTP request and has properties for the request query string, parameters, body, HTTP headers, and more.</p>
+      <p>The <code>res</code> object represents the HTTP response that a Node.js app sends when it gets an HTTP request.</p>
+      <p>Understanding <code>req</code> and <code>res</code> objects is crucial for handling HTTP interactions in Node.js apps.</p>
+      `,
+        `<h3>Controlling the Node.js process</h3>
+      <p><b>When we start a server, Node.js cannot simply exit the processs (exit the program)</b>, because the whole goal is to wait for the requests to come in.</p>
       `,
       ],
     },
@@ -185,15 +204,105 @@ server.listen(3000);
       highlights: {
         highlight1: ['Requests'],
       },
-      tooltips: [``],
+      tooltips: [
+        `<p>In Node.js, handling HTTP requests is a fundamental task, especially when building a server. Here’s a basic guide to understanding and working with requests in Node.js</p>`,
+        `<h3>Handling HTTP Requests</h3>
+        <p>GET Request: to handle a GET request, you define a route and a callback function that sends a response:</p>
+        <pre><code>
+app<i>.get</i>('/', (req, res) => {
+  res.send('Hello, World!');
+});
+        </code></pre>
+        <p>POST Request: to handle a POST request, you also define a route and a callback function. Typically, you’ll also need middleware to parse the request body:</p>
+        <pre><code>
+const bodyParser = require('body-parser');
+
+// Middleware to parse JSON bodies
+app.use(bodyParser.json());
+
+app.post('/submit', (req, res) => {
+  const data = req.body;
+  res.send('Data received: JSON.stringify(data)');
+});
+        </code></pre>
+        `,
+        `<h3>Request Object</h3>
+        <ul>The request object (<code>req</code>) contains information about the HTTP request. Some useful properties are:
+        <li>- <code>req.params</code>: Parameters from the URL (route parameters);</li>
+        <li>- <code>req.query</code>: Query string parameters;</li>
+        <li>- <code>req.body</code>: Data sent in the request body (for POST, PUT, etc.);</li>
+        <li>- <code>req.headers</code>: HTTP headers.</li>
+        </ul>
+        `,
+        `<h3>Middleware</h3>
+        <p>Middleware functions are functions that have access to the request object (<code>req</code>), the response object (<code>res</code>), and the next middleware function in the application’s request-response cycle. They can execute code, make changes to the request and response objects, end the request-response cycle, and call the next middleware function.</p>`,
+      ],
     },
     {
-      sectionTitle: 'Sending Responses',
+      sectionTitle: 'Understanding Responses',
       sectionSource: '',
       highlights: {
         highlight1: ['Responses'],
       },
-      tooltips: [``],
+      tooltips: [
+        `<p>In Node.js, handling responses typically involves working with the http module or using a web framework like Express.js. Understanding how to manage responses is crucial for <i>sending data back to the client</i>, whether it’s HTML, JSON, or other types of data.</p>`,
+        `<h3>Using the <code>http</code> Module</h3>
+        <p>The <code>http</code> module in Node.js provides functionalities to create an HTTP server and handle requests and responses.</p>
+        <pre><code>
+const http = require('http');
+
+const server = http.createServer((req, res) => {
+  //Setting response header
+  res.writeHead(200, { 'Content-Type': 'text/plain' });
+  
+  //Sending response body
+  <i>res.end('Hello, World!');</i>
+});
+
+server.listen(3000, () => {
+  console.log('Server is running on http://localhost:3000');
+});
+        </code></pre>
+        `,
+        `<h3>Using Express.js</h3>
+        <p>Express.js simplifies the process of handling requests and responses.</p>
+        <pre><code>
+const express = require('express');
+const app = express();
+const port = 3000;
+
+//Handling GET request
+app.get('/', (req, res) => {
+  res.send('Hello, World!');
+});
+
+//Handling JSON response
+app.get('/json', (req, res) => {
+  res.json({ message: 'Hello, World!', status: 'success' });
+});
+
+//Handling 404
+app.use((req, res, next) => {
+  res.status(404).send('Sorry, we could not find that!');
+});
+
+//Starting the server
+app.listen(port, () => {
+  console.log('Server is running on http://localhost:port');
+});
+        </code></pre>
+        `,
+        `<h3>Key Concepts</h3>
+        <p><i>Response Headers</i>: Headers provide essential information about the response such as content type, status, etc.</p>
+        <p><i>Response Body</i>: The body contains the data sent back to the client.</p>
+        <p><i>Status Codes</i>: Status codes indicate the result of the HTTP response.</p>
+        <ul>Sending Different Types of Responses:
+          <li>- <code>res.send()</code> - Sends various types of responses (HTML, plain text, etc.);</li>
+          <li>- <code>res.json()</code> - Sends a JSON response;</li>
+          <li>- <code>res.sendFile()</code> - Sends a file as an attachment or inline.</li>
+        </ul>
+        `,
+      ],
     },
     {
       sectionTitle: 'Request & Response Headers',
@@ -202,8 +311,10 @@ server.listen(3000);
         highlight1: ['Headers'],
       },
       tooltips: [
-        `<p>Request & Response Headers are <i>pieces of information</i> that we can receive with a request or that we can add to our responses.</p>
-        <pre><code>
+        `<p>Request & Response Headers are <i>pieces of information</i> that we can receive with a request or that we can add to our responses.</p>`,
+        `<h3>Response Headers</h3>
+        <p>There are many different standard headers that we can specify to <i>inform the browser or whatever client is receiving a response about the response itself</i>. For example, <code>'Content-Type'</code> header informs the browser that the response it's receive it a HTML response.</p>
+       <pre><code>
 const http = require('http');
 
 const server = http.createServer((req, res) => {
@@ -215,8 +326,8 @@ const server = http.createServer((req, res) => {
 
 server.listen(3000);
         </code></pre>
-        <p>For example, <code>'Content-Type'</code> header informs the browser that the response it's receive it a HTML response. There are many more headers that you can specify on your response.</p>
-        <p>It's important to understand that, <i>in a the case you want to add headers to a response, you need to set them before sending the response</i>.</p>
+        <p>There are many more headers that you can specify on your response. You can also specify our own made-up headers.</p>
+        <p>IMPORTANT: It's important to understand that, <i>in a the case you want to add headers to a response, you need to <b>set them before sending the response</b></i>.</p>
         `,
       ],
     },
@@ -227,8 +338,9 @@ server.listen(3000);
         highlight1: ['Routing'],
       },
       tooltips: [
-        `<p>With routing, you can <i>write Node.js code that react to URL that a user is requesting</i>.</p>
-        <p>In Node.js, routing refers to the process of defining how an application responds to a client request to a particular endpoint, which is a URI (or path) and a specific HTTP request method (GET, POST, etc.). <i>Each route can have one or more handler functions, which are executed when the route is matched.</i></p>
+        `<p>With routing, you can <i>write Node.js code that <b>react to URL that a user is requesting</b></i>. So, routing basically means <i>implementing different actions for different URLs</i>.</p>
+        <p>In Node.js, routing refers to the process of defining <b>how an application responds to a client request to a particular endpoint</b>, which is a URL (or path) and a specific HTTP request method (GET, POST, etc.).</p>
+        <p><b>Each route can have one or more handler functions, which are executed when the route is matched.</b></p>
         <p><i>Routing is used to perform different actions based on the URL and HTTP method requested.</i> For example, you might have one route to send a user information when they access a webpage via a GET request, and another route to process the information submitted through a form via a POST request.</p>
         <p><i>Node.js itself doesn't come with a built-in router</i>, so routing is often handled by Node.js frameworks like Express, which simplify the process of writing server-side code.</p>
         `,
@@ -332,7 +444,8 @@ const { add, subtract } = require('./mathFunctions');
       sectionTitle: 'Controlling the Node.js process',
       sectionSource: '',
       tooltips: [
-        `<p>In Node.js, <code>process.exit()</code> is a method used to terminate the Node.js process.</p>
+        `<p>Remember when create a simple server? When we start that server and listening for incoming request, Node.js cannot simply exit the processs (exit the program), because the whole goal is to wait for the requests to come in.</p>
+        <p>In Node.js, <code>process.exit()</code> is a method used to terminate the Node.js process.</p>
         <p>When <code>process.exit()</code> is called, the Node.js <i>event loop is stopped immediately</i>, and no further asynchronous operations are performed. It's often used to forcefully terminate the application under certain conditions, like critical errors or when a specific condition is met.</p>
         <p>However, it's important to <i>use <code>process.exit()</code> with caution, especially in production code</i>, as it doesn't allow graceful shutdown and can leave resources in an inconsistent state. It's generally recommended to handle errors and shutdown gracefully whenever possible.</p>
         `,
@@ -476,10 +589,11 @@ const development_workflow = {
       ],
     },
     {
-      sectionTitle: 'Using Modules in Node.js: Installing 3rd Party Packages',
+      sectionTitle:
+        'Using Modules in Node.js: Installing 3rd Party Modules (Packages)',
       sectionSource: '',
       highlights: {
-        highlight1: ['3rd Party Packages'],
+        highlight1: ['3rd Party Modules (Packages)'],
       },
       tooltips: [
         `<h3>Node.js core modules, custom code and third-party packages</h3>
@@ -627,7 +741,7 @@ app.listen(port, () => {
         <p>Middleware functions are <i>functions that have access to the <u><b>request</b> object</u> (req), the <u><b>response</b> object</u> (res), and <u>the <b>next()</b> middleware function</u> in the application's request-response cycle</i>.</p>
         <ul>Middleware functions can perform the following tasks:
           <li><i>- Execute any code.</i></li>
-          <li><i>- Make changes to the request and the response objects.</i></li>
+          <li><i>- Make changes to the request and the response objects (they can modify the request and response objects).</i></li>
           <li>- End the request-response cycle.</li>
           <li>- Call the next middleware in the stack.</li>
         </ul>
@@ -1323,14 +1437,43 @@ app.use('/someRoute', (req, res, next) => {
 app.listen(process.env.PORT);
         </code></pre>
         `,
-        `<h3>More aboute <code>path.join()</code> method</h3>
+        `<h3>More about <code>path.join()</code> method</h3>
         <p>The <code>path.join()</code> method <i>joins the specified <u>path segments</u> into <b>one path</b></i>.</p>
         <p>You can specify as many path segments as you like. The specified <b>path segments must be <u>strings</u></b>, separated by comma <code>,</code>.</p>
         <p>We're using <code>path.join()</code> because this will automatically build the path in a way that works on both Linux and Windows systems.</p>
         `,
-        `<h3>More aboute <code>__dirname</code> variable</h3>
-        <p><code>__dirname</code> is a <b>global variable</b> made available by Node.js (environment variable) that tells you <i>the <u>absolute path of the directory</u> containing the currently executing file</i>.</p>
-        `,
+      ],
+    },
+    {
+      sectionTitle: 'More about <code>__dirname</code> variable',
+      sectionSource: '',
+      highlights: {},
+      tooltips: [
+        `
+    <p>In Node.js, <code><b>./</b>folder/fileName</code> and <code>__dirname + '/folder/fileName'</code> are used to specify file paths, but they have different behaviors and use cases.</p>`,
+        `<h3>Setting a Path with <code>./folder/fileName</code></h3>
+      <p>Relative Path: <code>./folder/fileName</code> is a relative path, meaning it is <i>relative to the current working directory (CWD) from which the Node.js process was started</i>.</p>
+      <p>Usage: <b>This path changes based on where the Node.js process is executed from.</b> If you run your script from different directories, the path might not resolve correctly.</p>`,
+        `<h3>Setting a Path with <code>__dirname + '/folder/fileName'</code></h3>
+      <p>Absolute Path: <i><code>__dirname</code> is an absolute path to the directory that contains the currently executing script, not the CWD</i>.</p>
+      <p>Usage: This path is stable and reliable, as it always points to the same directory regardless of where the Node.js process is started from.</p>
+      <p><code>__dirname</code> is a <b>global variable</b> made available by Node.js (environment variable) that tells you <i>the <u>absolute path of the directory</u> containing the currently executing file</i>.</p>
+      `,
+        `<h3>Key Differences between <code>./folder/fileName</code> and <code>__dirname + '/folder/fileName'</code></h3>
+    <ul>Scope:
+      <li>- <code>./folder/fileName</code>: Dependent on the current working directory (CWD).</li>
+      <li>- <code>__dirname + '/folder/fileName'</code>: Dependent on the location of the script file.</li>
+    </ul>
+    <ul>Reliability:
+      <li>- <code>./folder/fileName</code>: Can be unreliable if the script is executed from different directories.</li>
+      <li>- <code>__dirname + '/folder/fileName'</code>: Consistent and reliable path resolution.</li>
+    </ul>
+    <ul>Use Case:
+      <li>- Use <code>./folder/fileName</code> when the file path is meant to be relative to the working directory of the process.</li>
+      <li>- Use <code>__dirname + '/folder/fileName'</code> when the file path needs to be relative to the script's location, ensuring consistency regardless of the CWD.</li>
+    </ul>
+    <p>In summary, using <code>__dirname</code> is generally more robust and reliable, especially when your Node.js application may be executed from various directories.</p>
+    `,
       ],
     },
     {
@@ -4276,7 +4419,7 @@ router.post('/add-product', (req, res, next) => {
 module.exports = router;
         </code></pre>
         `,
-        `<h3>More aboute <code>res.sendFile()</code> function</h3>
+        `<h3>More about <code>res.sendFile()</code> function</h3>
         <p>The <code>res.sendFile()</code> function <i>transfers the file at the given path</i> and <i>it sets the Content-Type response HTTP header field based on the filename extension</i>.</p>
         <p>Unless the <code>root</code> option is set in the options object, <i>path must be an <u>absolute path</u> to the file</i>.</p>
         <ul>This API <i>provides access to data on the running file system</i>. Ensure that either:
@@ -4285,13 +4428,10 @@ module.exports = router;
         </ul>
         <p>When the <code>root</code> option is provided, the path argument is allowed to be a relative path, including containing <code>..</code>. Express.js will validate that the relative path provided as path will resolve within the given <code>root</code> option.</p>
         `,
-        `<h3>More aboute <code>path.join()</code> method</h3>
+        `<h3>More about <code>path.join()</code> method</h3>
         <p>The <code>path.join()</code> method <i>joins the specified <u>path segments</u> into <u>one path</u></i>. You can specify as many path segments as you like.</p>
         <p>The specified <i>path segments must be <u>strings</u></i>, separated by comma <code>,</code>.</p>
         <p>We're using <code>path.join()</code> because this will automatically build the path in a way that works on both Linux and Windows systems.</p>
-        `,
-        `<h3>More aboute <code>__dirname</code> variable</h3>
-        <p><code>__dirname</code> is a <i>global variable</i> made available by Node.js (environment variable) that tells you <i>the <u>absolute path of the directory</u> containing the currently executing file</i>.</p>
         `,
       ],
     },
