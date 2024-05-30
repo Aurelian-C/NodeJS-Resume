@@ -539,6 +539,8 @@ myEmitter<i>.emit</i>('newSale', 9);
         <p><img src="../../src/img/streams_1.jpg"/></p>
         `,
         `<h3>Streams in practice</h3>
+        <p>One important thing to note is that streams are actually instances of the <code>EventEmitter</code> class, meaning that <i>all streams can emit and listen to named events</i>.</p>
+        <p>In the case of readable streams, they can emit and we as developers can listen to many different events. The most important two are the <code>data</code> and the <code>end</code> events. The <code>data</code> event is emitted when there is a new piece of data to consume, and the <code>end</code> event is emitted as soon as there is no more data to consume. And of course, we as developers can then react to these events accordingly.</p>
         <pre><code>
 const fs = require("fs");
 const server = require("http");
