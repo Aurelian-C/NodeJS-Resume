@@ -407,6 +407,13 @@ server.listen(3000);
         `,
       ],
     },
+  ],
+};
+
+const how_node_works = {
+  title: 'How Node.js Works',
+  titleDescription: 'A Look Behind the Scenes',
+  sections: [
     {
       sectionTitle: 'The Node Lifecycle & Event Loop',
       sectionSource: '',
@@ -414,6 +421,10 @@ server.listen(3000);
         highlight1: ['Event Loop'],
       },
       tooltips: [
+        `<p><img src="../../src/img/behind_the_scenes_01.jpg"/></p>
+        <p><img src="../../src/img/behind_the_scenes_02.jpg"/></p>
+        <p><img src="../../src/img/behind_the_scenes_03.jpg"/></p>
+        `,
         `<ul>The lifecycle of a Node.js application revolves around its <i>event-driven</i>, <i>non-blocking architecture</i>, which is facilitated by the event loop. Here's an overview:
           <li><h3>1. Initialization</h3>
             <p>When you run a Node.js application, it initializes by loading the main script file (typically index.js or app.js) and any modules it requires.</p>
@@ -451,17 +462,6 @@ server.listen(3000);
       ],
     },
     {
-      sectionTitle: 'Controlling the Node.js process',
-      sectionSource: '',
-      tooltips: [
-        `<p>Remember when create a simple server? When we start that server and listening for incoming request, Node.js cannot simply exit the processs (exit the program), because the whole goal is to wait for the requests to come in.</p>
-        <p>In Node.js, <code>process.exit()</code> is a method used to terminate the Node.js process.</p>
-        <p>When <code>process.exit()</code> is called, the Node.js <i>event loop is stopped immediately</i>, and no further asynchronous operations are performed. It's often used to forcefully terminate the application under certain conditions, like critical errors or when a specific condition is met.</p>
-        <p>However, it's important to <i>use <code>process.exit()</code> with caution, especially in production code</i>, as it doesn't allow graceful shutdown and can leave resources in an inconsistent state. It's generally recommended to handle errors and shutdown gracefully whenever possible.</p>
-        `,
-      ],
-    },
-    {
       sectionTitle: 'Understanding Event Driven Arhitecture of Node.js',
       sectionSource: '',
       tooltips: [
@@ -475,10 +475,10 @@ server.listen(3000);
         </ul>`,
         `<p>Here's a simple example of event-driven code execution in Node.js:</p>
         <pre><code>
-const EventEmitter = require('events');
+<i>const EventEmitter = require(<b>'events'</b>);</i>
 
 //1. Create an instance of EventEmitter
-const myEmitter = new EventEmitter();
+const myEmitter = <i>new EventEmitter()</i>;
 
 //2. Register a listener for the 'hello' event
 myEmitter.on('hello', () => {
@@ -491,6 +491,35 @@ myEmitter.emit('hello');
 console.log('Event emitted');
         </code></pre>
         <p>This demonstrates how event-driven code execution works in Node.js, where the callback function associated with the 'hello' event is executed asynchronously when the event is emitted.</p>
+        `,
+        `<p><img src="../../src/img/behind_the_scenes_04.jpg"/></p>`,
+        `<h3>Another example</h3>
+        <pre><code>
+const EventEmitter = require('events');
+
+const myEmitter = new EventEmitter();
+
+myEmitter<i>.on</i>('newSale', () => {
+  console.log('Costumer name: Balenciaga');
+});
+
+myEmitter<i>.on</i>('newSale', stock => {
+  console.log(stock);
+});
+
+myEmitter<i>.emit</i>('newSale', 9);
+        </code></pre>
+        `,
+      ],
+    },
+    {
+      sectionTitle: 'Controlling the Node.js process',
+      sectionSource: '',
+      tooltips: [
+        `<p>Remember when create a simple server? When we start that server and listening for incoming request, Node.js cannot simply exit the processs (exit the program), because the whole goal is to wait for the requests to come in.</p>
+        <p>In Node.js, <code>process.exit()</code> is a method used to terminate the Node.js process.</p>
+        <p>When <code>process.exit()</code> is called, the Node.js <i>event loop is stopped immediately</i>, and no further asynchronous operations are performed. It's often used to forcefully terminate the application under certain conditions, like critical errors or when a specific condition is met.</p>
+        <p>However, it's important to <i>use <code>process.exit()</code> with caution, especially in production code</i>, as it doesn't allow graceful shutdown and can leave resources in an inconsistent state. It's generally recommended to handle errors and shutdown gracefully whenever possible.</p>
         `,
       ],
     },
@@ -4975,6 +5004,7 @@ const nodeJS_and_TypeScript = {
 export const dataStorage = [
   introduction,
   understanding_the_basics,
+  how_node_works,
   development_workflow,
   working_with_ExpressJS,
   routing,
