@@ -202,7 +202,7 @@ const server = http.createServer((req, res) => {
   res.writeHead(200, { 'Content-Type': 'text/plain' });
   
   //Sending response body
-  <i>res.end('Hello, World!');</i>
+  <i>res.send('Hello, World!');</i>
 });
 
 server.listen(3000, () => {
@@ -219,17 +219,17 @@ const port = 3000;
 
 //Handling GET request
 app.get('/', (req, res) => {
-  res.send('Hello, World!');
+  <i>res.send</i>('Hello, World!');
 });
 
 //Handling JSON response
 app.get('/json', (req, res) => {
-  res.json({ message: 'Hello, World!', status: 'success' });
+  <i>res.json</i>({ message: 'Hello, World!', status: 'success' });
 });
 
 //Handling 404
 app.use((req, res, next) => {
-  res.status(404).send('Sorry, we could not find that!');
+  <i>res.status(404).send</i>('Sorry, we could not find that!');
 });
 
 //Starting the server
@@ -267,7 +267,7 @@ const server = http.createServer((req, res) => {
     <i>res.writeHead(404, {
       <b>'Content-Type': 'text/html'</b>
     });</i>
-    res.end('&#129172span&#129174Hello world&#129172span/&#129174');
+    res.send('&#129172span&#129174Hello world&#129172span/&#129174');
 });
 
 server.listen(3000);
@@ -285,7 +285,7 @@ server.listen(3000);
       },
       tooltips: [
         `<p>With routing, you can <i>write Node.js code that <b>react to URL that a user is requesting</b></i>. So, routing basically means <i>implementing different actions for different URLs</i>.</p>
-        <p>In Node.js, routing refers to the process of defining <b>how an application responds to a client request to a particular endpoint</b>, which is a URL (or path) and a specific HTTP request method (GET, POST, etc.).</p>
+        <p>In Node.js, routing refers to the process of defining <i><b>how an application responds to a client request to a particular endpoint</b>, which is a <b>URL (or path)</b> and a specific <b>HTTP request method</b> (GET, POST, etc.)</i>.</p>
         <p><b>Each route can have one or more handler functions, which are executed when the route is matched.</b></p>
         <p><i>Routing is used to perform different actions based on the URL and HTTP method requested.</i> For example, you might have one route to send a user information when they access a webpage via a GET request, and another route to process the information submitted through a form via a POST request.</p>
         <p><i>Node.js itself doesn't come with a built-in router</i>, so routing is often handled by Node.js frameworks like Express, which simplify the process of writing server-side code.</p>
@@ -549,7 +549,7 @@ server.createServer((req, res) => {
   // ---- Solution 1 ----
   <i>fs.readFile</i>("test-file.txt", (err, <i>data</i>) => {
     if (err) console.log(err);
-    <i>res.end(data);</i>
+    <i>res.send(data);</i>
   });
 
 
@@ -561,12 +561,12 @@ server.createServer((req, res) => {
   })</i>;
 
   readable1<i>.on(<b>"end"</b>, () => {
-    res.end();
+    res.send();
   })</i>;
 
   readable1<i>.on("error", err => {
     res.statusCode = 500;
-    res.end("File not found!");
+    res.send("File not found!");
   })</i>;
 
 
@@ -604,7 +604,8 @@ const development_workflow = {
         `,
         `<h3>Package Versioning and Updating</h3>
         <p>By running <code>npm outdated</code> in your terminal, you will receive a table with all outdated packages.</p>
-        <p>You can install a specific version of a npm package by running <code>npm install packageName<i>@1.4.3</i></code> or simply <code>npm install packageName<i>@1</i></code>.</p>
+        <p>You can install a specific version of a npm package by running <code>npm install packageName<i>@4.8.3</i></code> or simply <code>npm install packageName<i>@4</i></code>.</p>
+        <p>NOTE: <code>npm install packageName<i>@4</i></code> will install the latest version inside of 4, with the latest minor and patch versions.</p>
         <p>You can update a specific npm package by running <code>npm update packageName</code>. The update command will respect the symbol that you'll have in the front of the package: <code>~</code>, <code>^</code> or <code>*</code>.</p>
         <pre><code>
 {
@@ -2837,48 +2838,37 @@ const working_with_REST_APIs = {
       tooltips: [
         `<h3>Separate API into logical resources</h3>
         <p>A resource is an object or representation of something, which has data associated to it. Any information that can be <u>named</u> can be a resource.</p>
-        <p><img src="../../src/img/rest_api_arhitecture_1.jpg"/></p>
-        <p><b>Endpoints should contain only resources (nouns)</b>, and use HTTP methods for actions!</p>
+        <p>We need to <i>expose these resources</i>, which means to <i>make available the data using some structured URLs</i> that the client can send a request to. So our API will have many different endpoints, and <i>each endpoint will send different data back to the client</i>, or also perform different actions.</p>
+        <p><img src="../../src/img/rest_api_arhitecture_1.jpg"/></p>`,
+        `<h3>Endpoints should contain only resources!</h3>
+        <p><i><b>Endpoints should contain only resources (nouns)</b>, and use HTTP methods in order to perform actions on data!</i> So to perform different actions (reading / creating / updating / deleting) on data, the API should use the right HTTP method and not the URL.</p>
+        <p><i>Endpoints should only contain our resources and not the actions that can be performed on them</i>, because they will quickly become a nightmare to maintain.</p>
+        <p>For example, <code>/getTour</code> endpoint is to get data about a tour. So we should simply name the endpoint <code>/tours</code> and send the data whenever a GET request is made to <code>/tours</code> endpoint. Just like this, we only have resources in the endpoint and not actions, because the action is now in the HTTP method.</p>
         <p><img src="../../src/img/rest_api_arhitecture_2.jpg"/></p>
+        <p>What's is important to understand is that we have a single resource in <code>/tours</code> endpoint that <i>performs different actions on data based on different HTTP methods</i>. So, for example, if the <code>/tours</code> endpoint is accessed with GET method, we send data to the client. But if the same <code>/tours</code> endpoint is accessed with POST method, we expect data to come in with a request, so that we can then create a new resource on the server side. So that is really the beauty of only using HTTP methods, rather than messing with verbs in endpoint names.</p>
         `,
-        `<h3>Send data as JSON</h3>
-        <p><img src="../../src/img/rest_api_arhitecture_3.jpg"/></p>`,
+        `<h3>Accessing Data with REST APIs: Send data as JSON</h3>
+        <ul>Data Formats:
+          <li>- HTML;</li>
+          <li>- Plain Text;</li>
+          <li>- XML;</li>
+          <li>- JSON;</li>
+        </ul>
+        <p><img src="../../src/img/rest_api_arhitecture_3.jpg"/></p>
+        <p>When we send a JSON response back to the client, there is are a couple of standards to formatting the response before sending. We're gonna use a very simple one called JSend. We simply create a new object, then add a <code>status</code> message to it in order to inform the client whether the request was a success, fail or error, nd then we put our original data into a new object called <code>data</code>.</p>
+        `,
         `<h3>REST APIs are stateless</h3>
-        <p>In REST APIs all state is handled <i>on the client</i>. This means that each request must contain <u>all</u> the information necessary to process a certain request from the server. <i>The server should <u>not</u> have to remember previous requests in order to process the current request.</i></p>
+        <p>In REST APIs <i>all state is handled <u>on the client</u></i>. This means that each request must contain <u>all</u> the information necessary to process a certain request from the server. <i>The server should <u>not</u> have to remember previous requests in order to process the current request.</i></p>
         <p>In REST APIs the server does not save response history between requests.</p>
         <p><img src="../../src/img/rest_api_arhitecture_4.jpg"/></p>`,
-      ],
-    },
-    {
-      sectionTitle: 'Accessing Data with REST APIs',
-      sectionSource: '',
-      tooltips: [
-        `<ul>Data Formats:
-        <li>- HTML;</li>
-        <li>- Plain Text;</li>
-        <li>- XML;</li>
-        <li>- JSON;</li>
-      </ul>`,
-      ],
-    },
-    {
-      sectionTitle: 'Understanding Routing & HTTP Methods',
-      sectionSource: '',
-      tooltips: [
-        `<p>API Endpoints</p>
-        <p>When you switch from "Classic" to REST APIs, you will have more HTTP methods available. In "classic" server, you only have "GET" and "POST", in REST APIs you will have: "PUT", "PATCH", "DELETE" and "OPTIONS".</p>`,
-      ],
-    },
-    {
-      sectionTitle: 'REST APIs - The Core Principles',
-      sectionSource: '',
-      tooltips: [
-        `<ul>REST Concepts & Ideas:
-        <li>- <i>REST APIs are all about data, no UI logic in exchanged;</i></li>
-        <li>- <i>REST APIs are normal Node.js servers</i> which expose different endpoints (HTTP method + path) for clients to send request to;</li>
-        <li>- <i>JSON is the common data format</i> that is used both for requests and resposnes;</li>
-        <li>- REST APIs are decoupled from the clients that use them.</li>
-      </ul>`,
+        `<h3>REST APIs - The Core Principles</h3>
+        <ul>REST Concepts & Ideas:
+          <li>- <i>REST APIs are all about data, no UI logic in exchanged;</i></li>
+          <li>- <i>REST APIs are normal Node.js servers</i> which expose different endpoints (HTTP method + path) for clients to send request to;</li>
+          <li>- <i>JSON is the common data format</i> that is used both for requests and resposnes;</li>
+          <li>- REST APIs are decoupled from the clients that use them.</li>
+        </ul>
+        `,
       ],
     },
     {
