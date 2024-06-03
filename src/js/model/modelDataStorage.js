@@ -1015,13 +1015,24 @@ app.use(mw(<i>{ option1: '1', option2: '2' }</i>))
       sectionTitle: 'Environment Variables',
       sectionSource: '',
       tooltips: [
-        `<p>In Node.js, environment variables are <i><b>values that are set outside of the application</b> but <b>can be accessed within the application</b> code</i>. They provide a way to <i>configure and customize how the application behaves without modifying the source code</i>.</p>
+        `<h3>Introduction</h3>
+        <p>Environment variables is not exactly about Express.js, it really has to do with Node.js development in general.</p>
+        <p>Node.js or Express.js apps can run in different environments, and the most important ones are the <u>development</u> environment and the <u>production</u> environment. That's because depending on the environment, we might use different databases, or we might turn login on or off, or we might turn debugging on or off, or really all kinds of different settings that might change depending on the development that we're in. So this type of setting that I just mentioned, like different databases or login turned on or off, that will be based on environment variables.</p>
+        <p>By default, Express.js sets the environment to development, which makes a lot of sense because that's what we're doing when we start a new project.</p>
+        <p>In Express.js, many packages depend on a special variable called node <code>NODE_ENV</code>. <code>NODE_ENV</code> is a variable that's kind of a convention which should define whether we're in development or in production mode. However, Express.js does not really define automatically the <code>NODE_ENV</code> variable, so we as developers have to do that manually.</p>
+        <ul>There are multiple ways in which we can do it:
+          <li>- by using the command terminal: <code>NODE_ENV=development nodemon app.js</code>;</li>
+          <li>- by using a <code>config.env</code> file.</li>
+        </ul>
+        `,
+        `<h3>What are Environment Variables</h3>
+        <p>In Node.js, environment variables are <i><b>values that are set outside of the application</b> but <b>can be accessed within the application</b> code</i>. They provide a way to <i>configure and customize how the application behaves without modifying the source code</i>.</p>
         <p>Environment variables are commonly <b>used to store sensitive information</b> such as API keys, database credentials, or configuration parameters that vary between environments (such as development, testing, and production).</p>`,
         `<h3>Setting Environment Variables</h3>
         <ul>Environment variables can be set in various ways:
           <li>1. <i>Operating System Environment</i>: You can set environment variables directly in your operating system.</li>
           <li>2. <b><code>.env</code> files</b>: It's common practice to use <code>.env</code> files to store environment variables in Node.js projects. These files are not loaded by default but can be loaded using packages like <code>dotenv</code>. <code>.env</code> files contain key-value pairs in the format KEY=value.</li>
-          <li>3. <i>Command Line</i>: You can also pass environment variables directly through the command line when running Node.js scripts.</li>
+          <li>3. <b>Command Line</b>: You can also pass environment variables directly through the command line when running Node.js scripts.</li>
         </ul>
         `,
         `<h3>Accessing Environment Variables in Node.js</h3>
@@ -1048,7 +1059,7 @@ const dbConfig = {
 };
         </code></pre>
         </p>
-        <p>Then, you would set these variables either in your operating system environment, a <code>.env</code> file, or pass them through the command line:
+        <p>Then, you would set these variables either <i>in your operating system environment</i>, a <code>.env</code> file, or <i>pass them through the command line</i>:
         <pre><code>
 DB_HOST=localhost
 DB_USER=myuser
