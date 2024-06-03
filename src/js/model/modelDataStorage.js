@@ -844,7 +844,7 @@ const app = express();
 
 <i>app.use</i>((req, res, next) => {
     console.log('Text:', 'Some text to print!');
-    <i>next();</i> //
+    <i>next();</i>
 });
 
 app.get('/', (req, res) => {
@@ -861,18 +861,18 @@ app.listen(3000, () => {
         `<h3>More details about <code>app.use()</code> function</h3>
         <p>The <code>app.use()</code> function in Express.js is <b>used to <u>mount middleware functions</u> at a specified path</b>. These middleware functions will be <b>executed for every request that matches the specified path</b>. It can be used to set up middleware <u>globally</u> for your entire application or to apply middleware to <u>specific routes or groups of routes</u>.</p>
         <ul>The <code>app.use()</code> function takes two arguments:
-          <li>1. <code>path</code> (optional): specifies the path for which the middleware function should be executed. If no path is specified, the middleware function will be executed for every incoming request. This is useful for setting up middleware that needs to be applied globally, such as logging, parsing request bodies, or handling authentication.
+          <li>1. <code>path</code> (optional): specifies the path for which the middleware function should be executed. <i>If no path is specified, the middleware function will be executed for every incoming request.</i> This is useful for setting up middleware that needs to be applied globally, such as logging, parsing request bodies, or handling authentication.
           <pre><code>
 app.use((req, res, next) => {
-    // Middleware logic here
-    next();
+  // Middleware logic here
+  next();
 });
           </code></pre>
           <pre><code>
 // In this example, the middleware function will only be executed for requests that start with /api
 app.use('/api', (req, res, next) => {
-    // Middleware logic for requests to /api/
-    next();
+  // Middleware logic for requests to /api/
+  next();
 });
           </code></pre>
           </li>
@@ -1184,7 +1184,7 @@ const updateBook = (req, res) => {
 const express = require('express');
 <i>const router = <b>express.Router()</b>;</i>
 
-// middleware that is specific to this router
+// Middleware that is specific to this router
 const timeLog = (req, res, next) => {
   console.log('Time: ', Date.now())
   next()
@@ -1192,12 +1192,12 @@ const timeLog = (req, res, next) => {
 
 router.use(timeLog)
 
-// define the home page route
+// Define the home page route
 router.get('/', (req, res) => {
   res.send('Birds home page')
 })
 
-// define the about route
+// Define the about route
 router.get('/about', (req, res) => {
   res.send('About birds')
 })
@@ -1316,7 +1316,12 @@ app.listen(process.env.PORT);
         <ul>The basic syntax for chaining middleware looks like this:
           <li>
             <pre><code>
-app.get('/your-route', <i>middlewareFunction1, middlewareFunction2, finalHandlerFunction</i>);
+app.get(
+  '/your-route',
+  <i>middlewareFunction1,
+  middlewareFunction2,
+  finalHandlerFunction</i>
+);
             </code></pre>
           </li>
         </ul>
@@ -1329,7 +1334,12 @@ app.get('/your-route', <i>middlewareFunction1, middlewareFunction2, finalHandler
 const express = require('express');
 const router = express.Router();
 
-router.get('/example', middlewareFunction1, middlewareFunction2, finalHandlerFunction);
+router.get(
+  '/example',
+  middlewareFunction1,
+  middlewareFunction2,
+  finalHandlerFunction
+);
 
 app.use('/', router);
           </code></pre>
