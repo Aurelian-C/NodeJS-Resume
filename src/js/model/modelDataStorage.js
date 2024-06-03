@@ -1139,28 +1139,34 @@ app.listen(process.env.PORT);
     },
     {
       sectionTitle:
-        'Create chainable route handlers for a the same route path by using app.route()',
+        'Create chainable route handlers for the same route path by using app.route()',
       sectionSource: '',
       highlights: {
-        highlight1: ['chainable route handlers'],
+        highlight1: ['chainable route handlers', 'the same route path'],
         highlight2: ['app.route()'],
       },
       tooltips: [
-        `<p>You can create <i><u>chainable route handlers</u> for a route path</i> by using <code>app.route()</code>.</p>
+        `<p>You can create <i><b>chainable route handlers</b> for a route path</i> by using <code>app.route()</code>.</p>
         <pre><code>
-<i>app
-  <b>.route</b>('/book')</i>
-  <i>.get</i>((req, res) => {
-      res.send('Get a random book')
-  })
-  <i>.post</i>((req, res) => {
-      res.send('Add a book')
-  })
-  <i>.put</i>((req, res) => {
-      res.send('Update the book')
-  })      
+const getBook = (req, res) => {
+  res.send('Get a random book')
+}
+
+const addBook = (req, res) => {
+  res.send('Add a book')
+}
+
+const updateBook = (req, res) => {
+  res.send('Update the book')
+}
+
+<i>app</i>
+  <b>.route('/book')</b>
+  <i>.get</i>(getBook)
+  <i>.post</i>(addBook)
+  <i>.put</i>(updateBook)      
       </code></pre>
-      <p>Because the path is specified at a single location, creating modular routes is helpful, as is reducing redundancy and typos.</p>
+      <p>Because the <b>path is specified at a single location</b>, creating modular routes is helpful, as is reducing redundancy and typos.</p>
       `,
       ],
     },
@@ -1175,8 +1181,8 @@ app.listen(process.env.PORT);
         `,
         `<p>Create a router file named birds.js in the app directory, with the following content:</p>
         <pre><code>
-const express = require('express')
-const router = express.Router()
+const express = require('express');
+<i>const router = <b>express.Router()</b>;</i>
 
 // middleware that is specific to this router
 const timeLog = (req, res, next) => {
