@@ -2110,7 +2110,7 @@ exports.deleteTour = <b>catchAsync</b>(<i>async (req, res, next)</i> => {
       sectionSource: '',
       tooltips: [
         `<p>The idea behind "Errors During Development vs Production" is to <i>send different error messages for the development and production environment</i>. Is not a good practice to send the same response error message to everyone. In production, we want to leak as little information about our errors to the client as possible. So in that case, we only want to send a nice, human-friendly message so that the user knows what's wrong. On the other hand, when written development, we want to get as much information about the error that occurred as possible.</p>`,
-        `<p>We can distinguish between the development and the production environment by setting a <i><code>.env</code> file</i> where we save our informations about development environment, for example, <i><code>NODE_ENV=development</code></i>. The, we can read that information with <i><code>process.env.NODE_ENV</code></i> and send different errors in development or production environment.</p>
+        `<p>We can distinguish between the development and the production environment by setting a <i><code>.env</code> file</i> where we save our informations about development environment, for example, <i><code>NODE_ENV=development</code></i>. Then, we can read that information with <i><code>process.env.NODE_ENV</code></i> and send different errors in development or production environment.</p>
         <pre><code>
 const <i>sendErrorDev</i> = (err, res) => {
   res.status(err.statusCode).json({
@@ -2228,6 +2228,8 @@ process.on('unhandledRejection'</i>, (err) => {
 });
       </code></pre>
       <p>NOTE: While in the Unhandled Rejection crashing the application is optional, when there is an Uncaught Exception, we really, really need to crash our application, because after there was an Uncaught Exception, the entire Node.js process is in a so-called unclean state. So to fix that, the process need to terminate and then to be restarted. In production, we should then have a tool which will restart the application after crashing. And many hosting services already do that out of the box, so completely automatically without us having to do anything.</p>`,
+        `<h3>Why Terminate the Process?</h3>
+      <p>Terminating the process helps to catch and fix issues early in development. Unhandled promise rejections can lead to unpredictable behavior and bugs that are hard to track down. By terminating the process, Node.js ensures developers notice and address these errors promptly.</p>`,
         `<h3>IMPORTANT: handle errors in the place where it happen</h3>
       <p><i>In Node.js, it's not really a good practice to just blindly rely on these two error handlers (<code>unhandledRejection</code> & <code>uncaughtException</code>) that we just implemented in the code above. So <b>ideally errors should really be handled right where they occur</b>.</i> Some people even say that we shouldn't use these at all, but I disagree with that. I think that as a safety net, they can be very useful and play a part in our application.</p>
       <p>While Express.js does not directly handle Promise rejections for you, you can manage them by <i>ensuring that all Promises in your middleware or route handlers have corresponding <code>.catch()</code> blocks or by using async/await with <code>try/catch</code>.</i></p>
