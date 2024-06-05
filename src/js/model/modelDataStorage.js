@@ -2157,7 +2157,6 @@ module.exports = (err, req, res, next) => {
         `,
         `<pre><code>
 const express = require('express');
-
 <i>const globalErrorHandler = require('./controllers/errorController');</i>
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
