@@ -587,7 +587,7 @@ const development_workflow = {
   titleDescription: 'Developing Efficiently',
   sections: [
     {
-      sectionTitle: 'Understanding package.json file and NPM Scripts',
+      sectionTitle: 'Understanding package.json file',
       sectionSource: '',
       highlights: {
         highlight1: ['package.json', 'NPM Scripts'],
@@ -595,7 +595,7 @@ const development_workflow = {
       tooltips: [
         `<p>NPM is a software that we use to manage the 3rd party open-source packages that we choose to include and use in our project.</p>
         <p>The first thing that we usually do whenever we start a new project, is to start with <code>npm init</code> that will create a <code>package.json</code> file.</p>
-        <p><code>package.json</code> file is kind of a configuration file of our project where all kinds of data about the project is stored.</p>
+        <p><i><code>package.json</code> file is kind of a <u>configuration file</u> of our project where all kinds of data about the project is stored.</i></p>
         `,
         `<h3>Global & Local npm Packages</h3>
         <p>In the last lecture, we added nodemon as a <i>local dependency</i> to our project.</p>
@@ -628,6 +628,57 @@ const development_workflow = {
         <p>1. Tilde (<code>~</code>): When a version number is preceded by a tilde (<code>~</code>), it indicates that updates are allowed only to the latest PATCH version of the specified MINOR version. For example, <code>~1.5.7</code> allows updates to any version <code>1.5.x</code> where x >= 7. This is more restrictive and aims to reduce the risk of introducing breaking changes with new patches.</p>
         <p>2. Caret (<code>^</code>): The caret symbol (<code>^</code>) allows updates that do not modify the left-most non-zero digit in the semver string. For <code>^2.8.1</code>, this means any version <code>2.x.x</code> is allowed as long as x >= 8.1 for the MINOR version, and any PATCH version updates. This is more permissive than the tilde, allowing for minor updates that should be backwards compatible. The minor releases include some new features that will not break our code.</p>        
         </p>3. Asterisk (<code>*</code>) or Star: An asterisk (<code>*</code>) indicates that any version is allowed. It's the most permissive option, essentially ignoring versioning and always fetching the latest version. This can be risky as it might pull in incompatible updates. The major releases includes huge new releases which can have breaking changes to previous versions (break our code), so be aware that when there is a new version it might usually affect the code that you already have.</p>`,
+      ],
+    },
+    {
+      sectionTitle: 'Understanding NPM Scripts',
+      sectionSource: '',
+      highlights: {
+        highlight1: ['NPM Scripts'],
+      },
+      tooltips: [
+        `<h3>What are NPM Scripts?</h3>
+        <p><p>NPM (Node Package Manager) scripts are a feature of the <code>package.json</code> file that <i>allow you to <b>define custom commands</b> to automate various tasks</i> in your Node.js projects. <i>These scripts can be used to run build processes, start servers, run tests, lint code, and perform many other development activities.</i></p></p>`,
+        `<h3>Definition</h3>
+        <p>NPM scripts are defined in the scripts section of the <code>package.json</code> file. Each script is a key-value pair where the key is the script name and the value is the command to be executed.</p>
+        <pre><code>
+{
+  "name": "my-app",
+  "version": "1.0.0",
+  <i>"scripts": {
+    "start": "node app.js",
+    "build": "webpack --config webpack.config.js",
+    "test": "mocha test/",
+    "lint": "eslint ."
+  }</i>
+}
+        </code></pre>
+        `,
+        `<h3>Usage</h3>
+        <p>To run an NPM script, you use the <code>npm run <script-name></code> command. For example, to run the start script, you would use <code>npm run start</code>.</p>`,
+        `<h3>Default Scripts</h3>
+        <p>Some script names have special meanings and can be run with shorter commands. For instance, <code>start</code>, <code>test</code>, <code>preinstall</code>, <code>postinstall</code>, <code>prepublish</code>, and <code>postpublish</code> have default behaviors. You can run <code>npm start</code> instead of <code>npm run start</code>.</p>`,
+        `<h3>Script Composition</h3>
+        <p>NPM scripts can call other NPM scripts, allowing for complex workflows. This can be achieved using the <code>npm run</code> command within another script.<p>
+        <pre><code>
+{
+  "scripts": {
+    "clean": "rm -rf dist",
+    <i>"build": "npm run clean && webpack --config webpack.config.js"</i>
+  }
+}
+        </code></pre>
+        `,
+        `<h3>Environment Variables</h3>
+        <p>You can set environment variables in NPM scripts, which can be useful for configuring different environments (development, testing, production).</p>
+        <pre><code>
+{
+  "scripts": {
+    <i>"start": "<b>NODE_ENV=production</b> node app.js"</i>
+  }
+}
+        </code></pre>
+        `,
       ],
     },
     {
@@ -1769,7 +1820,7 @@ const error_handling_with_ExpressJS = {
       ],
     },
     {
-      sectionTitle: 'Debugging Node.js with ndb',
+      sectionTitle: 'Debugging Node.js with ndb package',
       sectionSource: '',
       highlights: {
         highlight1: ['ndb'],
@@ -1792,6 +1843,9 @@ const error_handling_with_ExpressJS = {
       sectionTitle:
         'An Overview of Error Handling: Operational vs Programming Errors',
       sectionSource: '',
+      highlights: {
+        highlight2: ['Operational vs Programming Errors'],
+      },
       tooltips: [
         `
       <p>Up until this point we haven't really <i>handled errors in a central place in our application</i>. What we did was to simply send back an error message as JSON in each route handler in case something went wrong.</p>
@@ -1800,23 +1854,23 @@ const error_handling_with_ExpressJS = {
         <li>- <i><b>programming</b> errors</i>.</li>
       </ul>
       <p>Operational errors are problems that we can predict will inevitably happen at some point in the future, so we just need to handle them in advance. <i>They have nothing to do with bugs in our code. Instead, they depend on the user, or the system, or the network.</i> So, things like a user accessing an invalid route, inputting invalid data, or an application failing to connect to the database. All these are operational errors that we will need to handle in order to prepare our application for these cases.</p>
-      <p>On the other hand, we have programming errors. <i>Programming errors are simply bugs that we developers introduce into our code.</i> Like, for example, trying to read properties from an <code>undefined</code> variable, using <code>await</code> without <code>async</code>, accidentally using <code>request.query</code> instead of <code>request.body</code>, or many other errors, really, that we might make. This are really inevitable but also more difficult to find and to handle.</p>
-      <p>It's important that you understand this crucial difference between operational errors and programming errors. When we're talking about error handling with Express.js, we mainly just mean operational errors, because these are the ones that are easy to catch and to handle with our Express.js application.</p>
-      <p>Express.js actually comes with error handling out of the box. So, all we have to do is to <i>write a global Express.js error handling middleware which will then catch errors coming from all over the application</i>. So, no matter if it's an error coming from a route handler, or a model validator or really, someplace else, the goal is that all these errors end up in one central error handling middleware. So that we can send a nice response back to the client letting them know what happened.</p>
-      <p>The beauty of having a global error handling middleware is that it allows for a nice separation of concerns. So, we don't have to worry about error handling right in our business logic or our controllers, or really anywhere in our application. We can simply send the errors down to the error handler which will then decide what to do with them next.</p>
+      <p>On the other hand, we have programming errors. <i>Programming errors are simply bugs that we developers introduce into our code.</i> Like, for example, trying to read properties from an <code>undefined</code> variable, using <code>await</code> without <code>async</code>, accidentally using <code>request.query</code> instead of <code>request.body</code>, or many other errors that we might make. This are really inevitable but also more difficult to find and to handle.</p>
+      <p>It's important that you understand this crucial difference between operational errors and programming errors. <i>When we're talking about error handling with Express.js, we mainly just mean operational errors, because these are the ones that are easy to catch and to handle with our Express.js application.</i></p>
+      <p>Express.js actually comes with error handling out of the box. So, all we have to do is to <i>write a global Express.js error handling middleware which will then catch errors coming from all over the application</i>. So, no matter if it's an error coming from a route handler, or a model validator or really, someplace else, the goal is that <b>all these errors end up in one central error handling middleware</b>. So that we can send a nice response back to the client letting them know what happened.</p>
+      <p>The beauty of having <b>a global error handling middleware</b> is that it allows for a nice separation of concerns. So, we don't have to worry about error handling right in our business logic or our controllers, or really anywhere in our application. We can simply send the errors down to the error handler which will then decide what to do with them next.</p>
       <p><img src="../../src/img/error_handling_1.jpg"/></p>
       `,
       ],
     },
     {
-      sectionTitle: 'Handling Unhandled Routes',
+      sectionTitle: 'Handling Unhandled Routes (URL/path)',
       sectionSource: '',
       highlights: {
         highlight1: ['Unhandled Routes'],
       },
       tooltips: [
-        `
-        <p>Middleware function that handle errors should be the last part after all our other routes.</p>
+        `<p>Express.js automatically sends a <code>404 Not Found</code> error code in case that we try to access a route (path or URL) that has not any handler attach to it.</p>
+        <p>We can create a handle function for all the routes that are not cached by other routers handlers, so we can write a middleware function that <i>handle undefined routes, so routes that we didn't assign any handler</i> yet. <b>This middleware function should be the last part after all our other routes</b>, because remember that all middleware functions are executed in the order they are in the code.</p>
         <pre><code>
 const express = require('express');
 
@@ -1828,13 +1882,17 @@ const app = express();
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 
-<i>app.use((req, res, next) => {
+<i>app<b>.all</b>(<b>'*'</b>, (req, res, next) => {
   res.status(404).json({
     status: 'fail',
     message: "Can't find {req.originalUrl} in this server!"
   })
 });</i>
-      </code></pre>`,
+
+app.listen(8080);
+      </code></pre>
+      <p>NOTE: <code>app.use()</code> will only see whether URL starts with specified path. But, <b><code>app.all()</code> will match the complete path</b>.</p>
+      `,
       ],
     },
     {
@@ -1844,9 +1902,9 @@ app.use('/api/v1/users', userRouter);
         highlight2: ['Global Error Handling Middleware'],
       },
       tooltips: [
-        `<p>To define an error handling middleware, all we need to do is to <i>give the middleware function 4 arguments, and Express.js will then automatically recognize it as an error handling middleware</i>, and therefore, <i>only call it when there is an error</i>.</p>
-        <p>To pass the error to the error handling middleware, we need to pass that error as an argument to <code>next()</code> function. <i>If the <code>next()</code> function receives an argument, no matter what it is, Express.js will automatically know that there was an error, so it will assume that whatever we pass into <code>next()</code> is gonna be an error, and that applies to every <code>next()</code> function in every single middleware anywhere in our application</i>.</p>
-        <p><b>Whenever we pass anything into <code>next()</code> function, Express.js will assume that it is an error, and it will then skip all the other middlewares in the middleware stack and sent the error that we passed in to our global error handling middleware, which will then, of course, be executed.</b></p>
+        `<p>To define an error handling middleware, all we need to do is to <i><b>give the middleware function 4 arguments</b>, and Express.js will then automatically recognize it as an error handling middleware</i>, and therefore, <b>only call it when there is an error</b>.</p>
+        <p>To pass an error from our routes handlers to the error handling middleware, we need to <b>pass that error as an argument to <code>next()</code> function</b>. <i>If the <code>next()</code> function receives an argument, no matter what it is, Express.js will automatically know that there was an error, so it will assume that whatever we pass into <code>next()</code> is gonna be an error, and that applies to every <code>next()</code> function in every single middleware anywhere in our application</i>.</p>
+        <p>IMPORTANT: <b>Whenever we pass anything into <code>next()</code> function, Express.js will assume that it is an error, and it will then skip all the other middlewares in the middleware stack and sent the error that we passed in to our global error handling middleware, which will then, of course, be executed.</b></p>
         <pre><code>
 const express = require('express');
 
@@ -1863,7 +1921,7 @@ app.all('*', (req, res, next) => {
   const error = new Error('Error message!');
   error.statusCode = 404;
   error.status = 'fail';
-  <i>next(error);</i>
+  <b>next(error)</b>;
 })
 
 // Handle all errors globally
