@@ -3245,7 +3245,11 @@ const authentication_with_JWT = {
     <p>- Due to no sessions being used, authentication works differently in REST APIs.</p>
     <p>- Each request needs to be able to send some data that proves that the request is authenticated.</p>
     <p>- JSON Web Tokens ("JWT") are a common way of storing authentication information on the client and providing authentication status.</p>
-    <p>- JWTs are signed by the server and can only be validated by the server.</p>
+    <p>- JWTs are signed by the server and can only be validated by the server.</p>`,
+        `<h3>How authentication with JWT works: step by step</h3>
+    <p>Assuming we already have a registered user in our database, this is how a user logs into the app: the user's client starts by making a POST request with the username/email and the password. The server then checks if the user exists and if the password is correct. If so, a unique JWT for only that user is created using a secret string that is stored on a server. A JWT itself is really just a string. The server then sends that JWT back to the client which will store it either in a cookie or in local storage. And just like this the user is authenticated and basically logged into our application <i>without leaving any state on the server</i>. So <b>the server does in fact not know which users are actually logged in, but of course, the user knows that he's logged in because he has <u>a valid JWT stored on the client</u> in a cookie/localStorage</b>, which is a bit like a passport to access protected parts of the application. This process is therefore completely stateless because the JWT is NOT SAVED ANYWHERE ON THE SERVER.</p>
+    <p>Each time a user wants to access a protected route, he sends his JWT along with a request. once the request hits the server, our app will verify if the JWT is actually valid. if the token is actually valid, then the requested data will be sent to the client and if not, then there will be an error telling the user that he's not allowed to access that resource.</p>
+    <p>What's very important to note is that all this communication must happen over HTTPS, so secure encrypted HTTP, in order to prevent that anyone can get access to passwords or JWT.</p>
     <p><img src="../../src/img/token_3.jpg"/></p>
     `,
       ],
