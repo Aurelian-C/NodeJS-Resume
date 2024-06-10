@@ -3269,9 +3269,9 @@ app.post((req, res, next) => {
 const token = <i>jwt<b>.sign</b>(
   {
     email: 'userEmail',
-    userId: 'userId,
+    userId: 'userId',
   },
-  <b>processenv.JWT_SECRET</b>,
+  <b>process.env.JWT_SECRET</b>,
   { <b>expiresIn</b>: process.env.JWT_EXPIRES_IN }
 );</i>
 
@@ -3304,9 +3304,9 @@ res.status(201).json({
     <p>When you make a async request from the client to your REST API, you can <i>attach your JWT to the <code>fetch()</code> request headers</i>:</p>
     <pre><code>
 fetch('https://rest-api/auth', {
-<i>headers: {
-  <b>Authorization: 'Bearer ' + token</b>
-}</i>
+  <i>headers: {
+    <b>Authorization: 'Bearer ' + token</b>
+  }</i>
 });
     </code></pre>`,
         `<p>On your server, you can read the Authorization header:</p>
