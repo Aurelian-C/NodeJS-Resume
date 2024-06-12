@@ -3432,7 +3432,7 @@ app.listen(process.env.PORT);
         `<h3>Brute Force Attack</h3>
           <p>The attacker basically tries to guess a password by trying millions and millions of random passwords until they find the right one. To prevent this, we can make the login request really slow, and the <code>bcrypt</code> package actually does just that. Another strategy is to implement rate limiting, which limits the number of requests coming from one single IP. Another strategy is to actually implement a maximum number of login attempts for each user.</p>`,
         `<h3>Cross-Site Scripting (XSS) Attack</h3>
-          <p>the attacker tries to inject scripts into our page to run his malicious code. On the client side, this is especially dangerous because it allows the attacker to read the local storage, which is the reason why we should never ever store the JSON web token in local storage. Instead, it should be stored in an HTTPOnly cookie that makes it so that the browser can only receive and send the cookie, but cannot access or modify it in any way. That then makes it impossible for any attacker to steal the JSON Web Token that is stored in the cookie.</p>
+          <p><i>The attacker tries to <b>inject scripts</b> into our page to run his malicious code.</i> On the client side, this is especially dangerous because it allows the attacker to read the local storage, which is the reason why <b>we should never ever store the JSON web token in local storage</b>. Instead, <b>JWT should be stored in an HTTPOnly cookie</b> that makes it so that the browser can only receive and send the cookie, but cannot access or modify it in any way. That then makes it impossible for any attacker to steal the JSON Web Token that is stored in the cookie.</p>
           <p>On the backend side, in order to prevent XSS attacks, we should sanitize user input data and set some special HTTP headers which make these attacks a bit more difficult to happen. Express doesn't come with these best practices out of the box, so we're gonna use middleware to set all of these special headers.</p>`,
         `<h3>Denial-of-Service (DOS) Attacks</h3>
           <p>Denial-of-Service (DOS) happens when the attacker sends so many requests to a server that it breaks down and the application becomes unavailable. implementing rate limiting is a good solution for this. Also, we should limit the amount of data that can be sent in a body in a POST or a PATCH request.</p>
@@ -3600,8 +3600,8 @@ app.use(async (req, res, next) => {
         highlight2: ['express-rate-limit'],
       },
       tooltips: [
-        `<p>In this article we will implement rate limiting, in order to prevent the same IP from making too many requests to our API. This will then help us preventing attacks like Denial-of-Service or Brute Force Attacks.</p>
-        <p>The rate limiter will be implemented as a global middleware function. The rate limiter will count the number of requests coming from one IP and then, when there are too many requests, block these requests.</p>
+        `<p>In this article we will implement rate limiting, in order to <i>prevent the same IP from making too many requests to our API</i>. This will then help us preventing attacks like Denial-of-Service or Brute Force Attacks.</p>
+        <p><b>The rate limiter will be implemented as a global middleware function.</b> The rate limiter will count the number of requests coming from one IP and then, when there are too many requests, block these requests.</p>
         <p>The rate limiter that we're going to use is a third party package called <code>express-rate-limit</code>.</p>
         <pre><code>
 const express = require('express');
@@ -3671,15 +3671,16 @@ const app = express();
 
 app.listen(process.env.PORT);
       </code></pre>
-      <p>It's best to use the <code>helmet</code> package early in the middleware stack, so that these headers are really sure to be set. So don't put it like somewhere at the end, put it right in the beginning</p>
+      <p>It's best to use the <code>helmet</code> package early in the middleware stack, so that these headers are really sure to be set. So don't put it like somewhere at the end, put it right in the beginning.</p>
       `,
       ],
     },
     {
-      sectionTitle: 'Data Sanitization',
+      sectionTitle: 'Data Sanitization with xss-clean',
       sectionSource: '',
       highlights: {
         highlight1: ['Data Sanitization'],
+        highlight2: ['xss-clean'],
       },
       tooltips: [
         `<p>Data sanitization means to clean all the data that comes into the application from malicious code.</p>
@@ -3718,7 +3719,7 @@ app.use(<b>xss()</b>);
 app.listen(process.env.PORT);
       </code></pre>
       <p>What <code>mongoSanitize()</code> middleware does is to look at the request body, the request query string, and also at request params, and then it will filter out all of the dollar signs and dots, because that's how MongoDB operators are written. By removing that, well, these operators are then no longer going to work.</p>
-      <p><code>xss()()</code> will clean any user input from malicious HTML code. Imagine that an attacker would try to insert some malicious HTML code with some JavaScript code attached to it. If that would then later be injected into our HTML site, it could really create some damage then.</p>
+      <p><code>xss()</code> will clean any user input from malicious HTML code. Imagine that an attacker would try to insert some malicious HTML code with some JavaScript code attached to it. If that would then later be injected into our HTML site, it could really create some damage then. The <code>xss()</code> middleware will <i>convert all the HTML tags/symbols</i>.</p>
         `,
       ],
     },
