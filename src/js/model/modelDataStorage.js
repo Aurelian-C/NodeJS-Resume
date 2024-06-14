@@ -10,10 +10,9 @@ const introduction = {
         <p>If you are used to run JavaScript in the browser, then the browser is a runtime environment for JavaScript.</p>
         <p>Node.js is just another <b>JavaScript runtime environment</b> build on Google's open-source V8 JavaScript Engine that <i>allows you to run JavaScript code outside of a web browser</i>, without all the restrictions that are in the browser.</p>
         <p><img src="../../src/img/what_is_node_01.jpg"/></p>
-        <p>Node.js provides a set of build-in modules, libraries and tools for <i>building server-side and networking applications</i>.</p>`,
+        <p>Node.js provides a set of <b>build-in modules</b>, <b>libraries</b> and <b>tools</b> for <i>building server-side and networking applications</i>.</p>`,
         `<h3>What is it used for?</h3>
         <p>Node.js is commonly used for building <i>web servers</i>, <i>APIs</i> (Application Programming Interfaces), real-time chat applications, streaming applications, and other networked applications.</p>
-        <p><img src="../../src/img/what_is_node_02.jpg"/></p>
         <p>Don't use Node.js if you want to build applications with heavy server-side processing (CPU-intensive) like image manipulations, video conversion, file compression or anything like that.</p>
         `,
         `<h3>Node.js characteristics</h3>
@@ -27,7 +26,7 @@ const introduction = {
       sectionTitle: 'How the Web Works',
       sectionSource: '',
       tooltips: [
-        `<p>The web works through a combination of <i>client-server architecture</i>, <i>protocols</i>, and various technologies.</p>`,
+        `<p>The web works through a combination of <b>client-server architecture</b>, <i>protocols</i>, and various technologies.</p>`,
         `<h3>Client-Server Model</h3>
         <p>The web operates on a client-server model. Clients, such as web browsers (e.g., Chrome, Firefox), request resources (e.g., web pages, images, videos) from servers, which store and provide those resources.</p>`,
         `<h3>Domain Name System (DNS)</h3>
@@ -55,7 +54,7 @@ const introduction = {
       sectionSource: '',
       tooltips: [
         `<h3>Static Websites</h3>
-        <p>Static websites or simple websites is when a developer upload ready to be served files of a website onto a web server. These files usually contains HTML, CSS, JavaScript, images and more. These are the exact files that the server will later send to the browser when the website is requested. The browser will then take these files and render them as they are. This means that <i>there is no work done on the server, there is no backend code, and there's also no Node.js application running</i>. So it's just <i>static web server serving static files</i>.</p>
+        <p>Static (simple) websites is when a developer upload ready to be served files of a website onto a web server. These files usually contains HTML, CSS, JavaScript, images and more. These are the exact files that the server will later send to the browser when the website is requested. The browser will then take these files and render them as they are. This means that <i>there is no work done on the server, there is no backend code, and there's also no Node.js application running</i>. So it's just <i>static web server serving static files</i>.</p>
         `,
         `
       <p><img src="../../src/img/static_dynamic_api_1.jpg"/></p>
@@ -80,24 +79,19 @@ const understanding_the_basics = {
   titleDescription: 'The Essential Knownledge You Need',
   sections: [
     {
-      sectionTitle: 'Installing Node.js',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
       sectionTitle: 'Using Modules in Node.js: Core (Build-In) Modules',
       sectionSource: '',
       highlights: {
         highlight2: ['Core (Build-In) Modules'],
       },
       tooltips: [
-        `<p><i>Node.js is built around a concept of modules</i>, where all kinds of <i><u>additional functionality</u> are stored in a module</i>. For example, if you want to read a file from your system, you will use a module called "fs" (fs stands for file system).</p>
+        `<p><i>Node.js is <b>built around a concept of modules</b></i>, where all kinds of <b><u>additional functionality</u> are stored in a module</b>. For example, if you want to read a file from your system, you will use a module called <code>fs</code> (<code>fs</code> stands for file system).</p>
         <p>How do we open up these modules, or how can we use them? Well, we do <b><code>require()</code></b> them into our code, and then store the result of the <code>require()</code> function into a variable. For example:
         <pre><code>
 const fs = <b>require("fs")</b>;
         </code></pre>
         <p>By requiring and using the <code>fs</code> module, we will get access to functions for reading/writing data right to the file system.</p>
-        <ul>Besides <code>fs</code> module, there are some other module that will help you use additional functionalities:
+        <ul>Besides <code>fs</code> module, there are some other modules that will help you use additional functionalities:
           <li>- <code>http</code>: creates an HTTP server in Node.js;</li>
           <li>- <code>https</code>: creates an HTTPS server in Node.js;</li>
           <li>- <code>path</code>: includes methods to deal with file paths;</li>
@@ -139,9 +133,6 @@ const server = <i>http<b>.createServer</b></i>((<i>req</i>, <i>res</i>) => {
       <p>The <code>res</code> object represents the HTTP response that a Node.js app sends when it gets an HTTP request.</p>
       <p>Understanding <code>req</code> and <code>res</code> objects is crucial for handling HTTP interactions in Node.js apps.</p>
       `,
-        `<h3>Controlling the Node.js process</h3>
-      <p><b>When we start a server, Node.js cannot simply exit the processs (exit the program)</b>, because the whole goal is to wait for the requests to come in.</p>
-      `,
       ],
     },
     {
@@ -153,13 +144,13 @@ const server = <i>http<b>.createServer</b></i>((<i>req</i>, <i>res</i>) => {
       tooltips: [
         `<p>In Node.js, handling HTTP requests is a fundamental task, especially when building a server. Here’s a basic guide to understanding and working with requests in Node.js</p>`,
         `<h3>Handling HTTP Requests</h3>
-        <p>GET Request: to handle a GET request, you define a route and a callback function that sends a response:</p>
+        <p><i>GET Request</i>: to handle a GET request, you <i>define a route</i> and <i>a callback function that sends a response</i>:</p>
         <pre><code>
 app<i>.get</i>('/', (req, res) => {
   res.send('Hello, World!');
 });
         </code></pre>
-        <p>POST Request: to handle a POST request, you also define a route and a callback function. Typically, you’ll also need middleware to parse the request body:</p>
+        <p><i>POST Request</i>: to handle a POST request, you also define a route and a callback function. Typically, you’ll also need middleware to parse the request body:</p>
         <pre><code>
 const bodyParser = require('body-parser');
 
@@ -173,11 +164,11 @@ app.post('/submit', (req, res) => {
         </code></pre>
         `,
         `<h3>Request Object</h3>
-        <ul>The request object (<code>req</code>) contains information about the HTTP request. Some useful properties are:
-        <li>- <code>req.params</code>: Parameters from the URL (route parameters);</li>
-        <li>- <code>req.query</code>: Query string parameters;</li>
-        <li>- <code>req.body</code>: Data sent in the request body (for POST, PUT, etc.);</li>
-        <li>- <code>req.headers</code>: HTTP headers.</li>
+        <ul><b>The request object (<code>req</code>) contains information about the HTTP request.</b> Some useful properties are:
+        <li>- <i><code>req.params</code></i>: Parameters from the URL (route parameters);</li>
+        <li>- <i><code>req.query</code></i>: Query string parameters;</li>
+        <li>- <i><code>req.body</code></i>: Data sent in the request body (for POST, PUT, etc.);</li>
+        <li>- <i><code>req.headers</code></i>: HTTP headers.</li>
         </ul>
         `,
         `<h3>Middleware</h3>
@@ -191,7 +182,7 @@ app.post('/submit', (req, res) => {
         highlight1: ['Responses'],
       },
       tooltips: [
-        `<p>In Node.js, handling responses typically involves working with the http module or using a web framework like Express.js. Understanding how to manage responses is crucial for <i>sending data back to the client</i>, whether it’s HTML, JSON, or other types of data.</p>`,
+        `<p>In Node.js, handling responses typically involves working with the http module or using a web framework like Express.js. Understanding how to manage responses is crucial for <i><b>sending data back to the client</b>, whether it’s HTML, JSON, or other types of data</i>.</p>`,
         `<h3>Using the <code>http</code> Module</h3>
         <p>The <code>http</code> module in Node.js provides functionalities to create an HTTP server and handle requests and responses.</p>
         <pre><code>
@@ -239,13 +230,13 @@ app.listen(port, () => {
         </code></pre>
         `,
         `<h3>Key Concepts</h3>
-        <p><i>Response Headers</i>: Headers provide essential information about the response such as content type, status, etc.</p>
-        <p><i>Response Body</i>: The body contains the data sent back to the client.</p>
-        <p><i>Status Codes</i>: Status codes indicate the result of the HTTP response.</p>
+        <p><i>Response <b>Headers</b></i>: Headers provide essential information about the response such as content type, status, etc.</p>
+        <p><i>Response <b>Body</b></i>: The body contains the data sent back to the client.</p>
+        <p><b>Status Codes</b>: Status codes indicate the result of the HTTP response.</p>
         <ul>Sending Different Types of Responses:
-          <li>- <code>res.send()</code> - Sends various types of responses (HTML, plain text, etc.);</li>
-          <li>- <code>res.json()</code> - Sends a JSON response;</li>
-          <li>- <code>res.sendFile()</code> - Sends a file as an attachment or inline.</li>
+          <li>- <code>res<i>.send()</i></code> - Sends various types of responses (HTML, plain text, etc.);</li>
+          <li>- <code>res<i>.json()</i></code> - Sends a JSON response;</li>
+          <li>- <code>res<i>.sendFile()</i></code> - Sends a file as an attachment or inline.</li>
         </ul>
         `,
       ],
@@ -257,7 +248,7 @@ app.listen(port, () => {
         highlight1: ['Headers'],
       },
       tooltips: [
-        `<p>Request & Response Headers are <i>pieces of information</i> that we can receive with a request or that we can add to our responses.</p>`,
+        `<p>Request & Response Headers are <i><b>pieces of information</b> that we can receive with a request or that we can add to our responses</i>.</p>`,
         `<h3>Response Headers</h3>
         <p>There are many different standard headers that we can specify to <i>inform the browser or whatever client is receiving a response about the response itself</i>. For example, <code>'Content-Type'</code> header informs the browser that the response it's receive it a HTML response.</p>
        <pre><code>
@@ -288,6 +279,16 @@ server.listen(3000);
         <p>In Node.js, routing refers to the process of defining <i><b>how an application responds to a client request to a particular endpoint</b>, which is a <b>URL (or path)</b> and a specific <b>HTTP request method</b> (GET, POST, etc.)</i>.</p>
         <p><b>Each route can have one or more handler functions, which are executed when the route is matched.</b></p>
         <p><i>Routing is used to perform different actions based on the URL and HTTP method requested.</i> For example, you might have one route to send a user information when they access a webpage via a GET request, and another route to process the information submitted through a form via a POST request.</p>
+        <pre><code>
+const express = require("express");
+
+const router = express.Router();
+
+router
+  .route('/pathName')
+  <i>.get((req, res, next) => {})
+  .post((req, res, next) => {})</i>;
+        </code></pre>
         <p><i>Node.js itself doesn't come with a built-in router</i>, so routing is often handled by Node.js frameworks like Express, which simplify the process of writing server-side code.</p>
         `,
       ],
@@ -343,6 +344,13 @@ const { add, subtract } = require('./mathFunctions');
        `,
       ],
     },
+  ],
+};
+
+const how_node_works = {
+  title: 'How Node.js Works',
+  titleDescription: 'A Look Behind the Scenes',
+  sections: [
     {
       sectionTitle:
         'Blocking and Non-Blocking Code: Asynchronous Nature of Node.js',
@@ -351,7 +359,7 @@ const { add, subtract } = require('./mathFunctions');
         highlight1: ['Asynchronous Nature of Node.js'],
       },
       tooltips: [
-        `<p>Node.js has only <b>one single thread</b>, which means that all the users accessing your web server application are all using the same thread. And so, whenever they're interacting with the application, the code that is run for each user will be executed all in the same thread, at the same place, in the computer running the application. And that happen no matter if you have 5, 5.000 or 5.000.000 users. What this also means is that <i>when one user blocks the single thread with synchronous code, then all other users will have to wait for that execution to finish</i>.</p>
+        `<p>Node.js has only <b>one single thread</b>, which means that <i>all the users accessing your web server application are all using the same thread</i>. And so, whenever they're interacting with the application, the code that is run for each user will be executed all in the same thread, at the same place, in the computer running the application. And that happen no matter if you have 5, 5.000 or 5.000.000 users. What this also means is that <i>when one user blocks the single thread with synchronous code, then all other users will have to wait for that execution to finish</i>.</p>
         <p>Imagine there's a user accessing your application and there's a huge synchronous file read in your code that will take like one second to load. This will mean that for that one second, all other users will have to wait because the entire execution is blocked for that one second. So if those other users want to do some simple tasks, like logging into your application or just requesting some data, they won't be able to do so. They will have to wait until the file is finished reading. Only when that happens they will finally be able to perform the simpler tasks, one after another.</p>
         <p>This is how the situation would play out with synchronous blocking code, which is obviously a terrible experience for your users. And so, it's really your job as a developer to avoid these kinds of situations by using asynchronous code.</p>
         <p><img src="../../src/img/synchronous_vs_asynchronous_01.jpg"/></p>
@@ -407,13 +415,6 @@ server.listen(3000);
         `,
       ],
     },
-  ],
-};
-
-const how_node_works = {
-  title: 'How Node.js Works',
-  titleDescription: 'A Look Behind the Scenes',
-  sections: [
     {
       sectionTitle: 'The Node Lifecycle & Event Loop',
       sectionSource: '',

@@ -7,7 +7,7 @@
   /* Font sizes */
   --font-size-card-title: 2.2rem;
   --font-size-article-title: 1.4rem;
-  --font-size-article-content: 1.6rem;
+  --font-size-article-content: 1.7rem;
   --font-size-article-code: 1.6rem;
   --font-size-title-descriptor: 1.4rem;
   --font-size-highlight: 1.4rem;
@@ -336,7 +336,7 @@ code {
   border-radius: 5px;
   margin: 0 0 3px 20px;
   text-indent: 0px;
-  font-size: 1.7rem;
+  font-size: 1.9rem;
 }
 
 .tooltip_paragraph p,
@@ -372,7 +372,7 @@ i code {
 
 b,
 b code {
-  font-size: 1.5rem;
+  /* font-size: 1.5rem; */
   color: rgb(255, 255, 0);
 }
 
