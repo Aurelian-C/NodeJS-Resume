@@ -827,7 +827,7 @@ app.listen(port, () => {
   console.log('App start running!')
 });
         </code></pre>
-        <p>Express.js handling incoming requests in a certain way called middleware functions. Middleware functions are a key characteristic of Express framework.</p>
+        <p><b>Express.js handling incoming requests in a certain way called middleware functions. Middleware functions are a key characteristic of Express framework.</b></p>
         `,
       ],
     },
@@ -957,7 +957,7 @@ app.use('/api', [middleware1, middleware2]);
           <li>2. By calling <code>next()</code>, the current middleware function signals to Express.js that it has completed its tasks and that the control should be passed to the next middleware function.</li>
           <li>3. If <code>next()</code> is called without any arguments, Express.js proceeds to the next middleware function in the stack. If there are no more middleware functions in the stack, Express.js proceeds to route handlers, or if there are no route handlers, it sends the response back to the client.</li>
         </ul>
-        <p>The <code>next()</code> function can also be used to handle errors within middleware functions. If <code>next()</code> is called with an argument (usually an error object), Express.js will skip all remaining middleware functions in the stack and pass control to the error handling middleware (if one is defined). This allows you to centralize error handling logic in a single middleware function.</p>
+        <p><i><b>The <code>next()</code> function can also be used to handle errors within middleware functions.</b> If <code>next()</code> is called with an argument (usually an error object), Express.js will skip all remaining middleware functions in the stack and pass control to the error handling middleware (if one is defined).</i> This allows you to centralize error handling logic in a single middleware function.</p>
         <p>If an error occurs in any middleware function or route handler and <code>next(err)</code> is called with the error object, Express.js will pass control to the error handling middleware, which can then handle the error and send an appropriate response back to the client.</p>
         `,
       ],
@@ -1069,9 +1069,9 @@ app.use(mw(<i>{ option1: '1', option2: '2' }</i>))
       tooltips: [
         `<h3>Introduction</h3>
         <p>Environment variables is not exactly about Express.js, it really has to do with Node.js development in general.</p>
-        <p>Node.js or Express.js apps can run in different environments, and the most important ones are the <u>development</u> environment and the <u>production</u> environment. That's because depending on the environment, we might use different databases, or we might turn login on or off, or we might turn debugging on or off, or really all kinds of different settings that might change depending on the development that we're in. So this type of setting that I just mentioned, like different databases or login turned on or off, that will be based on environment variables.</p>
-        <p>By default, Express.js sets the environment to development, which makes a lot of sense because that's what we're doing when we start a new project.</p>
-        <p>In Express.js, many packages depend on a special variable called node <code>NODE_ENV</code>. <code>NODE_ENV</code> is a variable that's kind of a convention which should define whether we're in development or in production mode. However, Express.js does not really define automatically the <code>NODE_ENV</code> variable, so we as developers have to do that manually.</p>
+        <p><i>Node.js or Express.js apps can run in different environments, and the most important ones are the <u>development</u> environment and the <u>production</u> environment.</i> That's because depending on the environment, we might use different databases, or we might turn login on or off, or we might turn debugging on or off, or really all kinds of different settings that might change depending on the development that we're in. So this type of setting that I just mentioned, like different databases or login turned on or off, that will be based on environment variables.</p>
+        <p><i>By default, Express.js sets the environment to development</i>, which makes a lot of sense because that's what we're doing when we start a new project.</p>
+        <p>In Express.js, many packages depend on a special variable called <code>NODE_ENV</code>. <code>NODE_ENV</code> is a variable that's kind of a convention which should define whether we're in development or in production mode. However, Express.js does not really define automatically the <code>NODE_ENV</code> variable, so we as developers have to do that manually.</p>
         <ul>There are multiple ways in which we can do it:
           <li>- by using the command terminal: <code>NODE_ENV=development nodemon app.js</code>;</li>
           <li>- by using a <code>config.env</code> file.</li>
