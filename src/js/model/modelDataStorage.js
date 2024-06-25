@@ -1425,7 +1425,7 @@ const dynamic_routes_and_advanced_models = {
       sectionTitle: 'Module introduction',
       sectionSource: '',
       tooltips: [
-        `<p>We need the ability to <i>pass some dynamic data through our routes</i>. We want to be able to <i>encode some information in our URL</i>, so that we can, for example, pass a product ID as part of the URL. In this module, you will learn how you can do that, how you can actually <i>submit or send data through the URL</i>, and when you would not do that and put your data into the request body instead.</p>
+        `<p>We need the ability to <b>pass some dynamic data through our routes</b>. We want to be able to <i>encode some information in our URL</i>, so that we can, for example, pass a product ID as part of the URL. In this module, you will learn how you can do that, how you can actually <i>submit or send data through the URL</i>, and when you would not do that and put your data into the request body instead.</p>
         <ul>You will learn about how to:
          <li>- pass <i>Route <u>Dynamic</u> Params</i>;</li>
          <li>- pass <i>Route <u>Optional</u> Params</i>;</li>
@@ -1442,9 +1442,9 @@ const dynamic_routes_and_advanced_models = {
       tooltips: [
         `<p>Route parameters are named URL segments that are used to capture the values specified at their position in the URL. <i>The captured values are populated in the <b><code>req.params</code></b> object</i>, with the name of the route parameter specified in the path as their respective keys.</p>
         <pre><code>
-Route path: /users/<i>:userId</i>/books/<i>:bookId</i>
+Route path: /users/<b>:userId</b>/books/<b>:bookId</b>
 Request URL: http://localhost:3000/users/34/books/8989
-<i>req.params</i>: { "userId": "34", "bookId": "8989" }
+<b>req.params</b>: { "userId": "34", "bookId": "8989" }
         </code></pre>
         <p>To define routes with route parameters, simply specify the route parameters in the path of the route as shown below.</p>
         <pre><code>
