@@ -5119,7 +5119,8 @@ export const dataStorage = [
   // nodeJS_and_TypeScript,
 ];
 
-dataStorage.forEach(el => {
+dataStorage.forEach((el, index) => {
+  el.titleNumber = index + 1;
   el.sections.forEach((section, idx) => (section.sectionNumber = idx + 1));
 });
 
