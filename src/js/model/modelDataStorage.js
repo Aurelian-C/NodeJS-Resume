@@ -5119,6 +5119,10 @@ export const dataStorage = [
   // nodeJS_and_TypeScript,
 ];
 
+dataStorage.forEach(el => {
+  el.sections.forEach((section, idx) => (section.sectionNumber = idx + 1));
+});
+
 const allSections = dataStorage.map(el => el.sections).flat();
 export const allArticles = allSections
   .map(el => {
