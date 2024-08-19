@@ -34,7 +34,7 @@ const introduction = {
         `<h3>HTTP/HTTPS Protocol</h3>
         <p>Hypertext Transfer Protocol (HTTP) and its secure variant HTTPS are <i><u>communication protocols</u> used for <u>transferring data</u> on the web</i>. When you request a web page by entering a URL or clicking a link, your browser sends an HTTP request to the server, which responds with the requested content.</p>`,
         `<h3>Request-Response Cycle</h3>
-        <p>The client sends an <i>HTTP request</i> to the server, specifying the resource it wants (e.g., a web page). The server processes the request and sends back an <i>HTTP response</i> containing the requested resource. This cycle forms the basis of how information is exchanged on the web.</p>`,
+        <p>The client sends an <b>HTTP request</b> to the server, specifying the resource it wants (e.g., a web page). The server processes the request and sends back an <b>HTTP response</b> containing the requested resource. This cycle forms the basis of how information is exchanged on the web.</p>`,
         `<h3>HTML, CSS, JavaScript</h3>
         <p>The content of web pages is typically created using HTML (Hypertext Markup Language) for structure, CSS (Cascading Style Sheets) for styling, and JavaScript for interactivity. When your browser receives the HTML content from the server, it parses and renders it, fetching additional resources like stylesheets and scripts as needed.</p>`,
         `<h3>Web Servers and Hosting</h3>
