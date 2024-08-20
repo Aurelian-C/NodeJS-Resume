@@ -85,8 +85,8 @@ const understanding_the_basics = {
         highlight2: ['Core (Build-In) Modules'],
       },
       tooltips: [
-        `<p><i>Node.js is <b>built around a concept of modules</b></i>, where all kinds of <b><u>additional functionality</u> are stored in a module</b>. For example, if you want to read a file from your system, you will use a module called <code>fs</code> (<code>fs</code> stands for file system).</p>
-        <p>How do we open up these modules, or how can we use them? Well, we do <b><code>require()</code></b> them into our code, and then store the result of the <code>require()</code> function into a variable. For example:
+        `<p><i>Node.js is <b>built around a concept of modules</b>, where all kinds of <b><u>additional functionality</u> are stored in a module</b>.</i> For example, if you want to read a file from your system, you will use a module called <code>fs</code> (<code>fs</code> stands for file system).</p>
+        <p>How do we open up these modules, or how can we use them? Well, we do <i><b><code>require()</code></b> them into our code, and then store the result of the <code>require()</code> function into a variable</i>. For example:
         <pre><code>
 const fs = <b>require("fs")</b>;
         </code></pre>
@@ -124,14 +124,17 @@ const server = <i>http<b>.createServer</b></i>((<i>req</i>, <i>res</i>) => {
 // 2. Start the server
 <i>server<b>.listen</b></i>(3000);
       </code></pre>
-      <p>Let's analyze what the code above does: we created our server, using <code>createServer()</code> and passed in it a callback function that is executed each time that a new request hits the server. Then we started listening for incoming requests on the on port 3000.</p>
-      <p>NOTE: <code>http.createServer</code> will accept a callback function, which will be <i>fired off each time a new request hits our server</i>. And this callback function gets access to two very important and fundamental objects: it is the request (<code>req</code>) object, and a response (<code>res</code>) object.</p>
+      <ul>Let's analyze what the code above does:
+        <li>- we created our server, using <code>createServer()</code> and passed in it a callback function that is <i>executed each time that a new request hits the server</i>;</li>
+        <li>- then we started <i>listening for incoming requests on the on port</i> 3000.</li>
+      </ul>
+      <p>NOTE: <code>http.createServer</code> will accept a callback function, which will be <u>fired off each time a new request hits our server</u>. And this callback function gets access to two very important and fundamental objects: it is the <i>request (<b><code>req</code></b>) object</i>, and a <i>response (<b><code>res</code></b>) object</i>.</p>
       `,
         `<h3>Request (<code>req</code>) and Response (<code>res</code>) objects</h3>
       <p>The request (<code>req</code>) and response (<code>res</code>) objects are fundamental components used to <i>handle HTTP requests and responses</i>.</p>
       <p>The <code>req</code> object represents the HTTP request and has properties for the request query string, parameters, body, HTTP headers, and more.</p>
       <p>The <code>res</code> object represents the HTTP response that a Node.js app sends when it gets an HTTP request.</p>
-      <p>Understanding <code>req</code> and <code>res</code> objects is crucial for handling HTTP interactions in Node.js apps.</p>
+      <p><i>Understanding <code>req</code> and <code>res</code> objects is crucial for handling HTTP interactions</i> in Node.js apps.</p>
       `,
       ],
     },
@@ -144,13 +147,13 @@ const server = <i>http<b>.createServer</b></i>((<i>req</i>, <i>res</i>) => {
       tooltips: [
         `<p>In Node.js, handling HTTP requests is a fundamental task, especially when building a server. Here’s a basic guide to understanding and working with requests in Node.js</p>`,
         `<h3>Handling HTTP Requests</h3>
-        <p><i>GET Request</i>: to handle a GET request, you <i>define a route</i> and <i>a callback function that sends a response</i>:</p>
+        <p><b>GET Request</b>: to handle a GET request, you <i>define a route</i> and <i>a callback function that sends a response</i>:</p>
         <pre><code>
 app<i>.get</i>('/', (req, res) => {
   res.send('Hello, World!');
 });
         </code></pre>
-        <p><i>POST Request</i>: to handle a POST request, you also define a route and a callback function. Typically, you’ll also need middleware to parse the request body:</p>
+        <p><b>POST Request</b>: to handle a POST request, you also <i>define a route</i> and <i>a callback function</i>. Typically, you’ll also need middleware to parse the request body:</p>
         <pre><code>
 const bodyParser = require('body-parser');
 
@@ -190,10 +193,10 @@ const http = require('http');
 
 const server = http.createServer((req, res) => {
   //Setting response header
-  res.writeHead(200, { 'Content-Type': 'text/plain' });
+  <i>res.writeHead</i>(200, { 'Content-Type': 'text/plain' });
   
   //Sending response body
-  <i>res.send('Hello, World!');</i>
+  <i>res.send</i>('Hello, World!');
 });
 
 server.listen(3000, () => {
@@ -230,13 +233,13 @@ app.listen(port, () => {
         </code></pre>
         `,
         `<h3>Key Concepts</h3>
-        <p><i>Response <b>Headers</b></i>: Headers provide essential information about the response such as content type, status, etc.</p>
-        <p><i>Response <b>Body</b></i>: The body contains the data sent back to the client.</p>
-        <p><b>Status Codes</b>: Status codes indicate the result of the HTTP response.</p>
-        <ul>Sending Different Types of Responses:
-          <li>- <code>res<i>.send()</i></code> - Sends various types of responses (HTML, plain text, etc.);</li>
-          <li>- <code>res<i>.json()</i></code> - Sends a JSON response;</li>
-          <li>- <code>res<i>.sendFile()</i></code> - Sends a file as an attachment or inline.</li>
+        <p><b>Response <u>Headers</u></b>: Headers <i>provide essential information about the response</i> such as content type, status, etc.</p>
+        <p><b>Response <u>Body</u></b>: The body contains <i>the data sent back to the client</i>.</p>
+        <p><b><u>Status</u> Codes</b>: Status codes <i>indicate the result of the HTTP response</i>.</p>
+        <ul>Sending <i>Different Types of Responses</i>:
+          <li>- <code>res<b>.send()</b></code> - Sends <i>various types</i> of responses (HTML, plain text, etc.);</li>
+          <li>- <code>res<b>.json()</b></code> - Sends a <i>JSON</i> response;</li>
+          <li>- <code>res<b>.sendFile()</b></code> - Sends <i>a file</i> as an attachment or inline.</li>
         </ul>
         `,
       ],
@@ -250,7 +253,7 @@ app.listen(port, () => {
       tooltips: [
         `<p>Request & Response Headers are <i><b>pieces of information</b> that we can receive with a request or that we can add to our responses</i>.</p>`,
         `<h3>Response Headers</h3>
-        <p>There are many different standard headers that we can specify to <i>inform the browser or whatever client is receiving a response about the response itself</i>. For example, <code>'Content-Type'</code> header informs the browser that the response it's receive it a HTML response.</p>
+        <p>There are many different standard headers that we can specify to <b>inform the browser or whatever client is receiving a response about the response itself</b>. For example, <code>'Content-Type'</code> header informs the browser that the response it's receive it a HTML response.</p>
        <pre><code>
 const http = require('http');
 
@@ -263,7 +266,7 @@ const server = http.createServer((req, res) => {
 
 server.listen(3000);
         </code></pre>
-        <p>There are many more headers that you can specify on your response. You can also specify our own made-up headers.</p>
+        <p><i>There are many more headers that you can specify on your response.</i> You can also specify your own made-up headers.</p>
         <p>IMPORTANT: It's important to understand that, <i>in a the case you want to add headers to a response, you need to <b>set them before sending the response</b></i>.</p>
         `,
       ],
@@ -275,10 +278,8 @@ server.listen(3000);
         highlight1: ['Routing'],
       },
       tooltips: [
-        `<p>With routing, you can <i>write Node.js code that <b>react to URL that a user is requesting</b></i>. So, routing basically means <i>implementing different actions for different URLs</i>.</p>
-        <p>In Node.js, routing refers to the process of defining <i><b>how an application responds to a client request to a particular endpoint</b>, which is a <b>URL (or path)</b> and a specific <b>HTTP request method</b> (GET, POST, etc.)</i>.</p>
-        <p><b>Each route can have one or more handler functions, which are executed when the route is matched.</b></p>
-        <p><i>Routing is used to perform different actions based on the URL and HTTP method requested.</i> For example, you might have one route to send a user information when they access a webpage via a GET request, and another route to process the information submitted through a form via a POST request.</p>
+        `<p>With routing, you can <b>write Node.js <u>code that react to URL</u> that a user is requesting</b>. So, routing basically means <i>implementing <u>different actions</u> for <u>different URLs</u></i>.</p>
+        <p>In Node.js, routing refers to the process of defining <i><b>how an application responds to a client request to a particular endpoint</b>, which is a <b>URL (or path)</b> and a specific <b>HTTP request method</b> (GET, POST, etc.). Routing is used to perform different actions based on the URL and HTTP method requested.</i> For example, you might have one route to send a user information when they access a webpage via a GET request, and another route to process the information submitted through a form via a POST request.</p>
         <pre><code>
 const express = require("express");
 
@@ -289,6 +290,7 @@ router
   <i>.get((req, res, next) => {})
   .post((req, res, next) => {})</i>;
         </code></pre>
+        <p><i><b>Each route can have one or more handler functions</b>, which are executed when the route is matched.</i></p>
         <p><i>Node.js itself doesn't come with a built-in router</i>, so routing is often handled by Node.js frameworks like Express, which simplify the process of writing server-side code.</p>
         `,
       ],
@@ -300,21 +302,21 @@ router
         highlight1: [],
       },
       tooltips: [
-        `<p>We can create our own modules and export something from them, like for example, a function. Then we can import this function into another module, and then use that function there.</p>
+        `<p>We can <i>create our own modules and export something from them</i>, like for example, a function. Then we can import this function into another module, and then use that function there.</p>
         <p>You need to know that <b>in Node.js every single file is treated as a module</b>.</p>
-        <p>Node.js uses the <i>CommonJS module system</i> for importing and exporting modules within and across files. This system is primarily used for server-side development and is native to Node.js.</p>
+        <p><i>Node.js uses the <b>CommonJS module system</b> for importing and exporting modules within and across files.</i> This system is primarily used for server-side development and <i>is native to Node.js</i>.</p>
         `,
         `<h3>Exporting in Node.js</h3>
         <p>To export a module, function, object, or any variable from a file in Node.js, you use the <b><code>module.exports</code></b> object or the <b><code>exports</code></b> shorthand.</p>`,
         `<h3>Export a <u>single</u> entity</h3>
-        <p>If you want to <i>export a <u>single</u> function, object, or class</i> from a file, you can assign it directly to <code>module.exports</code>:</p>
+        <p>If you want to <i>export a <u>single</u> function, object, or class</i> from a file, you can <i><u>assign it directly</u> to <code>module.exports</code></i>:</p>
         <pre><code>
 <b>module.exports</b> = function sayHello(name) {
   return "Hello world!";
 };
         </code></pre>`,
         `<h3>Export <u>multiple</u> entities</h3>
-        <p>To <i>export <u>multiple</u> entities</i>, you can add them as properties of the <code>module.exports</code> object or <code>module.exports</code> object:</p>
+        <p>To <i>export <u>multiple</u> entities</i>, you can <i><u>add them as properties</u> of the <code>module.exports</code> object or <code>module.exports</code> object</i>:</p>
         <pre><code>
 <b>exports.</b>add = function(a, b) {
   return a + b;
@@ -331,15 +333,15 @@ router
 const sayHello = require('./sayHello');
 
 const mathFunctions = require('./mathFunctions');
-console.log(mathFunctions.add;
+console.log(mathFunctions.add);
 console.log(mathFunctions.subtract); 
 
-//or use destructuring
+//or <i>use destructuring</i>
 const { add, subtract } = require('./mathFunctions');
         </code></pre>
         `,
         `<h3>ES Modules in Node.js</h3>
-       <p><i>Node.js also supports ES Modules (ESM)</i>, a newer module system used in modern JavaScript development for both client and server side. ESM uses <code>import</code> and <code>export</code> statements and <i>is enabled by adding <code>"type": "module"</code> in your package.json</i> file or <i>using the <code>.mjs</code> extension for your modules</i>.</p>
+       <p><b>Node.js also supports ES Modules (ESM)</b>, a newer module system used in modern JavaScript development for both client and server side. ESM uses <code>import</code> and <code>export</code> statements and <i>is enabled by adding <code>"type": "module"</code> in your package.json</i> file or <i>using the <code>.mjs</code> extension for your modules</i>.</p>
        <p>You can choose between CommonJS and ESM depending on your project's compatibility and your team's preference.</p>
        `,
       ],
