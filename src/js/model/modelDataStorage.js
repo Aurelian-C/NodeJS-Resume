@@ -361,13 +361,13 @@ const how_node_works = {
         highlight1: ['Asynchronous Nature of Node.js'],
       },
       tooltips: [
-        `<p>Node.js has only <b>one single thread</b>, which means that <i>all the users accessing your web server application are all using the same thread</i>. And so, whenever they're interacting with the application, the code that is run for each user will be executed all in the same thread, at the same place, in the computer running the application. And that happen no matter if you have 5, 5.000 or 5.000.000 users. What this also means is that <i>when one user blocks the single thread with synchronous code, then all other users will have to wait for that execution to finish</i>.</p>
+        `<p>Node.js has only <b>one single thread</b>, which means that <i>all the users accessing your web server application are all using the same thread</i>. And so, whenever they're interacting with the application, the code that is run for each user will be executed all in the same thread, at the same place, in the computer running the application. And that happen no matter if you have 5, 5.000 or 5.000.000 users. What this also means is that <b>when one user blocks the single thread with synchronous code, then all other users will have to wait for that execution to finish</b>.</p>
         <p>Imagine there's a user accessing your application and there's a huge synchronous file read in your code that will take like one second to load. This will mean that for that one second, all other users will have to wait because the entire execution is blocked for that one second. So if those other users want to do some simple tasks, like logging into your application or just requesting some data, they won't be able to do so. They will have to wait until the file is finished reading. Only when that happens they will finally be able to perform the simpler tasks, one after another.</p>
         <p>This is how the situation would play out with synchronous blocking code, which is obviously a terrible experience for your users. And so, it's really your job as a developer to avoid these kinds of situations by using asynchronous code.</p>
         <p><img src="../../src/img/synchronous_vs_asynchronous_01.jpg"/></p>
         `,
         `<h3>Synchronous vs Asynchronous Node.js code</h3>
-        <p>Being a single thread, synchronous code become a problem especially with slow operations, because each line of code blocks the execution of the rest of the code. So we say that <i>synchronous code is also called blocking code</i> because a certain operation can only be executed after the one before has finished.</p>
+        <p>Being a single thread, synchronous code <i>become a problem especially with slow operations</i>, because <i>each line of code blocks the execution of the rest of the code.</i> So we say that <b>synchronous code is also called blocking code</b> because <i>a certain operation can only be executed after the one before has finished</i>.</p>
         <p>An example of synchronous code:</p>
         <pre><code>
 const fs = require('fs');
@@ -377,7 +377,7 @@ const textFile = <b>fs.readFileSync</b>('./textFolder/textFile.text', 'utf-8');
 
 console.log(textFile);
         </code></pre>
-        <p>Because of the way Node.js was designed, synchronous code turns into a huge problem. The solution to synchronous code problem in Node.js is to <i>use asynchronous code (non-blocking code)</i>:</p>
+        <p>Because of the way Node.js was designed, synchronous code turns into a huge problem. The solution to synchronous code problem in Node.js is to <b>use asynchronous code (non-blocking code)</b>:</p>
         <pre><code>
 const fs = require('fs');
 
@@ -390,7 +390,7 @@ console.log('Reading file...');
         </code></pre>
         `,
         `<h3><code>fs.readFileSync</code> (Synchronous) vs <code>fs.readFile</code> (Asynchronous)</h3>
-        <p><i><code>fs.readFileSync</code> is a <u>synchronous</u> function</i> that blocks the code execution until it's finish execution. On the other hand, <i><code>fs.readFile</code> is an <u>asynchronous</u> function</i> that receives a callback function as a parameter, and this callback will be called with the data (result) when <code>fs.readFile</code> finish it's execution. In that time, the code execution is NOT blocked.</p>
+        <p><i><code>fs.readFileSync</code> is a <u>synchronous</u> function</i> that blocks the code execution until it's finish execution. On the other hand, <i><code>fs.readFile</code> is an <u>asynchronous</u> function</i> that receives a callback function as a parameter, and this callback will be called with the data (result) when <code>fs.readFile</code> finish it's execution. <i>In that time, the code execution is NOT blocked.</i></p>
         <p>IMPORTANT: It's YOUR job as a developer to avoid blocking code execution by using asynchronous code. This is actually the whole reason why <b>Node.js is completely designed around callbacks to implement asynchronous behavior</b>.</p>`,
         `<h3>Node.js asynchronous functions</h3>
         <p>It's important to know that, <i>when we use callbacks in our code, that doesn't automatically make it asynchronous</i>. So, passing functions around into other functions is quite common in JavaScript, but that doesn't make them asynchronous automatically. It only works this way for some functions in the Node.js, such as the <code>fs.readFile</code> function and many others.</p>
@@ -398,7 +398,7 @@ console.log('Reading file...');
         `<h3>Node.js vs other programming languages</h3>
         <p>In other programming languages, like PHP, it works very differently, because you get one new thread for each new user, which really works completely different. But the creator of Node.js found this model to be the best solution for building highly performant and scalable web applications.</p>`,
         `<h3>Node.js top-level code it's <u>only executed once</u> when the server starts</h3>
-        <p>The code that is outside the callback functions, so the so called <i><b>top level code is <u>only executed once</u> we start the server</b>, and so in that situation, it doesn't matter at all if it blocks the code execution, because it happens only once, and only when the server actually starts:</i></p>
+        <p><i>The code that is outside the callback functions, so the so called <b>top level code is <u>only executed once</u> we start the server</b>, and so in that situation, it doesn't matter at all if it blocks the code execution, because it happens only once, and only when the server actually starts:</i></p>
         <pre><code>
 const http = require('http');
 const fs = require('fs');
@@ -412,8 +412,8 @@ const server = http.createServer((req, res) => {
 
 server.listen(3000);
         </code></pre>
-        <p>You gone use this technique when you want to handle data right when a server start. So maybe you want to use some data and to be avaible right when the server starts.</p>
-        <p>The secret is simply to know which code is only executed once and only at the beginning, when the server starts, and which code gets executed over and over again, and is therefore problematic when blocking the Event Loop.</p>
+        <p><i>You gone use this technique when you want to handle data right when a server start.</i> So maybe you want to use some data and to be avaible right when the server starts.</p>
+        <p><i>The secret is simply to know which code is only executed once and only at the beginning, when the server starts, and which code gets executed over and over again</i>, and is therefore problematic when blocking the Event Loop.</p>
         `,
       ],
     },
@@ -520,9 +520,10 @@ myEmitter<i>.emit</i>('newSale', 9);
       sectionSource: '',
       tooltips: [
         `<p>Remember when create a simple server? When we start that server and listening for incoming request, Node.js cannot simply exit the processs (exit the program), because the whole goal is to wait for the requests to come in.</p>
-        <p>In Node.js, <code>process.exit()</code> is a method used to terminate the Node.js process.</p>
-        <p>When <code>process.exit()</code> is called, the Node.js <i>event loop is stopped immediately</i>, and no further asynchronous operations are performed. It's often used to forcefully terminate the application under certain conditions, like critical errors or when a specific condition is met.</p>
+        <p><b>In Node.js, <code>process.exit()</code> is a method used to terminate the Node.js process.</b></p>
+        <p><i>When <code>process.exit()</code> is called, the Node.js <b>event loop is stopped immediately</b>, and no further asynchronous operations are performed.</i> It's often used to forcefully terminate the application under certain conditions, like critical errors or when a specific condition is met.</p>
         <p>However, it's important to <i>use <code>process.exit()</code> with caution, especially in production code</i>, as it doesn't allow graceful shutdown and can leave resources in an inconsistent state. It's generally recommended to handle errors and shutdown gracefully whenever possible.</p>
+        <p>NOTE: <i><code>process</code> is a <u>global feature</u></i> provided by Node.js without the need for explicit import or inclusion. Node.js provide many these features that are built-in and can be accessed directly.</p>
         `,
       ],
     },
