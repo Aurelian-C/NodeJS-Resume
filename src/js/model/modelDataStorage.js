@@ -10,6 +10,12 @@ const introduction = {
         <p>If you are used to run JavaScript in the browser, then the browser is a runtime environment for JavaScript.</p>
         <p>Node.js is just another <b>JavaScript runtime environment</b> build on Google's open-source V8 JavaScript Engine that <i>allows you to run JavaScript code outside of a web browser</i>, without all the restrictions that are in the browser.</p>
         <p><img src="../../src/img/what_is_node_01.jpg"/></p>
+        <p>In order for Node.js do a lot more than just read JavaScript with the help of Google V8 Engine, it might want to do different things: maybe read files, access databases, maybe just run, some things that aren't part of the V8 Engine, aren't part of JavaScript. And that's where the libuv comes in.</p>
+        <p>Any time Node.js sees something that maybe isn't part of JavaScript, it's going to communicate with the libuv library. <i>So Node.js is essentially an environment to run JavaScript outside of the browser, but that gives us a little bit more than just the V8 engine.</i></p>
+        <p><img src="../../src/img/what_is_node_02.jpg"/></p>
+        <p>IMPORTANT: Node.js is not a programming language, is not a framework. Node.js is a JavaScript runtime.</p>
+        <p><img src="../../src/img/what_is_node_04.jpg"/></p>
+        <p><i>In order to run JavaScript on your PC (outside the browser), you need to install Node.js. Node.js provides you tools to run JavaScript outside of the browser.</i> Is like when you download and install a browser on your computer to run JavaScript on it. Browsers and Node.js provides tools to run JavaScript in different environments. <i>Without these environments (Browser or Node.js), your PC can't read JavaScript code by it's own.</i></p>
         <p>Node.js provides a set of <b>build-in modules</b>, <b>libraries</b> and <b>tools</b> for <i>building server-side and networking applications</i>.</p>`,
         `<h3>What is it used for?</h3>
         <p>Node.js is commonly used for building <i>web servers</i>, <i>APIs</i> (Application Programming Interfaces), real-time chat applications, streaming applications, and other networked applications.</p>
