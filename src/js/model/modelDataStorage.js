@@ -522,6 +522,35 @@ myEmitter<i>.emit</i>('newSale', 9);
       ],
     },
     {
+      sectionTitle: 'Node.js <code>global</code> object',
+      sectionSource: '',
+      tooltips: [
+        `<p>In Node.js, the <code>global</code> object is a <b>built-in object that serves as the top-level namespace</b> for variables, functions, and objects that are accessible from anywhere in your Node.js application. This object allows you to define properties and functions globally, meaning they can be accessed from any module within your application without requiring an import or export.</p>
+        <p>The Node.js <code>global</code> object and the browser's <code>window</code> object serve similar purposes in their respective environments, but are fundamentally different in where and how they are used.</p>
+        <p><img src="../../src/img/global_object_01.jpg"/></p>
+        `,
+        `<h3><code>global</code> Object in Node.js</h3>
+        <p>The <code>global</code> object in Node.js is the equivalent of the <code>window</code> object in the browser. It is available in all modules and represents the global namespace.</p>
+        <p>The <code>global</code> object can be used to store variables, functions, or other properties that you want to be accessible across different modules in your Node.js application.</p>
+        <p>By default, objects and functions defined globally in a Node.js module are not added to <code>global</code>, unlike in the browser where everything is added to <code>window</code>.</p>
+        `,
+        `<h3><code>window</code> Object in Browser</h3>
+        <p>The <code>window</code> object is specific to browser environments and represents the window in which the script is running. It serves as the global object for JavaScript running in a browser.</p>
+        <p>It is the global context for all JavaScript code running in the browser. All global variables, functions, and objects automatically become properties of <code>window</code>.</p>
+        `,
+        `<h3>Key Differences</h3>
+        <ul>1. Environment:
+          <li>- <i><code>global</code> is used in Node.js</i>, a server-side runtime environment.</li>
+          <li>- <i><code>window</code> is used in browsers</i>, a client-side environment.</li>
+        </ul>
+        <ul>2. APIs and Properties::
+          <li>- <code>global</code> in Node.js <i>includes properties and methods specific to server-side development</i>, like <code>process</code>, <code>Buffer</code>, and <code>require</code>.</li>
+          <li>- <code>window</code> in the browser <i>includes properties and methods specific to the client-side</i>, like <code>document</code>, <code>navigator</code>, and DOM-related APIs.</li>
+        </ul>
+        `,
+      ],
+    },
+    {
       sectionTitle: 'Controlling the Node.js process',
       sectionSource: '',
       tooltips: [
@@ -529,6 +558,13 @@ myEmitter<i>.emit</i>('newSale', 9);
         <p><b>In Node.js, <code>process.exit()</code> is a method used to terminate the Node.js process.</b></p>
         <p><i>When <code>process.exit()</code> is called, the Node.js <b>event loop is stopped immediately</b>, and no further asynchronous operations are performed.</i> It's often used to forcefully terminate the application under certain conditions, like critical errors or when a specific condition is met.</p>
         <p>However, it's important to <i>use <code>process.exit()</code> with caution, especially in production code</i>, as it doesn't allow graceful shutdown and can leave resources in an inconsistent state. It's generally recommended to handle errors and shutdown gracefully whenever possible.</p>
+        <ul>The <code>process</code> object is a global that provides information about, and control over, the current Node.js process. As a global, it is always available to Node.js applications without using <code>require()</code>. It can also be explicitly accessed using <code>require()</code>:
+          <li>
+            <pre><code>
+const process = require('process');
+            </code></pre>
+          </li>
+        </ul>
         <p>NOTE: <i><code>process</code> is a <u>global feature</u></i> provided by Node.js without the need for explicit import or inclusion. Node.js provide many these features that are built-in and can be accessed directly.</p>
         `,
       ],
