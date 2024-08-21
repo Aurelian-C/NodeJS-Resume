@@ -154,11 +154,6 @@ server.listen(3000);
         highlight1: ['Event Loop'],
       },
       tooltips: [
-        `<p><img src="../../src/img/behind_the_scenes_01.jpg"/></p>
-        <p><img src="../../src/img/behind_the_scenes_02.jpg"/></p>
-        <p><img src="../../src/img/behind_the_scenes_03.jpg"/></p>
-        
-        `,
         `<ul>The lifecycle of a Node.js application revolves around its <i>event-driven</i>, <i>non-blocking architecture</i>, which is facilitated by the event loop. Here's an overview:
         <p><img src="../../src/img/what_is_node_04.jpg"/></p>
           <li><h3>1. Initialization</h3>
@@ -170,19 +165,19 @@ server.listen(3000);
           </li>
       
           <li><h3>3. Event Loop</h3>
-            <p><i>The event loop is at the core of Node.js's asynchronous nature. It continuously checks for events in the event queue and executes their associated callback functions. The event loop keeps the Node.js process running and responsive, even when handling I/O operations.</i></p>
+            <p><i><b>The event loop is at the core of Node.js's asynchronous nature.</b> It continuously checks for events in the event queue and executes their associated callback functions. The event loop keeps the Node.js process running and responsive, even when handling I/O operations.</i></p>
           </li>
       
           <li><h3>4. Non-Blocking I/O Operations</h3>
-            <p><i>Node.js uses non-blocking I/O operations, which means that it can perform I/O tasks (like reading from files or making network requests) without waiting for the operation to complete.</i> Instead, it delegates these tasks to the operating system and continues executing other code.</p>
+            <p><i>Node.js <b>uses non-blocking I/O operations, which means that it can perform I/O tasks (like reading from files or making network requests) without waiting for the operation to complete.</b></i> Instead, it delegates these tasks to the operating system and continues executing other code.</p>
           </li>
       
           <li><h3>5. Event-Driven Architecture</h3>
-            <p><i>Node.js is event-driven, meaning that it relies heavily on <u>events and callbacks to handle asynchronous operations</u>.</i> When an asynchronous operation completes or a certain condition is met, it triggers an event, which is then processed by the event loop.</p>
+            <p><i>Node.js is event-driven, meaning that it <b>relies heavily on events and callbacks to handle asynchronous operations</b>.</i> When an asynchronous operation completes or a certain condition is met, it triggers an event, which is then processed by the event loop.</p>
           </li>
       
           <li><h3>6. Event Queue and Callbacks</h3>
-            <p>Asynchronous operations in Node.js typically <i>use callbacks to handle the results of the operation</i>. When an asynchronous operation completes, its callback function is pushed onto the event queue. The event loop picks up these callback functions from the queue and executes them one by one.</p>
+            <p>Asynchronous operations in Node.js typically <i>use <u>callbacks</u> to handle the results of the operation. When an asynchronous operation completes, its callback function is pushed onto the event queue. The event loop picks up these callback functions from the queue and executes them one by one.</i></p>
           </li>
       
           <li><h3>7. Concurrency and Scalability</h3>
@@ -190,10 +185,14 @@ server.listen(3000);
           </li>
       
           <li><h3>8. Termination</h3>
-            <p>Node.js applications terminate either when all event listeners have been removed and there are no more callbacks to execute, or when explicitly terminated by the user or the operating system.</p>
+            <p>Node.js applications terminate either <i>when all event listeners have been removed and there are no more callbacks to execute</i>, or <i>when explicitly terminated by the user or the operating system</i>.</p>
           </li>
       </ul>`,
         `<p>Understanding the Node.js event loop and its lifecycle is crucial for writing efficient, scalable, and responsive applications. It allows developers to leverage asynchronous programming paradigms effectively and build high-performance applications that can handle large numbers of simultaneous connections.<p>`,
+        `<p><img src="../../src/img/behind_the_scenes_01.jpg"/></p>
+        <p><img src="../../src/img/behind_the_scenes_02.jpg"/></p>
+        <p><img src="../../src/img/behind_the_scenes_03.jpg"/></p>
+        `,
       ],
     },
     {
@@ -203,12 +202,12 @@ server.listen(3000);
         highlight1: ['Event Driven Arhitecture'],
       },
       tooltips: [
-        `<p>Event-driven programming is a paradigm in which <b>the flow of the program is determined by events</b> such as user actions (e.g., mouse clicks, key presses), system notifications (e.g., file I/O completion, network requests), or timer expirations. Node.js is a popular runtime environment for JavaScript that is built on an event-driven architecture, allowing developers to write highly scalable and efficient server-side applications.</p>`,
+        `<p>Event-driven programming is a paradigm in which <b>the flow of the program is determined by events</b> such as <i><u>user actions</u></i> (e.g., mouse clicks, key presses), <i><u>system notifications</u></i> (e.g., file I/O completion, network requests), or <i><u>timer expirations</u></i>. Node.js is a popular runtime environment for JavaScript that is built on an event-driven architecture, allowing developers to write highly scalable and efficient server-side applications.</p>`,
         `<ul><i>In Node.js, the event-driven model is implemented using the <b><code>EventEmitter</code> class</b>, which provides methods for <b>emitting events</b> and <b>registering listeners</b> for those events.</i> Here's how event-driven code execution works in Node.js:
-          <li>1. <b>Event Emitters</b>: An event emitter is an object that emits named events. It maintains a list of listeners, which are functions that are executed in response to a particular event being emitted.</li>
+          <li>1. <b>Event Emitters</b>: <i>An event emitter is an object that emits <u>named events</u>.</i> It maintains a list of listeners, which are functions that are executed in response to a particular event being emitted.</li>
           <li>2. <b>Event Listeners</b>: <i>Event listeners are functions that are registered to handle specific events emitted by event emitters. When an event emitter emits an event, all registered listeners for that event are invoked.</i></li>
           <li>3. <i>Asynchronous Execution: Event-driven programming in Node.js is inherently asynchronous.</i> When an asynchronous operation (e.g., file I/O, network request) is initiated, Node.js does not block the execution of subsequent code. Instead, it continues executing the remaining code and registers a callback function to be invoked once the asynchronous operation completes.</li>
-          <li>4. Non-blocking I/O: Node.js employs non-blocking I/O operations, meaning that it can handle multiple concurrent I/O operations without waiting for each operation to complete before starting the next one. This allows Node.js to efficiently handle a large number of connections without the need for threading.</li>
+          <li>4. <i>Non-blocking I/O</i>: Node.js employs non-blocking I/O operations, meaning that it can handle multiple concurrent I/O operations without waiting for each operation to complete before starting the next one. This allows Node.js to efficiently handle a large number of connections without the need for threading.</li>
           <li>5. <b>Event Loop</b>: <i>The event loop is at the core of Node.js's event-driven architecture. It continuously checks for events in the event queue and dispatches them to event handlers when they occur.</i> This allows Node.js to efficiently handle asynchronous operations and respond to events in a timely manner.</li>
         </ul>`,
         `<p>Here's a simple example of event-driven code execution in Node.js:</p>
