@@ -199,6 +199,9 @@ server.listen(3000);
     {
       sectionTitle: 'Understanding Event Driven Arhitecture of Node.js',
       sectionSource: '',
+      highlights: {
+        highlight1: ['Event Driven Arhitecture'],
+      },
       tooltips: [
         `<p>Event-driven programming is a paradigm in which <b>the flow of the program is determined by events</b> such as user actions (e.g., mouse clicks, key presses), system notifications (e.g., file I/O completion, network requests), or timer expirations. Node.js is a popular runtime environment for JavaScript that is built on an event-driven architecture, allowing developers to write highly scalable and efficient server-side applications.</p>`,
         `<ul><i>In Node.js, the event-driven model is implemented using the <b><code>EventEmitter</code> class</b>, which provides methods for <b>emitting events</b> and <b>registering listeners</b> for those events.</i> Here's how event-driven code execution works in Node.js:
@@ -212,16 +215,16 @@ server.listen(3000);
         <pre><code>
 <i>const EventEmitter = require(<b>'events'</b>);</i>
 
-//1. Create an instance of EventEmitter
+//1.Create an instance of EventEmitter
 const myEmitter = <i>new EventEmitter()</i>;
 
-//2. Register a listener for the 'hello' event
-myEmitter.on('hello', () => {
+//2.Register a listener for the 'hello' event
+myEmitter<i>.on</i>('hello', () => {
   console.log('Hello, world!');
 });
 
-//3. Emit the 'hello' event
-myEmitter.emit('hello');
+//3.Emit the 'hello' event
+myEmitter<i>.emit</i>('hello');
 
 console.log('Event emitted');
         </code></pre>
