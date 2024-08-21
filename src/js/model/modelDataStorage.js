@@ -14,7 +14,6 @@ const introduction = {
         <p>Any time Node.js sees something that maybe isn't part of JavaScript, it's going to communicate with the libuv library. <i>So Node.js is essentially an environment to run JavaScript outside of the browser, but that gives us a little bit more than just the V8 engine.</i></p>
         <p><img src="../../src/img/what_is_node_02.jpg"/></p>
         <p>IMPORTANT: Node.js is not a programming language, is not a framework. Node.js is a JavaScript runtime.</p>
-        <p><img src="../../src/img/what_is_node_04.jpg"/></p>
         <p><i>In order to run JavaScript on your PC (outside the browser), you need to install Node.js. Node.js provides you tools to run JavaScript outside of the browser.</i> Is like when you download and install a browser on your computer to run JavaScript on it. Browsers and Node.js provides tools to run JavaScript in different environments. <i>Without these environments (Browser or Node.js), your PC can't read JavaScript code by it's own.</i></p>
         <p>Node.js provides a set of <b>build-in modules</b>, <b>libraries</b> and <b>tools</b> for <i>building server-side and networking applications</i>.</p>`,
         `<h3>What is it used for?</h3>
@@ -75,6 +74,281 @@ const introduction = {
       },
       tooltips: [
         `<p>Node REPL (Read Eval Print Loop) enable that you can <i>run JavaScript code directly in your terminal</i>.</p>`,
+      ],
+    },
+  ],
+};
+
+const how_node_works = {
+  title: 'How Node.js Works',
+  titleDescription: 'A Look Behind the Scenes',
+  sections: [
+    {
+      sectionTitle:
+        'Blocking and Non-Blocking Code: Asynchronous Nature of Node.js',
+      sectionSource: '',
+      highlights: {
+        highlight1: ['Asynchronous Nature of Node.js'],
+      },
+      tooltips: [
+        `<p>Node.js has only <b>one single thread</b>, which means that <i>all the users accessing your web server application are all using the same thread</i>. And so, whenever they're interacting with the application, the code that is run for each user will be executed all in the same thread, at the same place, in the computer running the application. And that happen no matter if you have 5, 5.000 or 5.000.000 users. What this also means is that <b>when one user blocks the single thread with synchronous code, then all other users will have to wait for that execution to finish</b>.</p>
+        <p>Imagine there's a user accessing your application and there's a huge synchronous file read in your code that will take like one second to load. This will mean that for that one second, all other users will have to wait because the entire execution is blocked for that one second. So if those other users want to do some simple tasks, like logging into your application or just requesting some data, they won't be able to do so. They will have to wait until the file is finished reading. Only when that happens they will finally be able to perform the simpler tasks, one after another.</p>
+        <p>This is how the situation would play out with synchronous blocking code, which is obviously a terrible experience for your users. And so, it's really your job as a developer to avoid these kinds of situations by using asynchronous code.</p>
+        <p><img src="../../src/img/synchronous_vs_asynchronous_01.jpg"/></p>
+        `,
+        `<h3>Synchronous vs Asynchronous Node.js code</h3>
+        <p>Being a single thread, synchronous code <i>become a problem especially with slow operations</i>, because <i>each line of code blocks the execution of the rest of the code.</i> So we say that <b>synchronous code is also called blocking code</b> because <i>a certain operation can only be executed after the one before has finished</i>.</p>
+        <p>An example of synchronous code:</p>
+        <pre><code>
+const fs = require('fs');
+
+//Blocking code execution
+const textFile = <b>fs.readFileSync</b>('./textFolder/textFile.text', 'utf-8');
+
+console.log(textFile);
+        </code></pre>
+        <p>Because of the way Node.js was designed, synchronous code turns into a huge problem. The solution to synchronous code problem in Node.js is to <b>use asynchronous code (non-blocking code)</b>:</p>
+        <pre><code>
+const fs = require('fs');
+
+//Non-blocking code execution
+const textFile = <b>fs.readFile</b>('./textFolder/textFile.text', 'utf-8', <i>(err, data) => {
+    console.log(data);
+}</i>);
+        
+console.log('Reading file...');
+        </code></pre>
+        `,
+        `<h3><code>fs.readFileSync</code> (Synchronous) vs <code>fs.readFile</code> (Asynchronous)</h3>
+        <p><i><code>fs.readFileSync</code> is a <u>synchronous</u> function</i> that blocks the code execution until it's finish execution. On the other hand, <i><code>fs.readFile</code> is an <u>asynchronous</u> function</i> that receives a callback function as a parameter, and this callback will be called with the data (result) when <code>fs.readFile</code> finish it's execution. <i>In that time, the code execution is NOT blocked.</i></p>
+        <p>IMPORTANT: It's YOUR job as a developer to avoid blocking code execution by using asynchronous code. This is actually the whole reason why <b>Node.js is completely designed around callbacks to implement asynchronous behavior</b>.</p>`,
+        `<h3>Node.js asynchronous functions</h3>
+        <p>It's important to know that, <i>when we use callbacks in our code, that doesn't automatically make it asynchronous</i>. So, passing functions around into other functions is quite common in JavaScript, but that doesn't make them asynchronous automatically. It only works this way for some functions in the Node.js, such as the <code>fs.readFile</code> function and many others.</p>
+        `,
+        `<h3>Node.js vs other programming languages</h3>
+        <p>In other programming languages, like PHP, it works very differently, because you get one new thread for each new user, which really works completely different. But the creator of Node.js found this model to be the best solution for building highly performant and scalable web applications.</p>`,
+        `<h3>Node.js top-level code it's <u>only executed once</u> when the server starts</h3>
+        <p><i>The code that is outside the callback functions, so the so called <b>top level code is <u>only executed once</u> we start the server</b>, and so in that situation, it doesn't matter at all if it blocks the code execution, because it happens only once, and only when the server actually starts:</i></p>
+        <pre><code>
+const http = require('http');
+const fs = require('fs');
+
+<i>//Top-level code it's only executed once, only when the server starts, so you can use here synchronous code even it's block the code execution</i>
+const textFile = fs<b>.readFileSync</b>('./textFolder/textFile.text', 'utf-8');
+
+const server = http.createServer((req, res) => {
+    <i>//Here you need to use asynchoronous code because it's executed over and over, for every incoming request</i>
+});
+
+server.listen(3000);
+        </code></pre>
+        <p><i>You gone use this technique when you want to handle data right when a server start.</i> So maybe you want to use some data and to be avaible right when the server starts.</p>
+        <p><i>The secret is simply to know which code is only executed once and only at the beginning, when the server starts, and which code gets executed over and over again</i>, and is therefore problematic when blocking the Event Loop.</p>
+        `,
+      ],
+    },
+    {
+      sectionTitle: 'The Node Lifecycle & Event Loop',
+      sectionSource: '',
+      highlights: {
+        highlight1: ['Event Loop'],
+      },
+      tooltips: [
+        `<p><img src="../../src/img/behind_the_scenes_01.jpg"/></p>
+        <p><img src="../../src/img/behind_the_scenes_02.jpg"/></p>
+        <p><img src="../../src/img/behind_the_scenes_03.jpg"/></p>
+        
+        `,
+        `<ul>The lifecycle of a Node.js application revolves around its <i>event-driven</i>, <i>non-blocking architecture</i>, which is facilitated by the event loop. Here's an overview:
+        <p><img src="../../src/img/what_is_node_04.jpg"/></p>
+          <li><h3>1. Initialization</h3>
+            <p>When you run a Node.js application, it initializes by loading the main script file (typically index.js or app.js) and any modules it requires.</p>
+          </li>
+      
+          <li><h3>2. Execution of Synchronous Code</h3>
+            <p><i>Node.js starts executing the synchronous code in the main script file.</i> This includes tasks like loading configuration files, setting up database connections, and defining functions.</p>
+          </li>
+      
+          <li><h3>3. Event Loop</h3>
+            <p><i>The event loop is at the core of Node.js's asynchronous nature. It continuously checks for events in the event queue and executes their associated callback functions. The event loop keeps the Node.js process running and responsive, even when handling I/O operations.</i></p>
+          </li>
+      
+          <li><h3>4. Non-Blocking I/O Operations</h3>
+            <p><i>Node.js uses non-blocking I/O operations, which means that it can perform I/O tasks (like reading from files or making network requests) without waiting for the operation to complete.</i> Instead, it delegates these tasks to the operating system and continues executing other code.</p>
+          </li>
+      
+          <li><h3>5. Event-Driven Architecture</h3>
+            <p><i>Node.js is event-driven, meaning that it relies heavily on <u>events and callbacks to handle asynchronous operations</u>.</i> When an asynchronous operation completes or a certain condition is met, it triggers an event, which is then processed by the event loop.</p>
+          </li>
+      
+          <li><h3>6. Event Queue and Callbacks</h3>
+            <p>Asynchronous operations in Node.js typically <i>use callbacks to handle the results of the operation</i>. When an asynchronous operation completes, its callback function is pushed onto the event queue. The event loop picks up these callback functions from the queue and executes them one by one.</p>
+          </li>
+      
+          <li><h3>7. Concurrency and Scalability</h3>
+            <p>Because <i>Node.js applications can handle multiple concurrent operations without blocking the event loop</i>, they are highly scalable and efficient, making them suitable for building real-time applications, APIs, and microservices.</p>
+          </li>
+      
+          <li><h3>8. Termination</h3>
+            <p>Node.js applications terminate either when all event listeners have been removed and there are no more callbacks to execute, or when explicitly terminated by the user or the operating system.</p>
+          </li>
+      </ul>`,
+        `<p>Understanding the Node.js event loop and its lifecycle is crucial for writing efficient, scalable, and responsive applications. It allows developers to leverage asynchronous programming paradigms effectively and build high-performance applications that can handle large numbers of simultaneous connections.<p>`,
+      ],
+    },
+    {
+      sectionTitle: 'Understanding Event Driven Arhitecture of Node.js',
+      sectionSource: '',
+      tooltips: [
+        `<p>Event-driven programming is a paradigm in which <b>the flow of the program is determined by events</b> such as user actions (e.g., mouse clicks, key presses), system notifications (e.g., file I/O completion, network requests), or timer expirations. Node.js is a popular runtime environment for JavaScript that is built on an event-driven architecture, allowing developers to write highly scalable and efficient server-side applications.</p>`,
+        `<ul><i>In Node.js, the event-driven model is implemented using the <b><code>EventEmitter</code> class</b>, which provides methods for <b>emitting events</b> and <b>registering listeners</b> for those events.</i> Here's how event-driven code execution works in Node.js:
+          <li>1. <b>Event Emitters</b>: An event emitter is an object that emits named events. It maintains a list of listeners, which are functions that are executed in response to a particular event being emitted.</li>
+          <li>2. <b>Event Listeners</b>: <i>Event listeners are functions that are registered to handle specific events emitted by event emitters. When an event emitter emits an event, all registered listeners for that event are invoked.</i></li>
+          <li>3. <i>Asynchronous Execution: Event-driven programming in Node.js is inherently asynchronous.</i> When an asynchronous operation (e.g., file I/O, network request) is initiated, Node.js does not block the execution of subsequent code. Instead, it continues executing the remaining code and registers a callback function to be invoked once the asynchronous operation completes.</li>
+          <li>4. Non-blocking I/O: Node.js employs non-blocking I/O operations, meaning that it can handle multiple concurrent I/O operations without waiting for each operation to complete before starting the next one. This allows Node.js to efficiently handle a large number of connections without the need for threading.</li>
+          <li>5. <b>Event Loop</b>: <i>The event loop is at the core of Node.js's event-driven architecture. It continuously checks for events in the event queue and dispatches them to event handlers when they occur.</i> This allows Node.js to efficiently handle asynchronous operations and respond to events in a timely manner.</li>
+        </ul>`,
+        `<p>Here's a simple example of event-driven code execution in Node.js:</p>
+        <pre><code>
+<i>const EventEmitter = require(<b>'events'</b>);</i>
+
+//1. Create an instance of EventEmitter
+const myEmitter = <i>new EventEmitter()</i>;
+
+//2. Register a listener for the 'hello' event
+myEmitter.on('hello', () => {
+  console.log('Hello, world!');
+});
+
+//3. Emit the 'hello' event
+myEmitter.emit('hello');
+
+console.log('Event emitted');
+        </code></pre>
+        <p>This demonstrates how event-driven code execution works in Node.js, where the callback function associated with the 'hello' event is executed asynchronously when the event is emitted.</p>
+        `,
+        `<p><img src="../../src/img/behind_the_scenes_04.jpg"/></p>`,
+        `<h3>Another example</h3>
+        <pre><code>
+const EventEmitter = require('events');
+
+const myEmitter = new EventEmitter();
+
+myEmitter<i>.on</i>('newSale', () => {
+  console.log('Costumer name: Balenciaga');
+});
+
+myEmitter<i>.on</i>('newSale', stock => {
+  console.log(stock);
+});
+
+myEmitter<i>.emit</i>('newSale', 9);
+        </code></pre>
+        `,
+      ],
+    },
+    {
+      sectionTitle: 'Node.js <code>global</code> object',
+      sectionSource: '',
+      tooltips: [
+        `<p>In Node.js, the <code>global</code> object is a <b>built-in object that serves as the top-level namespace</b> for variables, functions, and objects that are accessible from anywhere in your Node.js application. This object allows you to define properties and functions globally, meaning they can be accessed from any module within your application without requiring an import or export.</p>
+        <p>The Node.js <code>global</code> object and the browser's <code>window</code> object serve similar purposes in their respective environments, but are fundamentally different in where and how they are used.</p>
+        <p><img src="../../src/img/global_object_01.jpg"/></p>
+        `,
+        `<h3><code>global</code> Object in Node.js</h3>
+        <p>The <code>global</code> object in Node.js is the equivalent of the <code>window</code> object in the browser. It is available in all modules and represents the global namespace.</p>
+        <p>The <code>global</code> object can be used to store variables, functions, or other properties that you want to be accessible across different modules in your Node.js application.</p>
+        <p>By default, objects and functions defined globally in a Node.js module are not added to <code>global</code>, unlike in the browser where everything is added to <code>window</code>.</p>
+        `,
+        `<h3><code>window</code> Object in Browser</h3>
+        <p>The <code>window</code> object is specific to browser environments and represents the window in which the script is running. It serves as the global object for JavaScript running in a browser.</p>
+        <p>It is the global context for all JavaScript code running in the browser. All global variables, functions, and objects automatically become properties of <code>window</code>.</p>
+        `,
+        `<h3>Key Differences</h3>
+        <ul>1. Environment:
+          <li>- <i><code>global</code> is used in Node.js</i>, a server-side runtime environment.</li>
+          <li>- <i><code>window</code> is used in browsers</i>, a client-side environment.</li>
+        </ul>
+        <ul>2. APIs and Properties::
+          <li>- <code>global</code> in Node.js <i>includes properties and methods specific to server-side development</i>, like <code>process</code>, <code>Buffer</code>, and <code>require</code>.</li>
+          <li>- <code>window</code> in the browser <i>includes properties and methods specific to the client-side</i>, like <code>document</code>, <code>navigator</code>, and DOM-related APIs.</li>
+        </ul>
+        `,
+      ],
+    },
+    {
+      sectionTitle: 'Controlling the Node.js process',
+      sectionSource: '',
+      tooltips: [
+        `<p>Remember when create a simple server? When we start that server and listening for incoming request, Node.js cannot simply exit the processs (exit the program), because the whole goal is to wait for the requests to come in.</p>
+        <p><b>In Node.js, <code>process.exit()</code> is a method used to terminate the Node.js process.</b></p>
+        <p><i>When <code>process.exit()</code> is called, the Node.js <b>event loop is stopped immediately</b>, and no further asynchronous operations are performed.</i> It's often used to forcefully terminate the application under certain conditions, like critical errors or when a specific condition is met.</p>
+        <p>However, it's important to <i>use <code>process.exit()</code> with caution, especially in production code</i>, as it doesn't allow graceful shutdown and can leave resources in an inconsistent state. It's generally recommended to handle errors and shutdown gracefully whenever possible.</p>
+        <ul>The <code>process</code> object is a global that provides information about, and control over, the current Node.js process. As a global, it is always available to Node.js applications without using <code>require()</code>. It can also be explicitly accessed using <code>require()</code>:
+          <li>
+            <pre><code>
+const process = require('process');
+            </code></pre>
+          </li>
+        </ul>
+        <p>NOTE: <i><code>process</code> is a <u>global feature</u></i> provided by Node.js without the need for explicit import or inclusion. Node.js provide many these features that are built-in and can be accessed directly.</p>
+        `,
+      ],
+    },
+    {
+      sectionTitle: 'Introduction to Streams',
+      sectionSource: '',
+      highlights: {
+        highlight1: ['Streams'],
+      },
+      tooltips: [
+        `<p>Streams are used to <i><b>process (read and write) data piece by piece (chunks)</b>, without completing the whole read or write operation</i>, and therefore without keeping all the data in memory.</p>
+        <ul>Benefits of using streams:
+          <li>- perfect for handling large volumes of data, for example videos;</li>
+          <li>- More efficient data processing in terms of <u>memory</u> (no need to keep all data in
+            memory) and <u>time</u> (we don't have to wait until all the data is available).</li>
+        </ul>
+        <p><img src="../../src/img/streams_1.jpg"/></p>
+        `,
+        `<h3>Streams in practice</h3>
+        <p>One important thing to note is that streams are actually instances of the <code>EventEmitter</code> class, meaning that <i>all streams can emit and listen to named events</i>.</p>
+        <p>In the case of readable streams, they can emit and we as developers can listen to many different events. The most important two are the <code>data</code> and the <code>end</code> events. The <code>data</code> event is emitted when there is a new piece of data to consume, and the <code>end</code> event is emitted as soon as there is no more data to consume. And of course, we as developers can then react to these events accordingly.</p>
+        <pre><code>
+const fs = require("fs");
+const server = require("http");
+
+server.createServer((req, res) => {
+  // ---- Solution 1 ----
+  <i>fs.readFile</i>("test-file.txt", (err, <i>data</i>) => {
+    if (err) console.log(err);
+    <i>res.send(data);</i>
+  });
+
+
+  // ---- Solution 2: Streams ----
+  const readable1 = <i>fs.<b>createReadStream</b></i>("test-file.txt");
+
+  readable1<i>.on(<b>"data"</b>, <b>chunk</b> => {
+    res.write(chunk);
+  })</i>;
+
+  readable1<i>.on(<b>"end"</b>, () => {
+    res.send();
+  })</i>;
+
+  readable1<i>.on("error", err => {
+    res.statusCode = 500;
+    res.send("File not found!");
+  })</i>;
+
+
+  // ---- Solution 3: Streams ----
+  const readable2 = <i>fs<b>.createReadStream</b></i>("test-file.txt");
+  readable2<i><b>.pipe</b>(res)</i>;
+});
+
+server.listen(3000);
+      </code></pre>`,
       ],
     },
   ],
@@ -350,279 +624,6 @@ const { add, subtract } = require('./mathFunctions');
        <p><b>Node.js also supports ES Modules (ESM)</b>, a newer module system used in modern JavaScript development for both client and server side. ESM uses <code>import</code> and <code>export</code> statements and <i>is enabled by adding <code>"type": "module"</code> in your package.json</i> file or <i>using the <code>.mjs</code> extension for your modules</i>.</p>
        <p>You can choose between CommonJS and ESM depending on your project's compatibility and your team's preference.</p>
        `,
-      ],
-    },
-  ],
-};
-
-const how_node_works = {
-  title: 'How Node.js Works',
-  titleDescription: 'A Look Behind the Scenes',
-  sections: [
-    {
-      sectionTitle:
-        'Blocking and Non-Blocking Code: Asynchronous Nature of Node.js',
-      sectionSource: '',
-      highlights: {
-        highlight1: ['Asynchronous Nature of Node.js'],
-      },
-      tooltips: [
-        `<p>Node.js has only <b>one single thread</b>, which means that <i>all the users accessing your web server application are all using the same thread</i>. And so, whenever they're interacting with the application, the code that is run for each user will be executed all in the same thread, at the same place, in the computer running the application. And that happen no matter if you have 5, 5.000 or 5.000.000 users. What this also means is that <b>when one user blocks the single thread with synchronous code, then all other users will have to wait for that execution to finish</b>.</p>
-        <p>Imagine there's a user accessing your application and there's a huge synchronous file read in your code that will take like one second to load. This will mean that for that one second, all other users will have to wait because the entire execution is blocked for that one second. So if those other users want to do some simple tasks, like logging into your application or just requesting some data, they won't be able to do so. They will have to wait until the file is finished reading. Only when that happens they will finally be able to perform the simpler tasks, one after another.</p>
-        <p>This is how the situation would play out with synchronous blocking code, which is obviously a terrible experience for your users. And so, it's really your job as a developer to avoid these kinds of situations by using asynchronous code.</p>
-        <p><img src="../../src/img/synchronous_vs_asynchronous_01.jpg"/></p>
-        `,
-        `<h3>Synchronous vs Asynchronous Node.js code</h3>
-        <p>Being a single thread, synchronous code <i>become a problem especially with slow operations</i>, because <i>each line of code blocks the execution of the rest of the code.</i> So we say that <b>synchronous code is also called blocking code</b> because <i>a certain operation can only be executed after the one before has finished</i>.</p>
-        <p>An example of synchronous code:</p>
-        <pre><code>
-const fs = require('fs');
-
-//Blocking code execution
-const textFile = <b>fs.readFileSync</b>('./textFolder/textFile.text', 'utf-8');
-
-console.log(textFile);
-        </code></pre>
-        <p>Because of the way Node.js was designed, synchronous code turns into a huge problem. The solution to synchronous code problem in Node.js is to <b>use asynchronous code (non-blocking code)</b>:</p>
-        <pre><code>
-const fs = require('fs');
-
-//Non-blocking code execution
-const textFile = <b>fs.readFile</b>('./textFolder/textFile.text', 'utf-8', <i>(err, data) => {
-    console.log(data);
-}</i>);
-        
-console.log('Reading file...');
-        </code></pre>
-        `,
-        `<h3><code>fs.readFileSync</code> (Synchronous) vs <code>fs.readFile</code> (Asynchronous)</h3>
-        <p><i><code>fs.readFileSync</code> is a <u>synchronous</u> function</i> that blocks the code execution until it's finish execution. On the other hand, <i><code>fs.readFile</code> is an <u>asynchronous</u> function</i> that receives a callback function as a parameter, and this callback will be called with the data (result) when <code>fs.readFile</code> finish it's execution. <i>In that time, the code execution is NOT blocked.</i></p>
-        <p>IMPORTANT: It's YOUR job as a developer to avoid blocking code execution by using asynchronous code. This is actually the whole reason why <b>Node.js is completely designed around callbacks to implement asynchronous behavior</b>.</p>`,
-        `<h3>Node.js asynchronous functions</h3>
-        <p>It's important to know that, <i>when we use callbacks in our code, that doesn't automatically make it asynchronous</i>. So, passing functions around into other functions is quite common in JavaScript, but that doesn't make them asynchronous automatically. It only works this way for some functions in the Node.js, such as the <code>fs.readFile</code> function and many others.</p>
-        `,
-        `<h3>Node.js vs other programming languages</h3>
-        <p>In other programming languages, like PHP, it works very differently, because you get one new thread for each new user, which really works completely different. But the creator of Node.js found this model to be the best solution for building highly performant and scalable web applications.</p>`,
-        `<h3>Node.js top-level code it's <u>only executed once</u> when the server starts</h3>
-        <p><i>The code that is outside the callback functions, so the so called <b>top level code is <u>only executed once</u> we start the server</b>, and so in that situation, it doesn't matter at all if it blocks the code execution, because it happens only once, and only when the server actually starts:</i></p>
-        <pre><code>
-const http = require('http');
-const fs = require('fs');
-
-<i>//Top-level code it's only executed once, only when the server starts, so you can use here synchronous code even it's block the code execution</i>
-const textFile = fs<b>.readFileSync</b>('./textFolder/textFile.text', 'utf-8');
-
-const server = http.createServer((req, res) => {
-    <i>//Here you need to use asynchoronous code because it's executed over and over, for every incoming request</i>
-});
-
-server.listen(3000);
-        </code></pre>
-        <p><i>You gone use this technique when you want to handle data right when a server start.</i> So maybe you want to use some data and to be avaible right when the server starts.</p>
-        <p><i>The secret is simply to know which code is only executed once and only at the beginning, when the server starts, and which code gets executed over and over again</i>, and is therefore problematic when blocking the Event Loop.</p>
-        `,
-      ],
-    },
-    {
-      sectionTitle: 'The Node Lifecycle & Event Loop',
-      sectionSource: '',
-      highlights: {
-        highlight1: ['Event Loop'],
-      },
-      tooltips: [
-        `<p><img src="../../src/img/behind_the_scenes_01.jpg"/></p>
-        <p><img src="../../src/img/behind_the_scenes_02.jpg"/></p>
-        <p><img src="../../src/img/behind_the_scenes_03.jpg"/></p>
-        `,
-        `<ul>The lifecycle of a Node.js application revolves around its <i>event-driven</i>, <i>non-blocking architecture</i>, which is facilitated by the event loop. Here's an overview:
-          <li><h3>1. Initialization</h3>
-            <p>When you run a Node.js application, it initializes by loading the main script file (typically index.js or app.js) and any modules it requires.</p>
-          </li>
-      
-          <li><h3>2. Execution of Synchronous Code</h3>
-            <p><i>Node.js starts executing the synchronous code in the main script file.</i> This includes tasks like loading configuration files, setting up database connections, and defining functions.</p>
-          </li>
-      
-          <li><h3>3. Event Loop</h3>
-            <p><i>The event loop is at the core of Node.js's asynchronous nature. It continuously checks for events in the event queue and executes their associated callback functions. The event loop keeps the Node.js process running and responsive, even when handling I/O operations.</i></p>
-          </li>
-      
-          <li><h3>4. Non-Blocking I/O Operations</h3>
-            <p><i>Node.js uses non-blocking I/O operations, which means that it can perform I/O tasks (like reading from files or making network requests) without waiting for the operation to complete.</i> Instead, it delegates these tasks to the operating system and continues executing other code.</p>
-          </li>
-      
-          <li><h3>5. Event-Driven Architecture</h3>
-            <p><i>Node.js is event-driven, meaning that it relies heavily on <u>events and callbacks to handle asynchronous operations</u>.</i> When an asynchronous operation completes or a certain condition is met, it triggers an event, which is then processed by the event loop.</p>
-          </li>
-      
-          <li><h3>6. Event Queue and Callbacks</h3>
-            <p>Asynchronous operations in Node.js typically <i>use callbacks to handle the results of the operation</i>. When an asynchronous operation completes, its callback function is pushed onto the event queue. The event loop picks up these callback functions from the queue and executes them one by one.</p>
-          </li>
-      
-          <li><h3>7. Concurrency and Scalability</h3>
-            <p>Because <i>Node.js applications can handle multiple concurrent operations without blocking the event loop</i>, they are highly scalable and efficient, making them suitable for building real-time applications, APIs, and microservices.</p>
-          </li>
-      
-          <li><h3>8. Termination</h3>
-            <p>Node.js applications terminate either when all event listeners have been removed and there are no more callbacks to execute, or when explicitly terminated by the user or the operating system.</p>
-          </li>
-      </ul>`,
-        `<p>Understanding the Node.js event loop and its lifecycle is crucial for writing efficient, scalable, and responsive applications. It allows developers to leverage asynchronous programming paradigms effectively and build high-performance applications that can handle large numbers of simultaneous connections.<p>`,
-      ],
-    },
-    {
-      sectionTitle: 'Understanding Event Driven Arhitecture of Node.js',
-      sectionSource: '',
-      tooltips: [
-        `<p>Event-driven programming is a paradigm in which <b>the flow of the program is determined by events</b> such as user actions (e.g., mouse clicks, key presses), system notifications (e.g., file I/O completion, network requests), or timer expirations. Node.js is a popular runtime environment for JavaScript that is built on an event-driven architecture, allowing developers to write highly scalable and efficient server-side applications.</p>`,
-        `<ul><i>In Node.js, the event-driven model is implemented using the <b><code>EventEmitter</code> class</b>, which provides methods for <b>emitting events</b> and <b>registering listeners</b> for those events.</i> Here's how event-driven code execution works in Node.js:
-          <li>1. <b>Event Emitters</b>: An event emitter is an object that emits named events. It maintains a list of listeners, which are functions that are executed in response to a particular event being emitted.</li>
-          <li>2. <b>Event Listeners</b>: <i>Event listeners are functions that are registered to handle specific events emitted by event emitters. When an event emitter emits an event, all registered listeners for that event are invoked.</i></li>
-          <li>3. <i>Asynchronous Execution: Event-driven programming in Node.js is inherently asynchronous.</i> When an asynchronous operation (e.g., file I/O, network request) is initiated, Node.js does not block the execution of subsequent code. Instead, it continues executing the remaining code and registers a callback function to be invoked once the asynchronous operation completes.</li>
-          <li>4. Non-blocking I/O: Node.js employs non-blocking I/O operations, meaning that it can handle multiple concurrent I/O operations without waiting for each operation to complete before starting the next one. This allows Node.js to efficiently handle a large number of connections without the need for threading.</li>
-          <li>5. <b>Event Loop</b>: <i>The event loop is at the core of Node.js's event-driven architecture. It continuously checks for events in the event queue and dispatches them to event handlers when they occur.</i> This allows Node.js to efficiently handle asynchronous operations and respond to events in a timely manner.</li>
-        </ul>`,
-        `<p>Here's a simple example of event-driven code execution in Node.js:</p>
-        <pre><code>
-<i>const EventEmitter = require(<b>'events'</b>);</i>
-
-//1. Create an instance of EventEmitter
-const myEmitter = <i>new EventEmitter()</i>;
-
-//2. Register a listener for the 'hello' event
-myEmitter.on('hello', () => {
-  console.log('Hello, world!');
-});
-
-//3. Emit the 'hello' event
-myEmitter.emit('hello');
-
-console.log('Event emitted');
-        </code></pre>
-        <p>This demonstrates how event-driven code execution works in Node.js, where the callback function associated with the 'hello' event is executed asynchronously when the event is emitted.</p>
-        `,
-        `<p><img src="../../src/img/behind_the_scenes_04.jpg"/></p>`,
-        `<h3>Another example</h3>
-        <pre><code>
-const EventEmitter = require('events');
-
-const myEmitter = new EventEmitter();
-
-myEmitter<i>.on</i>('newSale', () => {
-  console.log('Costumer name: Balenciaga');
-});
-
-myEmitter<i>.on</i>('newSale', stock => {
-  console.log(stock);
-});
-
-myEmitter<i>.emit</i>('newSale', 9);
-        </code></pre>
-        `,
-      ],
-    },
-    {
-      sectionTitle: 'Node.js <code>global</code> object',
-      sectionSource: '',
-      tooltips: [
-        `<p>In Node.js, the <code>global</code> object is a <b>built-in object that serves as the top-level namespace</b> for variables, functions, and objects that are accessible from anywhere in your Node.js application. This object allows you to define properties and functions globally, meaning they can be accessed from any module within your application without requiring an import or export.</p>
-        <p>The Node.js <code>global</code> object and the browser's <code>window</code> object serve similar purposes in their respective environments, but are fundamentally different in where and how they are used.</p>
-        <p><img src="../../src/img/global_object_01.jpg"/></p>
-        `,
-        `<h3><code>global</code> Object in Node.js</h3>
-        <p>The <code>global</code> object in Node.js is the equivalent of the <code>window</code> object in the browser. It is available in all modules and represents the global namespace.</p>
-        <p>The <code>global</code> object can be used to store variables, functions, or other properties that you want to be accessible across different modules in your Node.js application.</p>
-        <p>By default, objects and functions defined globally in a Node.js module are not added to <code>global</code>, unlike in the browser where everything is added to <code>window</code>.</p>
-        `,
-        `<h3><code>window</code> Object in Browser</h3>
-        <p>The <code>window</code> object is specific to browser environments and represents the window in which the script is running. It serves as the global object for JavaScript running in a browser.</p>
-        <p>It is the global context for all JavaScript code running in the browser. All global variables, functions, and objects automatically become properties of <code>window</code>.</p>
-        `,
-        `<h3>Key Differences</h3>
-        <ul>1. Environment:
-          <li>- <i><code>global</code> is used in Node.js</i>, a server-side runtime environment.</li>
-          <li>- <i><code>window</code> is used in browsers</i>, a client-side environment.</li>
-        </ul>
-        <ul>2. APIs and Properties::
-          <li>- <code>global</code> in Node.js <i>includes properties and methods specific to server-side development</i>, like <code>process</code>, <code>Buffer</code>, and <code>require</code>.</li>
-          <li>- <code>window</code> in the browser <i>includes properties and methods specific to the client-side</i>, like <code>document</code>, <code>navigator</code>, and DOM-related APIs.</li>
-        </ul>
-        `,
-      ],
-    },
-    {
-      sectionTitle: 'Controlling the Node.js process',
-      sectionSource: '',
-      tooltips: [
-        `<p>Remember when create a simple server? When we start that server and listening for incoming request, Node.js cannot simply exit the processs (exit the program), because the whole goal is to wait for the requests to come in.</p>
-        <p><b>In Node.js, <code>process.exit()</code> is a method used to terminate the Node.js process.</b></p>
-        <p><i>When <code>process.exit()</code> is called, the Node.js <b>event loop is stopped immediately</b>, and no further asynchronous operations are performed.</i> It's often used to forcefully terminate the application under certain conditions, like critical errors or when a specific condition is met.</p>
-        <p>However, it's important to <i>use <code>process.exit()</code> with caution, especially in production code</i>, as it doesn't allow graceful shutdown and can leave resources in an inconsistent state. It's generally recommended to handle errors and shutdown gracefully whenever possible.</p>
-        <ul>The <code>process</code> object is a global that provides information about, and control over, the current Node.js process. As a global, it is always available to Node.js applications without using <code>require()</code>. It can also be explicitly accessed using <code>require()</code>:
-          <li>
-            <pre><code>
-const process = require('process');
-            </code></pre>
-          </li>
-        </ul>
-        <p>NOTE: <i><code>process</code> is a <u>global feature</u></i> provided by Node.js without the need for explicit import or inclusion. Node.js provide many these features that are built-in and can be accessed directly.</p>
-        `,
-      ],
-    },
-    {
-      sectionTitle: 'Introduction to Streams',
-      sectionSource: '',
-      highlights: {
-        highlight1: ['Streams'],
-      },
-      tooltips: [
-        `<p>Streams are used to <i><b>process (read and write) data piece by piece (chunks)</b>, without completing the whole read or write operation</i>, and therefore without keeping all the data in memory.</p>
-        <ul>Benefits of using streams:
-          <li>- perfect for handling large volumes of data, for example videos;</li>
-          <li>- More efficient data processing in terms of <u>memory</u> (no need to keep all data in
-            memory) and <u>time</u> (we don't have to wait until all the data is available).</li>
-        </ul>
-        <p><img src="../../src/img/streams_1.jpg"/></p>
-        `,
-        `<h3>Streams in practice</h3>
-        <p>One important thing to note is that streams are actually instances of the <code>EventEmitter</code> class, meaning that <i>all streams can emit and listen to named events</i>.</p>
-        <p>In the case of readable streams, they can emit and we as developers can listen to many different events. The most important two are the <code>data</code> and the <code>end</code> events. The <code>data</code> event is emitted when there is a new piece of data to consume, and the <code>end</code> event is emitted as soon as there is no more data to consume. And of course, we as developers can then react to these events accordingly.</p>
-        <pre><code>
-const fs = require("fs");
-const server = require("http");
-
-server.createServer((req, res) => {
-  // ---- Solution 1 ----
-  <i>fs.readFile</i>("test-file.txt", (err, <i>data</i>) => {
-    if (err) console.log(err);
-    <i>res.send(data);</i>
-  });
-
-
-  // ---- Solution 2: Streams ----
-  const readable1 = <i>fs.<b>createReadStream</b></i>("test-file.txt");
-
-  readable1<i>.on(<b>"data"</b>, <b>chunk</b> => {
-    res.write(chunk);
-  })</i>;
-
-  readable1<i>.on(<b>"end"</b>, () => {
-    res.send();
-  })</i>;
-
-  readable1<i>.on("error", err => {
-    res.statusCode = 500;
-    res.send("File not found!");
-  })</i>;
-
-
-  // ---- Solution 3: Streams ----
-  const readable2 = <i>fs<b>.createReadStream</b></i>("test-file.txt");
-  readable2<i><b>.pipe</b>(res)</i>;
-});
-
-server.listen(3000);
-      </code></pre>`,
       ],
     },
   ],
@@ -5132,8 +5133,8 @@ const nodeJS_and_TypeScript = {
 
 export const dataStorage = [
   introduction,
-  understanding_the_basics,
   how_node_works,
+  understanding_the_basics,
   development_workflow,
   working_with_ExpressJS,
   routing,
