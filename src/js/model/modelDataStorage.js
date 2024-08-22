@@ -199,7 +199,7 @@ server.listen(3000);
       sectionTitle: 'Understanding Event Driven Arhitecture of Node.js',
       sectionSource: '',
       highlights: {
-        highlight1: ['Event Driven Arhitecture'],
+        highlight2: ['Event Driven Arhitecture'],
       },
       tooltips: [
         `<p>Event-driven programming is a paradigm in which <b>the flow of the program is determined by events</b> such as <i><u>user actions</u></i> (e.g., mouse clicks, key presses), <i><u>system notifications</u></i> (e.g., file I/O completion, network requests), or <i><u>timer expirations</u></i>. Node.js is a popular runtime environment for JavaScript that is built on an event-driven architecture, allowing developers to write highly scalable and efficient server-side applications.</p>`,
@@ -775,7 +775,7 @@ app.listen(port, () => {
         `<h3>Key Concepts</h3>
         <p><b>Response <u>Headers</u></b>: Headers <i>provide essential information about the response</i> such as content type, status, etc.</p>
         <p><b>Response <u>Body</u></b>: The body contains <i>the data sent back to the client</i>.</p>
-        <p><b><u>Status</u> Codes</b>: Status codes <i>indicate the result of the HTTP response</i>.</p>
+        <p><b>Response <u>Status Codes</u></b>: Status codes <i>indicate the result of the HTTP response</i>.</p>
         <ul>Sending <i>Different Types of Responses</i>:
           <li>- <code>res<b>.send()</b></code> - Sends <i>various types</i> of responses (HTML, plain text, etc.);</li>
           <li>- <code>res<b>.json()</b></code> - Sends a <i>JSON</i> response;</li>
@@ -917,17 +917,17 @@ server.listen(3000);
       <p>The results we get back from readable streams are just <b>raw buffers of bytes</b>.</p>
       `,
         `<h3>Solution 3: Streams implemented with the <code>pipe</code> function</h3>
-      <p>The <code>pipe</code> function is meant to connect a readable stream source to a readable stream destination. In other words, the <code>pipe</code> function sends the data from the readable stream to a writable stream.</p>
+      <p>The <code>pipe</code> function is meant to <i>connect a readable <u>stream source</u> to a readable <u>stream destination</u></i>. In other words, the <code>pipe</code> function sends the data from the readable stream to a writable stream.</p>
       <p><code>pipe</code> <i><b>automatically manages the flow of data</b>, pausing and resuming as necessary so that the writable stream is not overwhelmed with data</i>. You can chain multiple pipes to handle complex streaming workflows.</p>
       <pre><code>
 const fs = require('fs');
 
-const readableStream = fs.createReadStream('source.txt');
-const writableStream = fs.createWriteStream('destination.txt');
+const readableStream = fs<i>.createReadStream</i>('source.txt');
+const writableStream = fs<i>.createWriteStream</i>('destination.txt');
 
-readableStream.pipe(writableStream);
+<i>readableStream.pipe(writableStream);</i>
       </code></pre>
-      <p>In the above example, <code>readableStream.pipe(writableStream)</code> will read data from source.txt and write it directly to destination.txt without loading the entire file into memory, making it very efficient.</p>
+      <p>In the above example, <i><code>readableStream.pipe(writableStream)</code> will read data from source.txt and write it directly to destination.txt <u>without loading the entire file into memory</u></i>, making it very efficient.</p>
       `,
         `<h3>Advantages of Using Streams and <code>pipe()</code></h3>
       <p><i>Memory Efficiency</i>: Streams process data in chunks, which means you don’t have to load the entire dataset into memory at once.</p>
@@ -3510,18 +3510,28 @@ const security = {
   titleDescription: 'Secure your JWT Tokens & API against Hackers Attacks',
   sections: [
     {
-      sectionTitle: 'REST APIs, Clients & CORS Errors',
+      sectionTitle: 'Same Origin Policy & CORS Errors',
       sectionSource: '',
       highlights: {
         highlight2: ['CORS Errors'],
       },
       tooltips: [
+        `<p>The Same Origin Policy (SOP) and Cross-Origin Resource Sharing (CORS) are <b>security mechanisms</b> used in web development to <b>control how resources are shared between different origins</b>. They are important concepts to understand, especially when working with web APIs and frontend-backend communication.</p>`,
+        `<h3>What is Same Origin Policy (SOP)</h3>
+        <p>The Same Origin Policy is <i>a security feature implemented by web browsers to restrict how web pages can interact with resources (e.g., scripts, images, or data) from different origins</i>. An "origin" is defined by the scheme (protocol), hostname (domain), and port of a URL.</p>
+        <p>SOP is designed to <b>prevent malicious websites from accessing sensitive data on other sites</b>.</p>
+        `,
         `<h3>What are CORS?</h3>
-      <p>CORS stands for Cross Origin Resource Sharing and <i>by default, CORS is not allowed by browsers</i>.</p>
-      <p><img src="../../src/img/cors_1.jpg"/></p>
-      <p>We can <i>overwrite CORS</i> in our Node.js server, because CORS mechanism makes sense for some applications, for REST APIs, it typically does not. We want to <i>allow our server to share its data</i>, we want to offer data from our server to different clients, and these clients will often not be served by the same server as our REST API runs on.</p>
-      <p>Take Google Maps for example: you're not running your app on Google servers, still you can access it, and the same is true for your own API. Even if you build both the frontend and the backend, you will often serve the two ends from different servers, because you can choose a server for the frontend that's optimized for frontend code, that really serves that really well, and you serve your server-side code, your Node.js code from a different server. So you will have different domains, different addresses there too for frontend and backend.</p>
-      <p>A lot of people see the CORS error on the client-side and want to solve it in their browser-side JavaScript code, you just can't, <b>you can only solve CORS errors on the server</b>.</p>
+      <p>CORS stands for Cross Origin Resource Sharing and <b>by default, CORS is not allowed by browsers</b>.</p>
+      <p>CORS is <b>a mechanism that allows a server to <u>explicitly specify</u> who can access its resources when they are requested from a different origin</b> (i.e., a cross-origin request). <i>CORS relaxes the Same Origin Policy by allowing servers to <u>explicitly permit</u> certain cross-origin requests</i>.</p>
+      <p><img src="../../src/img/cors_1.jpg"/></p>`,
+        `<h3>How CORS works?</h3>
+      <p>When a web page makes a request to a different origin (e.g., fetching data from an API hosted on a different domain), the browser first sends an <code>OPTIONS</code> request (called a "preflight request") to the server to check if the actual request is allowed. The server responds with appropriate CORS headers, such as <code>Access-Control-Allow-Origin</code>, indicating which origins are permitted.</p>
+      <ul>Key Headers:
+        <li>- <b>Access-Control-Allow-<u>Origin</u></b>: <i>specifies which origins can access the resource.</i> For example, <code>Access-Control-Allow-Origin: *</code> allows any origin, while <code>Access-Control-Allow-Origin: https://www.example.com</code> only allows requests from that specific origin.</li>
+        <li>- <b>Access-Control-Allow-<u>Methods</u></b>: Indicates <i>the HTTP methods (e.g., GET, POST, PUT) that are allowed when accessing the resource</i>.</li>
+        <li>- <b>Access-Control-Allow-<u>Headers</u></b>: Lists <i>the HTTP headers that can be used in the actual request</i>.</li>
+      </ul>
       <pre><code>
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -3543,8 +3553,9 @@ app.use('/feed', feedRoutes);
 
 app.listen(8080);
       </code></pre>
-      <p>CORS errors occur when the API and your client are sitting on different servers, different domains, and they want to exchange data. You "fix them" in quotation marks, because they are a security mechanism, but you can bypass that on purpose by setting the right <u>CORS headers</u>, which basically tell the client "Hey, it's fine, I'm a public API! You may use my data!".</p>
-      <p>So <b>CORS errors occur when using an API that does NOT set CORS headers!</b></p>
+      
+      <p>NOTE: We can <i>overwrite CORS</i> in our Node.js server, because CORS mechanism makes sense for some applications, for REST APIs, it typically does not. We want to <i>allow our server to share its data</i>, we want to offer data from our server to different clients, and these clients will often not be served by the same server as our REST API runs on.</p>
+      <p>IMPORTANT: A lot of people see the CORS error on the client-side and want to solve it in their browser-side JavaScript code, you just can't, <b>you can only solve CORS errors on the server</b>. CORS errors occur when the API and your client are sitting on different servers, different domains, and they want to exchange data. You "fix them" in quotation marks, because they are a security mechanism, but you can bypass that on purpose by setting the right <u>CORS headers</u>, which basically tell the client "Hey, it's fine, I'm a public API! You may use my data!". So <b>CORS errors occur when using an API that does NOT set CORS headers!</b></p>
       `,
         `<h3>Implementing CORS with cors package</h3>
       <p>By calling <code>cors()</code>  the <code>Access-Control-Allow-Origin</code> will be set by default to <code>*</code>.</p>
@@ -3577,6 +3588,10 @@ app.use('/routePath', <i>cors()</i>, (req, res, next) => {
 app.listen(process.env.PORT);
       </code></pre>
       `,
+        `<h3>Summary</h3>
+      <p><b>Same Origin Policy (SOP)</b>: <i>A <b>security measure</b> that restricts how resources from different origins can interact.</i> It <b>prevents malicious activities like cross-site scripting (XSS) attacks</b>.</p>
+      <p><b>Cross-Origin Resource Sharing (CORS)</b>: A protocol that <i>allows servers to define which cross-origin requests are permitted</i>, thereby relaxing the SOP under controlled conditions.</p>
+      <p>Understanding SOP and CORS is essential for web developers, particularly when dealing with APIs, as it directly affects <i>how frontend applications can communicate with backend services across different domains</i>.</p>`,
       ],
     },
     {
