@@ -854,87 +854,6 @@ const process = require('process');
         `,
       ],
     },
-    {
-      sectionTitle: 'Handling Large Volumes of Data: Introduction to Streams',
-      sectionSource: '',
-      highlights: {
-        highlight1: ['Streams'],
-      },
-      tooltips: [
-        `<p>Streams are used to <i><b>process (read and write) data piece by piece (chunks)</b>, without completing the whole read or write operation</i>, and therefore without keeping all the data in memory.</p>
-        <p>Streams in Node.js come in different types, including readable, writable, duplex, and transform streams.</p>
-        <ul>Benefits of using streams:
-          <li>- perfect for handling <i>large volumes of data</i>, for example videos;</li>
-          <li>- more efficient data processing in terms of <u>memory</u> (no need to keep all data in
-            memory) and <u>time</u> (we don't have to wait until all the data is available).</li>
-        </ul>
-        <p><img src="../../src/img/streams_1.jpg"/></p>
-        `,
-        `<h3>Streams in practice</h3>
-        <p>One important thing to note is that streams are actually instances of the <code>EventEmitter</code> class, meaning that <i>all streams can emit and listen to named events</i>.</p>
-        <p>NOTE: <b>In Node.JS, all streams are implemented using the event emitter</b>, where the events are emitted by Node.js,and we just react to the events on that stream using the <code>.on()</code> function.</p>
-        <p><i>In the case of readable streams, they can emit and we as developers can listen to many different events. The most important two are <b>the <code>data</code> and the <code>end</code> events</b>.</i> The <code>data</code> event is emitted when there is a new piece of data to consume, and the <code>end</code> event is emitted as soon as there is no more data to consume. And of course, we as developers can then react to these events accordingly.</p>
-        <pre><code>
-const fs = require("fs");
-const server = require("http");
-
-server.createServer((req, res) => {
-  // ---- Solution 1: Read the entire file in one go ----
-  <i>fs.readFile</i>("test-file.txt", (err, <i>data</i>) => {
-    if (err) console.log(err);
-    <i>res.send(data);</i>
-  });
-
-
-  // ---- Solution 2: Streams ----
-  const readable1 = <i>fs.<b>createReadStream</b></i>("test-file.txt");
-
-  readable1<i>.on(<b>"data"</b>, <b>chunk</b> => {
-    res.write(chunk);
-  })</i>;
-
-  readable1<i>.on(<b>"end"</b>, () => {
-    res.send();
-  })</i>;
-
-  readable1<i>.on(<b>"error"</b>, err => {
-    res.statusCode = 500;
-    res.send("File not found!");
-  })</i>;
-
-
-  // ---- Solution 3: Streams ----
-  const readable2 = <i>fs<b>.createReadStream</b></i>("test-file.txt");
-  readable2<i><b>.pipe</b>(res)</i>;
-});
-
-server.listen(3000);
-      </code></pre>`,
-
-        `<h3>Solution 2: Streams implemented with the <code>fs.createReadStream()</code> method</h3>
-      <p>The <code>fs.createReadStream()</code> method in Node.js is used to <i>create a readable stream to read data from a file</i>. This method is part of the <code>fs</code> (file system) module and is <i>ideal for reading <u>large files</u>, as it <b>reads the file in chunks</b> rather than loading the entire file into memory</i>.</p>
-      <p>The <code>fs.createReadStream()</code> method returns the <code>fs.ReadStream</code> object. The <code>fs.ReadStream</code> object is a kind of an event emitter that emits various different named events, depending on what's currently happening to that file. We can use these events to read our file in piece by piece, and every time a piece of data is received, we can do some processing on that data while we wait for the rest of the data to be read it.</p>
-      <p>The results we get back from readable streams are just <b>raw buffers of bytes</b>.</p>
-      `,
-        `<h3>Solution 3: Streams implemented with the <code>pipe</code> function</h3>
-      <p>The <code>pipe</code> function is meant to <i>connect a readable <u>stream source</u> to a readable <u>stream destination</u></i>. In other words, the <code>pipe</code> function sends the data from the readable stream to a writable stream.</p>
-      <p><code>pipe</code> <i><b>automatically manages the flow of data</b>, pausing and resuming as necessary so that the writable stream is not overwhelmed with data</i>. You can chain multiple pipes to handle complex streaming workflows.</p>
-      <pre><code>
-const fs = require('fs');
-
-const readableStream = fs<i>.createReadStream</i>('source.txt');
-const writableStream = fs<i>.createWriteStream</i>('destination.txt');
-
-<i>readableStream.pipe(writableStream);</i>
-      </code></pre>
-      <p>In the above example, <i><code>readableStream.pipe(writableStream)</code> will read data from source.txt and write it directly to destination.txt <u>without loading the entire file into memory</u></i>, making it very efficient.</p>
-      `,
-        `<h3>Advantages of Using Streams and <code>pipe()</code></h3>
-      <p><i>Memory Efficiency</i>: Streams process data in chunks, which means you don’t have to load the entire dataset into memory at once.</p>
-      <p><i>Time Efficiency</i>: Streams can start processing data as soon as it begins to be available, rather than waiting for all the data to be loaded.</p>
-      <p><i>Ease of Use</i>: The <code>.pipe()</code> method simplifies the process of transferring data from one stream to another.</p>`,
-      ],
-    },
   ],
 };
 
@@ -1703,6 +1622,87 @@ module.exports = class Product {
 };     
       </code></pre>`,
         `<p>IMPORTANT: It's important to understand that <i>working with <u>files for data storage</u> is suboptimal for bigger amounts of data</i>.</p>`,
+      ],
+    },
+    {
+      sectionTitle: 'Handling Large Volumes of Data: Introduction to Streams',
+      sectionSource: '',
+      highlights: {
+        highlight1: ['Streams'],
+      },
+      tooltips: [
+        `<p>Streams are used to <i><b>process (read and write) data piece by piece (chunks)</b>, without completing the whole read or write operation</i>, and therefore without keeping all the data in memory.</p>
+        <p>Streams in Node.js come in different types, including readable, writable, duplex, and transform streams.</p>
+        <ul>Benefits of using streams:
+          <li>- perfect for handling <i>large volumes of data</i>, for example videos;</li>
+          <li>- more efficient data processing in terms of <u>memory</u> (no need to keep all data in
+            memory) and <u>time</u> (we don't have to wait until all the data is available).</li>
+        </ul>
+        <p><img src="../../src/img/streams_1.jpg"/></p>
+        `,
+        `<h3>Streams in practice</h3>
+        <p>One important thing to note is that streams are actually instances of the <code>EventEmitter</code> class, meaning that <i>all streams can emit and listen to named events</i>.</p>
+        <p>NOTE: <b>In Node.JS, all streams are implemented using the event emitter</b>, where the events are emitted by Node.js,and we just react to the events on that stream using the <code>.on()</code> function.</p>
+        <p><i>In the case of readable streams, they can emit and we as developers can listen to many different events. The most important two are <b>the <code>data</code> and the <code>end</code> events</b>.</i> The <code>data</code> event is emitted when there is a new piece of data to consume, and the <code>end</code> event is emitted as soon as there is no more data to consume. And of course, we as developers can then react to these events accordingly.</p>
+        <pre><code>
+const fs = require("fs");
+const server = require("http");
+
+server.createServer((req, res) => {
+  // ---- Solution 1: Read the entire file in one go ----
+  <i>fs.readFile</i>("test-file.txt", (err, <i>data</i>) => {
+    if (err) console.log(err);
+    <i>res.send(data);</i>
+  });
+
+
+  // ---- Solution 2: Streams ----
+  const readable1 = <i>fs.<b>createReadStream</b></i>("test-file.txt");
+
+  readable1<i>.on(<b>"data"</b>, <b>chunk</b> => {
+    res.write(chunk);
+  })</i>;
+
+  readable1<i>.on(<b>"end"</b>, () => {
+    res.send();
+  })</i>;
+
+  readable1<i>.on(<b>"error"</b>, err => {
+    res.statusCode = 500;
+    res.send("File not found!");
+  })</i>;
+
+
+  // ---- Solution 3: Streams ----
+  const readable2 = <i>fs<b>.createReadStream</b></i>("test-file.txt");
+  readable2<i><b>.pipe</b>(res)</i>;
+});
+
+server.listen(3000);
+      </code></pre>`,
+
+        `<h3>Solution 2: Streams implemented with the <code>fs.createReadStream()</code> method</h3>
+      <p>The <code>fs.createReadStream()</code> method in Node.js is used to <i>create a readable stream to read data from a file</i>. This method is part of the <code>fs</code> (file system) module and is <i>ideal for reading <u>large files</u>, as it <b>reads the file in chunks</b> rather than loading the entire file into memory</i>.</p>
+      <p>The <code>fs.createReadStream()</code> method returns the <code>fs.ReadStream</code> object. The <code>fs.ReadStream</code> object is a kind of an event emitter that emits various different named events, depending on what's currently happening to that file. We can use these events to read our file in piece by piece, and every time a piece of data is received, we can do some processing on that data while we wait for the rest of the data to be read it.</p>
+      <p>The results we get back from readable streams are just <b>raw buffers of bytes</b>.</p>
+      `,
+        `<h3>Solution 3: Streams implemented with the <code>pipe</code> function</h3>
+      <p>The <code>pipe</code> function is meant to <i>connect a readable <u>stream source</u> to a readable <u>stream destination</u></i>. In other words, the <code>pipe</code> function sends the data from the readable stream to a writable stream.</p>
+      <p><code>pipe</code> <i><b>automatically manages the flow of data</b>, pausing and resuming as necessary so that the writable stream is not overwhelmed with data</i>. You can chain multiple pipes to handle complex streaming workflows.</p>
+      <pre><code>
+const fs = require('fs');
+
+const readableStream = fs<i>.createReadStream</i>('source.txt');
+const writableStream = fs<i>.createWriteStream</i>('destination.txt');
+
+<i>readableStream.pipe(writableStream);</i>
+      </code></pre>
+      <p>In the above example, <i><code>readableStream.pipe(writableStream)</code> will read data from source.txt and write it directly to destination.txt <u>without loading the entire file into memory</u></i>, making it very efficient.</p>
+      `,
+        `<h3>Advantages of Using Streams and <code>pipe()</code></h3>
+      <p><i>Memory Efficiency</i>: Streams process data in chunks, which means you don’t have to load the entire dataset into memory at once.</p>
+      <p><i>Time Efficiency</i>: Streams can start processing data as soon as it begins to be available, rather than waiting for all the data to be loaded.</p>
+      <p><i>Ease of Use</i>: The <code>.pipe()</code> method simplifies the process of transferring data from one stream to another.</p>`,
       ],
     },
     {
