@@ -292,81 +292,6 @@ get('https://someURL.com', (res) => {
         `,
       ],
     },
-    {
-      sectionTitle: 'Controlling the Node.js process',
-      sectionSource: '',
-      tooltips: [
-        `<p>Remember when create a simple server? When we start that server and listening for incoming request, Node.js cannot simply exit the processs (exit the program), because the whole goal is to wait for the requests to come in.</p>
-        <p><b>In Node.js, <code>process.exit()</code> is a method used to terminate the Node.js process.</b></p>
-        <p><i>When <code>process.exit()</code> is called, the Node.js <b>event loop is stopped immediately</b>, and no further asynchronous operations are performed.</i> It's often used to forcefully terminate the application under certain conditions, like critical errors or when a specific condition is met.</p>
-        <p>However, it's important to <i>use <code>process.exit()</code> with caution, especially in production code</i>, as it doesn't allow graceful shutdown and can leave resources in an inconsistent state. It's generally recommended to handle errors and shutdown gracefully whenever possible.</p>
-        <ul>The <code>process</code> object is a global that provides information about, and control over, the current Node.js process. As a global, it is always available to Node.js applications without using <code>require()</code>. It can also be explicitly accessed using <code>require()</code>:
-          <li>
-            <pre><code>
-const process = require('process');
-            </code></pre>
-          </li>
-        </ul>
-        <p>NOTE: <i><code>process</code> is a <u>global feature</u></i> provided by Node.js without the need for explicit import or inclusion. Node.js provide many these features that are built-in and can be accessed directly.</p>
-        `,
-      ],
-    },
-    {
-      sectionTitle: 'Introduction to Streams',
-      sectionSource: '',
-      highlights: {
-        highlight1: ['Streams'],
-      },
-      tooltips: [
-        `<p>Streams are used to <i><b>process (read and write) data piece by piece (chunks)</b>, without completing the whole read or write operation</i>, and therefore without keeping all the data in memory.</p>
-        <ul>Benefits of using streams:
-          <li>- perfect for handling large volumes of data, for example videos;</li>
-          <li>- More efficient data processing in terms of <u>memory</u> (no need to keep all data in
-            memory) and <u>time</u> (we don't have to wait until all the data is available).</li>
-        </ul>
-        <p><img src="../../src/img/streams_1.jpg"/></p>
-        `,
-        `<h3>Streams in practice</h3>
-        <p>One important thing to note is that streams are actually instances of the <code>EventEmitter</code> class, meaning that <i>all streams can emit and listen to named events</i>.</p>
-        <p>In the case of readable streams, they can emit and we as developers can listen to many different events. The most important two are the <code>data</code> and the <code>end</code> events. The <code>data</code> event is emitted when there is a new piece of data to consume, and the <code>end</code> event is emitted as soon as there is no more data to consume. And of course, we as developers can then react to these events accordingly.</p>
-        <pre><code>
-const fs = require("fs");
-const server = require("http");
-
-server.createServer((req, res) => {
-  // ---- Solution 1 ----
-  <i>fs.readFile</i>("test-file.txt", (err, <i>data</i>) => {
-    if (err) console.log(err);
-    <i>res.send(data);</i>
-  });
-
-
-  // ---- Solution 2: Streams ----
-  const readable1 = <i>fs.<b>createReadStream</b></i>("test-file.txt");
-
-  readable1<i>.on(<b>"data"</b>, <b>chunk</b> => {
-    res.write(chunk);
-  })</i>;
-
-  readable1<i>.on(<b>"end"</b>, () => {
-    res.send();
-  })</i>;
-
-  readable1<i>.on("error", err => {
-    res.statusCode = 500;
-    res.send("File not found!");
-  })</i>;
-
-
-  // ---- Solution 3: Streams ----
-  const readable2 = <i>fs<b>.createReadStream</b></i>("test-file.txt");
-  readable2<i><b>.pipe</b>(res)</i>;
-});
-
-server.listen(3000);
-      </code></pre>`,
-      ],
-    },
   ],
 };
 
@@ -595,7 +520,9 @@ const { add, subtract } = require('./mathFunctions');
       sectionTitle: 'Vulnerabilities In Dependencies',
       sectionSource: '',
       tooltips: [
-        `<p>When developing Node.js applications, <i>managing dependencies is crucial for maintaining the security of your project</i>. The Node Package Manager (npm) offers tools to help developers identify and fix vulnerabilities in their dependencies. Two essential commands for this purpose are <b><code>npm audit</code></b> and <b><code>npm audit fix</code></b>.</p>`,
+        `<p>When developing Node.js applications, <i>managing dependencies is crucial for maintaining the security of your project</i>. The Node Package Manager (npm) offers tools to help developers identify and fix vulnerabilities in their dependencies. Two essential commands for this purpose are <b><code>npm audit</code></b> and <b><code>npm audit fix</code></b>.</p>
+        <p>NOTE: <i><code>npm audit</code> will only report vulnerabilities that have been reported</i>, and it <i>can only fix them automatically if there's an available update</i>. If there isn't an available updates, it might be worth switching to an alternative library that is more secure.</p>
+        `,
         `<h3>The <code>npm audit</code> command</h3>
         <p>The <code>npm audit</code> command <b>analyzes the dependencies in your project to identify known security vulnerabilities</b>. When you run <code>npm audit</code>, npm will perform a security check against your project's dependencies by querying the npm public registry for any known vulnerabilities in the packages you are using. It <i>generates a report that categorizes vulnerabilities by severity (low, moderate, high, critical)</i> and <i>provides information on the affected package version</i>, the vulnerability description, and possible remediation steps.</p>`,
         `<h3>The <code>npm audit</code> command</h3>
@@ -607,7 +534,7 @@ const { add, subtract } = require('./mathFunctions');
         </ul>
         `,
         `<h3>Additional Options</h3>
-        <ul><code>--force</code>: This option <i>forces the application of patches even if they include major version upgrades, which could introduce breaking changes</i>:
+        <ul><b><code>--force</code></b>: This option <i>forces the application of patches even if they include major version upgrades, which could introduce breaking changes</i>:
           <li>
           <pre><code>
 npm audit fix <i>--force</i>
@@ -906,6 +833,106 @@ router
         <p><i><b>Each route can have one or more handler functions</b>, which are executed when the route is matched.</i></p>
         <p><i>Node.js itself doesn't come with a built-in router</i>, so routing is often handled by Node.js frameworks like Express, which simplify the process of writing server-side code.</p>
         `,
+      ],
+    },
+    {
+      sectionTitle: 'Controlling the Node.js process',
+      sectionSource: '',
+      tooltips: [
+        `<p>Remember when create a simple server? When we start that server and listening for incoming request, Node.js cannot simply exit the processs (exit the program), because the whole goal is to wait for the requests to come in.</p>
+        <p><b>In Node.js, <code>process.exit()</code> is a method used to terminate the Node.js process.</b></p>
+        <p><i>When <code>process.exit()</code> is called, the Node.js <b>event loop is stopped immediately</b>, and no further asynchronous operations are performed.</i> It's often used to forcefully terminate the application under certain conditions, like critical errors or when a specific condition is met.</p>
+        <p>However, it's important to <i>use <code>process.exit()</code> with caution, especially in production code</i>, as it doesn't allow graceful shutdown and can leave resources in an inconsistent state. It's generally recommended to handle errors and shutdown gracefully whenever possible.</p>
+        <ul>The <code>process</code> object is a global that provides information about, and control over, the current Node.js process. As a global, it is always available to Node.js applications without using <code>require()</code>. It can also be explicitly accessed using <code>require()</code>:
+          <li>
+            <pre><code>
+const process = require('process');
+            </code></pre>
+          </li>
+        </ul>
+        <p>NOTE: <i><code>process</code> is a <u>global feature</u></i> provided by Node.js without the need for explicit import or inclusion. Node.js provide many these features that are built-in and can be accessed directly.</p>
+        `,
+      ],
+    },
+    {
+      sectionTitle: 'Handling Large Volumes of Data: Introduction to Streams',
+      sectionSource: '',
+      highlights: {
+        highlight1: ['Streams'],
+      },
+      tooltips: [
+        `<p>Streams are used to <i><b>process (read and write) data piece by piece (chunks)</b>, without completing the whole read or write operation</i>, and therefore without keeping all the data in memory.</p>
+        <p>Streams in Node.js come in different types, including readable, writable, duplex, and transform streams.</p>
+        <ul>Benefits of using streams:
+          <li>- perfect for handling <i>large volumes of data</i>, for example videos;</li>
+          <li>- more efficient data processing in terms of <u>memory</u> (no need to keep all data in
+            memory) and <u>time</u> (we don't have to wait until all the data is available).</li>
+        </ul>
+        <p><img src="../../src/img/streams_1.jpg"/></p>
+        `,
+        `<h3>Streams in practice</h3>
+        <p>One important thing to note is that streams are actually instances of the <code>EventEmitter</code> class, meaning that <i>all streams can emit and listen to named events</i>.</p>
+        <p>NOTE: <b>In Node.JS, all streams are implemented using the event emitter</b>, where the events are emitted by Node.js,and we just react to the events on that stream using the <code>.on()</code> function.</p>
+        <p><i>In the case of readable streams, they can emit and we as developers can listen to many different events. The most important two are <b>the <code>data</code> and the <code>end</code> events</b>.</i> The <code>data</code> event is emitted when there is a new piece of data to consume, and the <code>end</code> event is emitted as soon as there is no more data to consume. And of course, we as developers can then react to these events accordingly.</p>
+        <pre><code>
+const fs = require("fs");
+const server = require("http");
+
+server.createServer((req, res) => {
+  // ---- Solution 1: Read the entire file in one go ----
+  <i>fs.readFile</i>("test-file.txt", (err, <i>data</i>) => {
+    if (err) console.log(err);
+    <i>res.send(data);</i>
+  });
+
+
+  // ---- Solution 2: Streams ----
+  const readable1 = <i>fs.<b>createReadStream</b></i>("test-file.txt");
+
+  readable1<i>.on(<b>"data"</b>, <b>chunk</b> => {
+    res.write(chunk);
+  })</i>;
+
+  readable1<i>.on(<b>"end"</b>, () => {
+    res.send();
+  })</i>;
+
+  readable1<i>.on(<b>"error"</b>, err => {
+    res.statusCode = 500;
+    res.send("File not found!");
+  })</i>;
+
+
+  // ---- Solution 3: Streams ----
+  const readable2 = <i>fs<b>.createReadStream</b></i>("test-file.txt");
+  readable2<i><b>.pipe</b>(res)</i>;
+});
+
+server.listen(3000);
+      </code></pre>`,
+
+        `<h3>Solution 2: Streams implemented with the <code>fs.createReadStream()</code> method</h3>
+      <p>The <code>fs.createReadStream()</code> method in Node.js is used to <i>create a readable stream to read data from a file</i>. This method is part of the <code>fs</code> (file system) module and is <i>ideal for reading <u>large files</u>, as it <b>reads the file in chunks</b> rather than loading the entire file into memory</i>.</p>
+      <p>The <code>fs.createReadStream()</code> method returns the <code>fs.ReadStream</code> object. The <code>fs.ReadStream</code> object is a kind of an event emitter that emits various different named events, depending on what's currently happening to that file. We can use these events to read our file in piece by piece, and every time a piece of data is received, we can do some processing on that data while we wait for the rest of the data to be read it.</p>
+      <p>The results we get back from readable streams are just <b>raw buffers of bytes</b>.</p>
+      `,
+        `<h3>Solution 3: Streams implemented with the <code>pipe</code> function</h3>
+      <p>The <code>pipe</code> function is meant to connect a readable stream source to a readable stream destination. In other words, the <code>pipe</code> function sends the data from the readable stream to a writable stream.</p>
+      <p><code>pipe</code> <i><b>automatically manages the flow of data</b>, pausing and resuming as necessary so that the writable stream is not overwhelmed with data</i>. You can chain multiple pipes to handle complex streaming workflows.</p>
+      <pre><code>
+const fs = require('fs');
+
+const readableStream = fs.createReadStream('source.txt');
+const writableStream = fs.createWriteStream('destination.txt');
+
+readableStream.pipe(writableStream);
+      </code></pre>
+      <p>In the above example, <code>readableStream.pipe(writableStream)</code> will read data from source.txt and write it directly to destination.txt without loading the entire file into memory, making it very efficient.</p>
+      `,
+        `<h3>Advantages of Using Streams and <code>pipe()</code></h3>
+      <p><i>Memory Efficiency</i>: Streams process data in chunks, which means you don’t have to load the entire dataset into memory at once.</p>
+      <p><i>Time Efficiency</i>: Streams can start processing data as soon as it begins to be available, rather than waiting for all the data to be loaded.</p>
+      <p><i>Ease of Use</i>: The <code>.pipe()</code> method simplifies the process of transferring data from one stream to another.</p>`,
       ],
     },
   ],
