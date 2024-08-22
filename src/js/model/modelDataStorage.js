@@ -246,6 +246,20 @@ myEmitter<i>.on</i>('newSale', stock => {
 
 myEmitter<i>.emit</i>('newSale', 9);
         </code></pre>
+
+        <pre><code>
+const { get } = require('https');
+
+get('https://someURL.com', (res) => {
+  res<i>.on</i>(<i>'data'</i>, (chunck) => {
+    console.log(chunck);
+  });
+
+  res<i>.on</i>(<i>'end'</i>, () => {
+    console.log('No more data');
+  })
+});
+        </code></pre>
         `,
       ],
     },
@@ -356,9 +370,9 @@ server.listen(3000);
   ],
 };
 
-const understanding_the_basics = {
-  title: 'Understanding the Basics',
-  titleDescription: 'The Essential Knownledge You Need',
+const development_workflow = {
+  title: 'Improved Development Workflow',
+  titleDescription: 'Developing Efficiently',
   sections: [
     {
       sectionTitle: 'Using Modules in Node.js: Core (Build-In) Modules',
@@ -381,8 +395,325 @@ const fs = <b>require("fs")</b>;
         </ul>
         </p>
         `,
+        `<h3>Why to use modules?</h3>
+        <ul>There are at least 3 resoans to use modules:
+          <li>1. Reuse existing code.</li>
+          <li>2. Organize your code.</li>
+          <li>3. Expose only what will be used.</li>
+        </ul>
+        `,
       ],
     },
+    {
+      sectionTitle: 'Using Modules in Node.js: Our Own Modules',
+      sectionSource: '',
+      highlights: {
+        highlight1: [],
+      },
+      tooltips: [
+        `<p>We can <i>create our own modules and export something from them</i>, like for example, a function. Then we can import this function into another module, and then use that function there.</p>
+        <p>You need to know that <b>in Node.js every single file is treated as a module</b>.</p>
+        <p><i>Node.js uses the <b>CommonJS module system</b> for importing and exporting modules within and across files.</i> This system is primarily used for server-side development and <i>is native to Node.js</i>.</p>
+        `,
+        `<h3>Exporting in Node.js</h3>
+        <p>To export a module, function, object, or any variable from a file in Node.js, you use the <b><code>module.exports</code></b> object or the <b><code>exports</code></b> shorthand.</p>`,
+        `<h3>Export a <u>single</u> entity</h3>
+        <p>If you want to <i>export a <u>single</u> function, object, or class</i> from a file, you can <i><u>assign it directly</u> to <code>module.exports</code></i>:</p>
+        <pre><code>
+<b>module.exports</b> = function sayHello(name) {
+  return "Hello world!";
+};
+        </code></pre>`,
+        `<h3>Export <u>multiple</u> entities</h3>
+        <ul>To export <u>multiple</u> entities, you have 2 solutions:
+        <li>- <i>add them as properties</i> of the <code>exports</code> object:
+        <pre><code>
+<b>exports.</b>add = function(a, b) {
+  return a + b;
+};
+
+<b>exports.</b>subtract = function(a, b) {
+  return a - b;
+};
+        </code></pre>
+        </li>
+
+        <li>- as an <i>entire object</i> to <code>module.exports</code> object:
+        <pre><code>
+module.exports = <b>{</b>
+  add: (a, b) => a + b,
+  subtract: (a, b) => a - b
+<b>}</b>;
+        </code></pre>
+        </li>
+        </ul>
+        `,
+        `<h3>Importing in Node.js</h3>
+        <p>To use the exported module or functions in another file, you use the <code>require()</code> function provided by Node.js</p>
+        <pre><code>
+const sayHello = require('./sayHello');
+
+const mathFunctions = require('./mathFunctions');
+console.log(mathFunctions.add);
+console.log(mathFunctions.subtract); 
+
+//or <i>use destructuring</i>
+const { add, subtract } = require('./mathFunctions');
+        </code></pre>
+        `,
+        `<h3>ES Modules in Node.js</h3>
+       <p><b>Node.js also supports ES Modules (ESM)</b>, a newer module system used in modern JavaScript development for both client and server side. ESM uses <code>import</code> and <code>export</code> statements and <i>is enabled by adding <code>"type": "module"</code> in your package.json</i> file or <i>using the <code>.mjs</code> extension for your modules</i>.</p>
+       <p>You can choose between CommonJS and ESM depending on your project's compatibility and your team's preference.</p>
+       `,
+        `<h3>Why to use modules?</h3>
+       <ul>There are at least 3 resoans to use modules:
+         <li>1. Reuse existing code.</li>
+         <li>2. Organize your code.</li>
+         <li>3. Expose only what will be used.</li>
+       </ul>
+       `,
+      ],
+    },
+    {
+      sectionTitle:
+        'Using Modules in Node.js: Installing 3rd Party Modules (Packages)',
+      sectionSource: '',
+      highlights: {
+        highlight1: ['3rd Party Modules (Packages)'],
+      },
+      tooltips: [
+        `<h3>Why to use modules?</h3>
+        <ul>There are at least 3 resoans to use modules:
+          <li>1. Reuse existing code.</li>
+          <li>2. Organize your code.</li>
+          <li>3. Expose only what will be used.</li>
+        </ul>
+        `,
+        `<h3>Node.js core modules, custom code and third-party packages</h3>
+        <p>Node projects typically don't just use core modules and custom code, but also third-party packages.</p>
+        <p>You install them via npm.</p>
+        `,
+        `<h3>Third-party packages: development vs production vs global packages</h3>
+      <ul>Third-party packages which you install can be divided into:
+        <li>- <i>development</i> dependencies (<code>--save-dev</code>), so packages which mostly help you during development;</li>
+        <li>- <i>production</i> dependencies (<code>--save</code>), so packages that helps you for the app as it's running on a server.</li>
+      </ul>
+      <p>NOTE: You can basically tell npm which kind of dependency you will install. This does not make a huge difference and you can omit the setting, but it helps you understand which package is used for what. <code>--save</code> and <code>--save-dev</code> allow you to differentiate between production and development dependencies.</p>
+      <p>For example nodemon package would be a development dependency, because we only use it during the development process, once we install our app on a real server we don't need it there. The real server which is running somewhere in the Internet of course shouldn't restart and it also doesn't have to because we'll not change its code dynamically.</p>
+      <p>There also is a third option by the way, <i><code>-g</code> we'll not install a package on a specific project, but globally on your machine so that you can use it anywhere</i>.</p>
+      <p>NOTE: You can differentiate between <u>production</u> dependecies (<code>--save</code>), <u>development</u> dependencies (<code>--save-dev</code>) and <u>global</u> dependencies (<code>-g</code>).</p>
+      `,
+        `<h3>Using 3rd Party Modules (Packages)</h3>
+      <p>To use a 3rd Party Module (Package) that you already install, all you have to do is to <code>const moduleVariable = <i>require('moduleName')</i></code> without specifying a path to it. Then Node.js will automatically know that it will have to go into the node_modules folder where all the dependencies are, and search for that module there.</p>
+      `,
+      ],
+    },
+    {
+      sectionTitle:
+        'Global Features vs Core (Build-In) Modules vs 3rd Party Modules',
+      sectionSource: '',
+      tooltips: [
+        `<p>In Node.js, understanding the distinction between global features, core modules, and third-party modules is essential for effective development.</p>`,
+        `<h3>Global Features</h3>
+        <ul>Global features in Node.js refer to <i>functionalities or objects that are available throughout the application without the need for explicit import or inclusion</i>. These features are built-in and can be accessed directly. Examples include:
+          <li>- <code>console</code>: for logging messages to the console;</li>
+          <li>- <code>process</code>: for accessing information about the current Node.js process;</li>
+          <li>- <code>Buffer</code>: for handling binary data;</li>
+          <li>- <code>setTimeout</code>, <code>setInterval</code>: for scheduling tasks;</li>
+          <li>- <code>require</code>: for importing modules.</li>
+        </ul>
+        <p>While these features are globally available, it's often recommended to avoid over-reliance on them as they can lead to code that is difficult to maintain and debug.</p>
+        `,
+        `<h3>Core (Build-In) Modules</h3>
+        <ul>Core modules in Node.js are <i>modules that are bundled with the Node.js runtime and can be imported into any Node.js application without the need for additional installation</i>. These modules provide essential functionalities for building applications. Examples include:
+          <li>- <code>fs</code>: for file system operations;</li>
+          <li>- <code>http</code> & <code>https</code>: for creating HTTP and HTTPS servers and clients;</li>
+          <li>- <code>path</code>: for handling file paths;</li>
+          <li>- <code>os</code>: for accessing operating system-related information.</li>
+        </ul>
+        <p>Core modules are generally more reliable and efficient compared to third-party modules since they are maintained as part of the Node.js project itself.</p>
+        `,
+        `<h3>3rd Party Modules</h3>
+        <ul>Third-party modules are <i>modules developed by the Node.js community or external developers</i>. These modules extend the functionality of Node.js by <i>providing additional features that are not available in core modules</i>. They are typically published on npm (Node Package Manager) and can be easily installed using npm or yarn. Examples include:
+          <li>- <code>express</code>: a web application framework;</li>
+          <li>- <code>lodash</code>: a utility library;</li>
+          <li>- <code>mongoose</code>: an ORM (Object-Relational Mapping) library for MongoDB;</li>
+          <li>- <code>axios</code>: a promise-based HTTP client.</li>
+        </ul>
+        <p>Third-party modules greatly enhance the productivity of Node.js developers by <i>providing pre-built solutions for common tasks</i>. However, it's important to <i>check third-party modules for quality, security, and maintenance status</i> before including them in a project.</p>
+        `,
+        `<h3>Summary</h3>
+        <p>In summary, global features are <i>built-in functionalities</i> available throughout the application, core modules are <i>essential modules bundled with Node.js</i>, and third-party modules are <i>external modules developed by the community to extend Node.js functionality</i>. Understanding the distinctions between these types of modules is crucial for building robust and efficient Node.js applications.</p>
+        `,
+      ],
+    },
+    {
+      sectionTitle: 'Understanding package.json file',
+      sectionSource: '',
+      highlights: {
+        highlight1: ['package.json', 'NPM Scripts'],
+      },
+      tooltips: [
+        `<p>NPM is a software that we use to manage the 3rd party open-source packages that we choose to include and use in our project.</p>
+        <p>The first thing that we usually do whenever we start a new project, is to start with <code>npm init</code> that will create a <code>package.json</code> file.</p>
+        <p><i><code>package.json</code> file is kind of a <u>configuration file</u> of our project where all kinds of data about the project is stored.</i></p>
+        `,
+        `<h3>Global & Local npm Packages</h3>
+        <p>In the last lecture, we added nodemon as a <i>local dependency</i> to our project.</p>
+      <p>The good thing about local dependencies is that you can share projects without the node_modules folder (where they are stored) and you can run <code>npm install</code> in a project to then re-create that node_modules folder. This allows you to share only your source code, hence reducing the size of the shared project vastly.</p>
+      <p>I showed that <code>nodemon app.js</code> would not work in the terminal or command line because we don't use local dependencies there but global packages. You could install nodemon globally if you wanted (this is NOT required though - because we can just run it locally): <code>npm install -g nodemon</code> would do the trick. Specifically <i>the <code>-g</code> flag ensures that the package gets added as a global package which you now can use anywhere on your machine, <u>directly from inside the terminal or command prompt</u></i>.</p>
+        `,
+        `<h3>Package Versioning and Updating</h3>
+        <p>By running <code>npm outdated</code> in your terminal, you will receive a table with all outdated packages.</p>
+        <p>You can install a specific version of a npm package by running <code>npm install packageName<i>@4.8.3</i></code> or simply <code>npm install packageName<i>@4</i></code>.</p>
+        <p>NOTE: <code>npm install packageName<i>@4</i></code> will install the latest version inside of 4, with the latest minor and patch versions.</p>
+        <p>You can update a specific npm package by running <code>npm update packageName</code>. The update command will respect the symbol that you'll have in the front of the package: <code>~</code>, <code>^</code> or <code>*</code>.</p>
+        <pre><code>
+{
+  "dependecies": {
+      "package1": "<b>~</b>1.5.7",
+      "package2": "<b>^</b>2.8.1",
+      "package3": "<b>*</b>4.1.5"
+  }
+}
+        </code></pre>
+        <ul>What symbols means:
+          <li>- <b><code>~</code></b> means that we only accept <i><b>PATCH (bug fixes)</b> releases</i> (~1.5.<i>7</i>). The patch releases includes only bug fixes that will not break our code;</li>
+          <li>- <b><code>^</code></b> means that we only accept <i><b>MINOR</b> releases</i> (^1.<i>5</i>.7). The minor releases includes some new features added to the package that will not break our code;</li>
+          <li>- <b><code>*</code></b> means that we accept <i><b>MAJOR (all)</b> releases</i>: major, minor & patch (bug fixes) (*1.5.7). The major releases includes huge new releases which can have breaking changes to previous versions (break our code).</li>
+        </ul>
+        <p>In the context of npm dependencies, version numbers and the symbols preceding them (<code>~</code>, <code>^</code> or <code>*</code>) signify <i>different strategies for updating dependencies</i>. Understanding these symbols helps <i>manage package versions</i> and <i>ensures compatibility</i> within projects.</p>
+        <p>You can uninstall a npm package by running <code>npm uninstall packageName</code>.</p>
+        `,
+        `<h3>Symbols and Their Meanings: Explanation in detail</h3>
+        <p>1. Tilde (<code>~</code>): When a version number is preceded by a tilde (<code>~</code>), it indicates that updates are allowed only to the latest PATCH version of the specified <i>MINOR version</i>. For example, <code>~1.5.7</code> allows updates to any version <code>1.5.x</code> where x >= 7. This is more restrictive and aims to reduce the risk of introducing breaking changes with new patches.</p>
+        <p>2. Caret (<code>^</code>): The caret symbol (<code>^</code>) allows updates that do not modify the left-most non-zero digit in the semver string. For <code>^2.8.1</code>, this means any version <code>2.x.x</code> is allowed as long as x >= 8.1 for the <i>MINOR version, and any PATCH version updates</i>. This is more permissive than the tilde, allowing for minor updates that should be backwards compatible. The minor releases include some new features that will not break our code.</p>        
+        </p>3. Asterisk (<code>*</code>) or Star: An asterisk (<code>*</code>) indicates that <i>any MAJOR (all) version is allowed</i>. It's the most permissive option, essentially ignoring versioning and always fetching the latest version. This can be risky as it might pull in incompatible updates. The major releases includes huge new releases which can have breaking changes to previous versions (break our code), so be aware that when there is a new version it might usually affect the code that you already have.</p>`,
+      ],
+    },
+    {
+      sectionTitle: 'Vulnerabilities In Dependencies',
+      sectionSource: '',
+      tooltips: [
+        `<p>When developing Node.js applications, <i>managing dependencies is crucial for maintaining the security of your project</i>. The Node Package Manager (npm) offers tools to help developers identify and fix vulnerabilities in their dependencies. Two essential commands for this purpose are <b><code>npm audit</code></b> and <b><code>npm audit fix</code></b>.</p>`,
+        `<h3>The <code>npm audit</code> command</h3>
+        <p>The <code>npm audit</code> command <b>analyzes the dependencies in your project to identify known security vulnerabilities</b>. When you run <code>npm audit</code>, npm will perform a security check against your project's dependencies by querying the npm public registry for any known vulnerabilities in the packages you are using. It <i>generates a report that categorizes vulnerabilities by severity (low, moderate, high, critical)</i> and <i>provides information on the affected package version</i>, the vulnerability description, and possible remediation steps.</p>`,
+        `<h3>The <code>npm audit</code> command</h3>
+        <ul>The <code>npm audit fix</code> command <b>automatically applies available patches to resolve vulnerabilities in your project dependencies</b>. <code>npm audit fix</code> attempts to fix the vulnerabilities identified by <code>npm audit</code> by <i>installing patched versions of the affected packages or updating the dependency to a non-vulnerable version</i>:
+          <li>1. It first checks if a fix is available that doesn’t break your existing dependency tree (i.e., doesn’t introduce breaking changes).</li>
+          <li>2. If successful, it updates the package-lock.json and node_modules directory with the new dependency versions.</li>
+          <li>3. If an automatic fix isn’t possible (for example, if the fix involves a major version update), it will inform you and provide instructions for manual resolution.</li>
+        
+        </ul>
+        `,
+        `<h3>Additional Options</h3>
+        <ul><code>--force</code>: This option <i>forces the application of patches even if they include major version upgrades, which could introduce breaking changes</i>:
+          <li>
+          <pre><code>
+npm audit fix <i>--force</i>
+          </code></pre>
+          </li>
+        </ul>
+        `,
+        `<h3>Best Practices</h3>
+        <p><b>Regular Audits</b>: <i>Regularly running <code>npm audit</code> as part of your development process</i> helps you stay aware of potential vulnerabilities in your dependencies.</p>
+        <p><b>Manual Reviews</b>: While <code>npm audit fix</code> is convenient, <i>some vulnerabilities may require manual intervention, especially if they involve breaking changes or critical fixes</i> that affect the core functionality of your application.</p>
+        <p><b>Dependency Management</b>: Consider using tools like <code>npm-check-updates</code> to keep your dependencies up-to-date regularly, reducing the chances of accumulating security debt.</p>`,
+        `<h3>Limitations</h3>
+        <p><b>False Positives</b>: <i>Occasionally, <code>npm audit</code> might flag vulnerabilities that are not applicable to your use case</i>, especially in development dependencies or optional features you’re not using.</p>
+        <p><b>Outdated Vulnerabilities</b>: <i>Sometimes, the audit report may include vulnerabilities that have already been fixed in the latest versions of packages, but your package-lock.json might still reference older versions</i>.</p>`,
+      ],
+    },
+    {
+      sectionTitle: 'Understanding NPM Scripts',
+      sectionSource: '',
+      highlights: {
+        highlight1: ['NPM Scripts'],
+      },
+      tooltips: [
+        `<h3>What are NPM Scripts?</h3>
+        <p><p>NPM (Node Package Manager) scripts are a feature of the <code>package.json</code> file that <i>allow you to <b>define custom commands</b> to automate various tasks</i> in your Node.js projects. <i>These scripts can be used to run build processes, start servers, run tests, lint code, and perform many other development activities.</i></p></p>`,
+        `<h3>Definition</h3>
+        <p>NPM scripts are defined in the scripts section of the <code>package.json</code> file. Each script is a key-value pair where the key is the script name and the value is the command to be executed.</p>
+        <pre><code>
+{
+  "name": "my-app",
+  "version": "1.0.0",
+  <i>"scripts": {
+    "start": "node app.js",
+    "build": "webpack --config webpack.config.js",
+    "test": "mocha test/",
+    "lint": "eslint ."
+  }</i>
+}
+        </code></pre>
+        `,
+        `<h3>Usage</h3>
+        <p>To run an NPM script, you use the <code>npm run <script-name></code> command. For example, to run the start script, you would use <code>npm run start</code>.</p>`,
+        `<h3>Default Scripts</h3>
+        <p>Some script names have special meanings and can be run with shorter commands. For instance, <code>start</code>, <code>test</code>, <code>preinstall</code>, <code>postinstall</code>, <code>prepublish</code>, and <code>postpublish</code> have default behaviors. You can run <code>npm start</code> instead of <code>npm run start</code>.</p>`,
+        `<h3>Script Composition</h3>
+        <p>NPM scripts can call other NPM scripts, allowing for complex workflows. This can be achieved using the <code>npm run</code> command within another script.<p>
+        <pre><code>
+{
+  "scripts": {
+    "clean": "rm -rf dist",
+    <i>"build": "npm run clean && webpack --config webpack.config.js"</i>
+  }
+}
+        </code></pre>
+        `,
+        `<h3>Environment Variables</h3>
+        <p>You can set environment variables in NPM scripts, which can be useful for configuring different environments (development, testing, production).</p>
+        <pre><code>
+{
+  "scripts": {
+    <i>"start": "<b>NODE_ENV=production</b> node app.js"</i>
+  }
+}
+        </code></pre>
+        `,
+      ],
+    },
+    {
+      sectionTitle: 'Using nodemon package for autorestarts',
+      sectionSource: '',
+      highlights: {
+        highlight2: ['nodemon package'],
+      },
+      tooltips: [
+        `<p>nodemon is a very nice tool that helps us develop Node.js applications by <i>automatically restarting the Node.js application whenever we change some files in our working directory</i>.</p>
+        <pre><code> 
+{
+  "name": "js-project-1", 
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+      "test": "echo "Error: no test specified" &amp;&amp; exit 1",
+      <i>"start": "nodemon app.js"</i>
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+      <i>"nodemon": "^3.1.0"</i>
+  }
+}
+       </code></pre>
+       <p>To use nodemon, in your terminal you run the command that will execute the npm script called "start":</p>
+       <pre><code>
+npm run start
+       </code></pre>
+       `,
+      ],
+    },
+  ],
+};
+
+const understanding_the_basics = {
+  title: 'Understanding the Basics',
+  titleDescription: 'The Essential Knownledge You Need',
+  sections: [
     {
       sectionTitle: 'Creating a Simple Web Server',
       sectionSource: '',
@@ -574,257 +905,6 @@ router
         </code></pre>
         <p><i><b>Each route can have one or more handler functions</b>, which are executed when the route is matched.</i></p>
         <p><i>Node.js itself doesn't come with a built-in router</i>, so routing is often handled by Node.js frameworks like Express, which simplify the process of writing server-side code.</p>
-        `,
-      ],
-    },
-    {
-      sectionTitle: 'Using Modules in Node.js: Our Own Modules',
-      sectionSource: '',
-      highlights: {
-        highlight1: [],
-      },
-      tooltips: [
-        `<p>We can <i>create our own modules and export something from them</i>, like for example, a function. Then we can import this function into another module, and then use that function there.</p>
-        <p>You need to know that <b>in Node.js every single file is treated as a module</b>.</p>
-        <p><i>Node.js uses the <b>CommonJS module system</b> for importing and exporting modules within and across files.</i> This system is primarily used for server-side development and <i>is native to Node.js</i>.</p>
-        `,
-        `<h3>Exporting in Node.js</h3>
-        <p>To export a module, function, object, or any variable from a file in Node.js, you use the <b><code>module.exports</code></b> object or the <b><code>exports</code></b> shorthand.</p>`,
-        `<h3>Export a <u>single</u> entity</h3>
-        <p>If you want to <i>export a <u>single</u> function, object, or class</i> from a file, you can <i><u>assign it directly</u> to <code>module.exports</code></i>:</p>
-        <pre><code>
-<b>module.exports</b> = function sayHello(name) {
-  return "Hello world!";
-};
-        </code></pre>`,
-        `<h3>Export <u>multiple</u> entities</h3>
-        <p>To <i>export <u>multiple</u> entities</i>, you can <i><u>add them as properties</u> of the <code>module.exports</code> object or <code>module.exports</code> object</i>:</p>
-        <pre><code>
-<b>exports.</b>add = function(a, b) {
-  return a + b;
-};
-
-<b>exports.</b>subtract = function(a, b) {
-  return a - b;
-};
-        </code></pre>
-        `,
-        `<h3>Importing in Node.js</h3>
-        <p>To use the exported module or functions in another file, you use the <code>require()</code> function provided by Node.js</p>
-        <pre><code>
-const sayHello = require('./sayHello');
-
-const mathFunctions = require('./mathFunctions');
-console.log(mathFunctions.add);
-console.log(mathFunctions.subtract); 
-
-//or <i>use destructuring</i>
-const { add, subtract } = require('./mathFunctions');
-        </code></pre>
-        `,
-        `<h3>ES Modules in Node.js</h3>
-       <p><b>Node.js also supports ES Modules (ESM)</b>, a newer module system used in modern JavaScript development for both client and server side. ESM uses <code>import</code> and <code>export</code> statements and <i>is enabled by adding <code>"type": "module"</code> in your package.json</i> file or <i>using the <code>.mjs</code> extension for your modules</i>.</p>
-       <p>You can choose between CommonJS and ESM depending on your project's compatibility and your team's preference.</p>
-       `,
-      ],
-    },
-  ],
-};
-
-const development_workflow = {
-  title: 'Improved Development Workflow',
-  titleDescription: 'Developing Efficiently',
-  sections: [
-    {
-      sectionTitle: 'Understanding package.json file',
-      sectionSource: '',
-      highlights: {
-        highlight1: ['package.json', 'NPM Scripts'],
-      },
-      tooltips: [
-        `<p>NPM is a software that we use to manage the 3rd party open-source packages that we choose to include and use in our project.</p>
-        <p>The first thing that we usually do whenever we start a new project, is to start with <code>npm init</code> that will create a <code>package.json</code> file.</p>
-        <p><i><code>package.json</code> file is kind of a <u>configuration file</u> of our project where all kinds of data about the project is stored.</i></p>
-        `,
-        `<h3>Global & Local npm Packages</h3>
-        <p>In the last lecture, we added nodemon as a <i>local dependency</i> to our project.</p>
-      <p>The good thing about local dependencies is that you can share projects without the node_modules folder (where they are stored) and you can run <code>npm install</code> in a project to then re-create that node_modules folder. This allows you to share only your source code, hence reducing the size of the shared project vastly.</p>
-      <p>I showed that <code>nodemon app.js</code> would not work in the terminal or command line because we don't use local dependencies there but global packages. You could install nodemon globally if you wanted (this is NOT required though - because we can just run it locally): <code>npm install -g nodemon</code> would do the trick. Specifically <i>the <code>-g</code> flag ensures that the package gets added as a global package which you now can use anywhere on your machine, <u>directly from inside the terminal or command prompt</u></i>.</p>
-        `,
-        `<h3>Package Versioning and Updating</h3>
-        <p>By running <code>npm outdated</code> in your terminal, you will receive a table with all outdated packages.</p>
-        <p>You can install a specific version of a npm package by running <code>npm install packageName<i>@4.8.3</i></code> or simply <code>npm install packageName<i>@4</i></code>.</p>
-        <p>NOTE: <code>npm install packageName<i>@4</i></code> will install the latest version inside of 4, with the latest minor and patch versions.</p>
-        <p>You can update a specific npm package by running <code>npm update packageName</code>. The update command will respect the symbol that you'll have in the front of the package: <code>~</code>, <code>^</code> or <code>*</code>.</p>
-        <pre><code>
-{
-  "dependecies": {
-      "package1": "<b>~</b>1.5.7",
-      "package2": "<b>^</b>2.8.1",
-      "package3": "<b>*</b>4.1.5"
-  }
-}
-        </code></pre>
-        <ul>What symbols means:
-          <li>- <b><code>~</code></b> means that we only accept <i><b>patch (bug fixes)</b> releases</i> (~1.5.<i>7</i>). The patch releases includes only bug fixes that will not break our code;</li>
-          <li>- <b><code>^</code></b> means that we only accept <i><b>minor</b> releases</i> (^1.<i>5</i>.7). The minor releases includes some new features added to the package that will not break our code;</li>
-          <li>- <b><code>*</code></b> means that we accept <i><b>all</b> releases</i>: major, minor & patch (bug fixes) (*1.5.7). The major releases includes huge new releases which can have breaking changes to previous versions (break our code).</li>
-        </ul>
-        <p>In the context of npm dependencies, version numbers and the symbols preceding them (<code>~</code>, <code>^</code> or <code>*</code>) signify <i>different strategies for updating dependencies</i>. Understanding these symbols helps <i>manage package versions</i> and <i>ensures compatibility</i> within projects.</p>
-        <p>You can uninstall a npm package by running <code>npm uninstall packageName</code>.</p>
-        `,
-        `<h3>Symbols and Their Meanings: Explanation in detail</h3>
-        <p>1. Tilde (<code>~</code>): When a version number is preceded by a tilde (<code>~</code>), it indicates that updates are allowed only to the latest PATCH version of the specified MINOR version. For example, <code>~1.5.7</code> allows updates to any version <code>1.5.x</code> where x >= 7. This is more restrictive and aims to reduce the risk of introducing breaking changes with new patches.</p>
-        <p>2. Caret (<code>^</code>): The caret symbol (<code>^</code>) allows updates that do not modify the left-most non-zero digit in the semver string. For <code>^2.8.1</code>, this means any version <code>2.x.x</code> is allowed as long as x >= 8.1 for the MINOR version, and any PATCH version updates. This is more permissive than the tilde, allowing for minor updates that should be backwards compatible. The minor releases include some new features that will not break our code.</p>        
-        </p>3. Asterisk (<code>*</code>) or Star: An asterisk (<code>*</code>) indicates that any version is allowed. It's the most permissive option, essentially ignoring versioning and always fetching the latest version. This can be risky as it might pull in incompatible updates. The major releases includes huge new releases which can have breaking changes to previous versions (break our code), so be aware that when there is a new version it might usually affect the code that you already have.</p>`,
-      ],
-    },
-    {
-      sectionTitle: 'Understanding NPM Scripts',
-      sectionSource: '',
-      highlights: {
-        highlight1: ['NPM Scripts'],
-      },
-      tooltips: [
-        `<h3>What are NPM Scripts?</h3>
-        <p><p>NPM (Node Package Manager) scripts are a feature of the <code>package.json</code> file that <i>allow you to <b>define custom commands</b> to automate various tasks</i> in your Node.js projects. <i>These scripts can be used to run build processes, start servers, run tests, lint code, and perform many other development activities.</i></p></p>`,
-        `<h3>Definition</h3>
-        <p>NPM scripts are defined in the scripts section of the <code>package.json</code> file. Each script is a key-value pair where the key is the script name and the value is the command to be executed.</p>
-        <pre><code>
-{
-  "name": "my-app",
-  "version": "1.0.0",
-  <i>"scripts": {
-    "start": "node app.js",
-    "build": "webpack --config webpack.config.js",
-    "test": "mocha test/",
-    "lint": "eslint ."
-  }</i>
-}
-        </code></pre>
-        `,
-        `<h3>Usage</h3>
-        <p>To run an NPM script, you use the <code>npm run <script-name></code> command. For example, to run the start script, you would use <code>npm run start</code>.</p>`,
-        `<h3>Default Scripts</h3>
-        <p>Some script names have special meanings and can be run with shorter commands. For instance, <code>start</code>, <code>test</code>, <code>preinstall</code>, <code>postinstall</code>, <code>prepublish</code>, and <code>postpublish</code> have default behaviors. You can run <code>npm start</code> instead of <code>npm run start</code>.</p>`,
-        `<h3>Script Composition</h3>
-        <p>NPM scripts can call other NPM scripts, allowing for complex workflows. This can be achieved using the <code>npm run</code> command within another script.<p>
-        <pre><code>
-{
-  "scripts": {
-    "clean": "rm -rf dist",
-    <i>"build": "npm run clean && webpack --config webpack.config.js"</i>
-  }
-}
-        </code></pre>
-        `,
-        `<h3>Environment Variables</h3>
-        <p>You can set environment variables in NPM scripts, which can be useful for configuring different environments (development, testing, production).</p>
-        <pre><code>
-{
-  "scripts": {
-    <i>"start": "<b>NODE_ENV=production</b> node app.js"</i>
-  }
-}
-        </code></pre>
-        `,
-      ],
-    },
-    {
-      sectionTitle:
-        'Using Modules in Node.js: Installing 3rd Party Modules (Packages)',
-      sectionSource: '',
-      highlights: {
-        highlight1: ['3rd Party Modules (Packages)'],
-      },
-      tooltips: [
-        `<h3>Node.js core modules, custom code and third-party packages</h3>
-        <p>Node projects typically don't just use core modules and custom code, but also third-party packages.</p>
-        <p>You install them via npm.</p>
-        `,
-        `<h3>Third-party packages: development vs production vs global packages</h3>
-      <ul>Third-party packages which you install can be divided into:
-        <li>- <i>development</i> dependencies (<code>--save-dev</code>), so packages which mostly help you during development;</li>
-        <li>- <i>production</i> dependencies (<code>--save</code>), so packages that helps you for the app as it's running on a server.</li>
-      </ul>
-      <p>NOTE: You can basically tell npm which kind of dependency you will install. This does not make a huge difference and you can omit the setting, but it helps you understand which package is used for what. <code>--save</code> and <code>--save-dev</code> allow you to differentiate between production and development dependencies.</p>
-      <p>For example nodemon package would be a development dependency, because we only use it during the development process, once we install our app on a real server we don't need it there. The real server which is running somewhere in the Internet of course shouldn't restart and it also doesn't have to because we'll not change its code dynamically.</p>
-      <p>There also is a third option by the way, <i><code>-g</code> we'll not install a package on a specific project, but globally on your machine so that you can use it anywhere</i>.</p>
-      <p>NOTE: You can differentiate between <u>production</u> dependecies (<code>--save</code>), <u>development</u> dependencies (<code>--save-dev</code>) and <u>global</u> dependencies (<code>-g</code>).</p>
-      `,
-        `<h3>Using 3rd Party Modules (Packages)</h3>
-      <p>To use a 3rd Party Module (Package) that you already install, all you have to do is to <code>const moduleVariable = <i>require('moduleName')</i></code> without specifying a path to it. Then Node.js will automatically know that it will have to go into the node_modules folder where all the dependencies are, and search for that module there.</p>
-      `,
-      ],
-    },
-    {
-      sectionTitle: 'Using nodemon package for autorestarts',
-      sectionSource: '',
-      highlights: {
-        highlight2: ['nodemon package'],
-      },
-      tooltips: [
-        `<p>nodemon is a very nice tool that helps us develop Node.js applications by <i>automatically restarting the Node.js application whenever we change some files in our working directory</i>.</p>
-        <pre><code> 
-{
-  "name": "js-project-1", 
-  "version": "1.0.0",
-  "description": "",
-  "main": "app.js",
-  "scripts": {
-      "test": "echo "Error: no test specified" &amp;&amp; exit 1",
-      <i>"start": "nodemon app.js"</i>
-  },
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-      <i>"nodemon": "^3.1.0"</i>
-  }
-}
-       </code></pre>
-       <p>To use nodemon, in your terminal you run the command that will execute the npm script called "start":</p>
-       <pre><code>
-npm run start
-       </code></pre>
-       `,
-      ],
-    },
-    {
-      sectionTitle:
-        'Global Features vs Core (Build-In) Modules vs 3rd Party Modules',
-      sectionSource: '',
-      tooltips: [
-        `<p>In Node.js, understanding the distinction between global features, core modules, and third-party modules is essential for effective development.</p>`,
-        `<h3>Global Features</h3>
-        <ul>Global features in Node.js refer to <i>functionalities or objects that are available throughout the application without the need for explicit import or inclusion</i>. These features are built-in and can be accessed directly. Examples include:
-          <li>- <code>console</code>: for logging messages to the console;</li>
-          <li>- <code>process</code>: for accessing information about the current Node.js process;</li>
-          <li>- <code>Buffer</code>: for handling binary data;</li>
-          <li>- <code>setTimeout</code>, <code>setInterval</code>: for scheduling tasks;</li>
-          <li>- <code>require</code>: for importing modules.</li>
-        </ul>
-        <p>While these features are globally available, it's often recommended to avoid over-reliance on them as they can lead to code that is difficult to maintain and debug.</p>
-        `,
-        `<h3>Core (Build-In) Modules</h3>
-        <ul>Core modules in Node.js are <i>modules that are bundled with the Node.js runtime and can be imported into any Node.js application without the need for additional installation</i>. These modules provide essential functionalities for building applications. Examples include:
-          <li>- <code>fs</code>: for file system operations;</li>
-          <li>- <code>http</code> & <code>https</code>: for creating HTTP and HTTPS servers and clients;</li>
-          <li>- <code>path</code>: for handling file paths;</li>
-          <li>- <code>os</code>: for accessing operating system-related information.</li>
-        </ul>
-        <p>Core modules are generally more reliable and efficient compared to third-party modules since they are maintained as part of the Node.js project itself.</p>
-        `,
-        `<h3>3rd Party Modules</h3>
-        <ul>Third-party modules are <i>modules developed by the Node.js community or external developers</i>. These modules extend the functionality of Node.js by <i>providing additional features that are not available in core modules</i>. They are typically published on npm (Node Package Manager) and can be easily installed using npm or yarn. Examples include:
-          <li>- <code>express</code>: a web application framework;</li>
-          <li>- <code>lodash</code>: a utility library;</li>
-          <li>- <code>mongoose</code>: an ORM (Object-Relational Mapping) library for MongoDB;</li>
-          <li>- <code>axios</code>: a promise-based HTTP client.</li>
-        </ul>
-        <p>Third-party modules greatly enhance the productivity of Node.js developers by <i>providing pre-built solutions for common tasks</i>. However, it's important to <i>check third-party modules for quality, security, and maintenance status</i> before including them in a project.</p>
-        `,
-        `<h3>Summary</h3>
-        <p>In summary, global features are <i>built-in functionalities</i> available throughout the application, core modules are <i>essential modules bundled with Node.js</i>, and third-party modules are <i>external modules developed by the community to extend Node.js functionality</i>. Understanding the distinctions between these types of modules is crucial for building robust and efficient Node.js applications.</p>
         `,
       ],
     },
@@ -5136,8 +5216,8 @@ const nodeJS_and_TypeScript = {
 export const dataStorage = [
   introduction,
   how_node_works,
-  understanding_the_basics,
   development_workflow,
+  understanding_the_basics,
   working_with_ExpressJS,
   routing,
   dynamic_routes_and_advanced_models,
