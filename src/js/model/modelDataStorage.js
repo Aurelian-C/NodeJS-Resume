@@ -1841,10 +1841,11 @@ const parsing_data = {
   titleDescription: 'Parsing incoming request data',
   sections: [
     {
-      sectionTitle: 'Parsing incoming Requests with body-parser package',
+      sectionTitle:
+        'Parsing data on incoming Requests with body-parser package',
       sectionSource: '',
       highlights: {
-        highlight1: ['Parsing incoming Requests'],
+        highlight1: ['Parsing data on incoming Requests'],
         highlight2: ['body-parser'],
       },
       tooltips: [
@@ -1891,7 +1892,10 @@ app.listen(process.env.PORT);
         highlight2: ['express.json()'],
       },
       tooltips: [
-        `<h3>An example of parsing an incoming JSON request body</h3>
+        `<p><i>Our web servers don't understand JSON format by default.</i> So we need to use a middleware function that parse JSON for us.</p>
+        <p><code>express.json()</code> is a <b>built-in middleware function</b> in Express that understands when an incoming request is being passed in as JSON by the client, based on the <code>Content-Type</code> header, and when it notices an  incoming request with the "application/json" type, it'll do the parsing automatically for us, and it'll set the <code>req.body</code> parameter on the <code>req</code> object with the parsed JSON data.</p>
+        <p>It is based on <code>body-parser</code>. Returns middleware that only parses JSON and <i>only looks at requests where the <code>Content-Type</code> header matches the "application/json" type</i>.</p>
+        <h3>An example of parsing an incoming JSON request body</h3>
         <pre><code>
 const express = require('express');
 
@@ -1905,7 +1909,9 @@ app.post('/product', (req, res, next) => {
 });
 
 app.listen(process.env.PORT);
-      </code></pre>`,
+      </code></pre>
+      <p>NOTE: As <code>req.body</code>’s shape is based on user-controlled input, all properties and values in this object are untrusted and should be validated before trusting.</p>
+      `,
       ],
     },
   ],
