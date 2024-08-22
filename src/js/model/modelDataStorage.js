@@ -939,7 +939,7 @@ app.listen(port, () => {
         highlight2: ['app.use()'],
       },
       tooltips: [
-        `<p><b>To load the middleware function, call <code>app.use()</code></b>, specifying the middleware function. For example, the following code loads the <code>myLogger</code> middleware function before the route to the root path (/).
+        `<p><i>To load the middleware function, call <b><code>app.use()</code></b>, specifying the middleware function.</i> For example, the following code loads the <code>myLogger</code> middleware function before the route to the root path (/).
         <pre><code>
 const express = require('express')
 const app = express()
@@ -981,57 +981,60 @@ app.listen(3000, () => {
     console.log('Server is running on port 3000');
 });
         </code></pre>
-        <p>In this example, <i><code>app.use()</code> is used to register a middleware function</i>. This middleware function logs the current timestamp to the console <u>every time a request is received</u>. <i>The <code>next()</code> function is called to pass control to the next middleware function in the stack.</i></p>
+        <p>In this example, <b><code>app.use()</code> is used to register a middleware function</b>. This middleware function logs the current timestamp to the console <u>every time a request is received</u>. <i>The <code>next()</code> function is called to pass control to the next middleware function in the stack.</i></p>
         <p>NOTE: Using <code>next()</code> allows the request to continue to the next middleware in line (next middleware function in the stack).</p>
         `,
         `<h3>More details about <code>app.use()</code> function</h3>
-        <p>The <code>app.use()</code> function in Express.js is <b>used to <u>mount middleware functions</u> at a specified path</b>. These middleware functions will be <b>executed for every request that matches the specified path</b>. It can be used to set up middleware <u>globally</u> for your entire application or to apply middleware to <u>specific routes or groups of routes</u>.</p>
+        <p>The <code>app.use()</code> function in Express.js is <b>used to <u>mount middleware functions</u> at a specified path</b>. These middleware functions will be <b><u>executed for every request</u> that matches the specified path</b>.</p>
+        <p>It can be used to <i>set up middleware <u>globally</u> for your entire application</i> or to <i>apply middleware to <u>specific routes or groups of routes</u></i>.</p>
         <ul>The <code>app.use()</code> function takes two arguments:
-          <li>1. <code>path</code> (optional): specifies the path for which the middleware function should be executed. <i>If no path is specified, the middleware function will be executed for every incoming request.</i> This is useful for setting up middleware that needs to be applied globally, such as logging, parsing request bodies, or handling authentication.
+          <li>1. <b><code>path</code> (optional)</b>: <i>specifies the path for which the middleware function should be executed.</i> <b>If no path is specified, the middleware function will be executed for every incoming request.</b> This is useful for setting up middleware that needs to be applied globally, such as logging, parsing request bodies, or handling authentication.
           <pre><code>
 app.use((req, res, next) => {
-  // Middleware logic here
+  //Middleware logic here
   next();
 });
           </code></pre>
           <pre><code>
-// In this example, the middleware function will only be executed for requests that start with /api
+//In this example, the middleware function will only be executed for requests that start with /api
+
 app.use('/api', (req, res, next) => {
-  // Middleware logic for requests to /api/
+  //Middleware logic for requests to /api/
   next();
 });
           </code></pre>
           </li>
-          <li>2. <code>callback</code>: the middleware function or an array of middleware functions to be executed. These functions have access to the request (req), response (res), and the next middleware function (next) in the stack.
+          <li>2. <b><code>callback</code></b>: the <i>middleware function</i> or an <i>array of middleware functions</i> to be executed. These functions have access to the request (req), response (res), and the next middleware function (next) in the stack.
           <pre><code>
-// You can also chain multiple middleware functions together by passing an array of middleware functions to app.use():
+//You can also chain multiple middleware functions together by passing an array of middleware functions to app.use():
+
 function middleware1(req, res, next) {
-  // Middleware 1 logic
+  //Middleware 1 logic
   next();
 }
           
 function middleware2(req, res, next) {
-  // Middleware 2 logic
+  //Middleware 2 logic
   next();
 }
           
 app.use('/api', [middleware1, middleware2]);
 
-// This will execute middleware1 and middleware2 in sequence for requests to the specified path.
+//This will execute middleware1 and middleware2 in sequence for requests to the specified path.
           </code></pre>
           </li>
         </ul>
-        <p>Overall, <code>app.use()</code> is a powerful function in Express.js that allows you to <i>set up middleware for your application</i>, making it easy to <i>handle common tasks</i> and <i>modularize your code</i>.</p>
+        <p>Overall, <code>app.use()</code> is a powerful function in Express.js that allows you to set up middleware for your application, making it easy to handle common tasks and modularize your code.</p>
         `,
         `<h3>More details about <code>next()</code> function</h3>
-        <p>In Express.js, the <code>next()</code> function is a callback function that is <i><u>used within middleware functions</u> to pass control to the next middleware function <u>in the stack</u></i>. It is often <i>used to chain multiple middleware functions together</i>, allowing each middleware function to perform its specific tasks before passing control to the next one.</p>
-        <p>NOTE: We have to call <code>next()</code> to allow an incoming request to continue to the next middleware in line. If we don't call <code>next()</code>, middleware just dies, so we should actually send back a response because otherwise the request can't continue its journey to the next middleware function, so it will never reach a place where we might send a response. <i>Express.js doesn't send a default response</i> or anything like that.</p>
+        <p>In Express.js, the <code>next()</code> function is a callback function that is <i><u>used within middleware functions</u> to pass control to the next middleware function <u>in the stack</u></i>. It is often <b>used to chain multiple middleware functions together</b>, <i>allowing each middleware function to perform its <u>specific tasks</u> before passing control to the next one</i>.</p>
+        <p>IMPORTANT: <b>We have to call <code>next()</code> to allow an incoming request to continue to the next middleware in line.</b> If we don't call <code>next()</code>, middleware just dies, so we should actually send back a response because otherwise the request can't continue its journey to the next middleware function, so it will never reach a place where we might send a response. <i>Express.js doesn't send a default response</i> or anything like that.</p>
         <ul>Here's how the <code>next()</code> function works:
           <li>1. When a middleware function is invoked, it receives three arguments: req (the request object), res (the response object), and next (the callback function).</li>
           <li>2. By calling <code>next()</code>, the current middleware function signals to Express.js that it has completed its tasks and that the control should be passed to the next middleware function.</li>
-          <li>3. If <code>next()</code> is called without any arguments, Express.js proceeds to the next middleware function in the stack. If there are no more middleware functions in the stack, Express.js proceeds to route handlers, or if there are no route handlers, it sends the response back to the client.</li>
+          <li>3. <i>If <code>next()</code> is called <u>without any arguments</u>, Express.js proceeds to the next middleware function in the stack. <b>If there are no more middleware functions in the stack, Express.js proceeds to route handlers</b>, or if there are no route handlers, it sends the response back to the client.</i></li>
         </ul>
-        <p><i><b>The <code>next()</code> function can also be used to handle errors within middleware functions.</b> If <code>next()</code> is called with an argument (usually an error object), Express.js will skip all remaining middleware functions in the stack and pass control to the error handling middleware (if one is defined).</i> This allows you to centralize error handling logic in a single middleware function.</p>
+        <p><i><b>The <code>next()</code> function can also be used to handle errors within middleware functions.</b> If <code>next()</code> is called <u>with an argument</u> (usually an error object), Express.js will skip all remaining middleware functions in the stack and pass control to the error handling middleware (if one is defined).</i> This allows you to centralize error handling logic in a single middleware function.</p>
         <p>If an error occurs in any middleware function or route handler and <code>next(err)</code> is called with the error object, Express.js will pass control to the error handling middleware, which can then handle the error and send an appropriate response back to the client.</p>
         `,
       ],
@@ -1913,7 +1916,7 @@ const mvc = {
   titleDescription: 'Structuring your code',
   sections: [
     {
-      sectionTitle: 'What is the MVC?',
+      sectionTitle: 'What is the MVC (Model View Controller)?',
       sectionSource: '',
       highlights: {
         highlight1: ['MVC'],
