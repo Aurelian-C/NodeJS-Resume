@@ -297,7 +297,7 @@ get('https://someURL.com', (res) => {
 
 const development_workflow = {
   title: 'Improved Development Workflow',
-  titleDescription: 'Developing Efficiently',
+  titleDescription: 'Developing Efficiently & Structuring Your Code',
   sections: [
     {
       sectionTitle: 'Using Modules in Node.js: Core (Build-In) Modules',
@@ -632,6 +632,52 @@ npm audit fix <i>--force</i>
 npm run start
        </code></pre>
        `,
+      ],
+    },
+    {
+      sectionTitle:
+        'Backend Architecture: What is the MVC (Model-View-Controller)?',
+      sectionSource: '',
+      highlights: {
+        highlight1: ['MVC'],
+      },
+      tooltips: [
+        `<p>In this module I want to dive into a very important aspect of building backend applications. We want to follow a certain <i>pattern for structuring our code</i> and with that, I don't really just mean how we split it over files or how we write the code, but I mean how we <i>logically separate our code</i> and the different functions it fulfills or the different things it does.</p>
+        `,
+        `<h3>The MVC Pattern</h3>
+        <p>What does MVC stand for or what is it? It's all about a <i>separation of concerns</i>, so making sure that <i>different parts of your code do different things</i>, and you clearly know which part is responsible for what. MVC stands for Model-View-Controller, so we work with <i>models</i>, <i>views</i> and <i>controllers</i>.</p>
+        <p>MVC is a pattern that tells us <b>how to organize the various different pieces of our code <u>based on what they do</u></b>.</p>`,
+        `<h3>How MVC works</h3>
+        <p>Our code is split into the Model, the View and the Controller, while we have the User who interacts with these components. These interactions are generally that the <i>User uses the Controller</i>, for example, by making requests. <i>The Controller understands and processes that User's requests and then manipulates the Model accordingly</i>, for example, by adding or removing data from a database.</p>
+        <p>And <i>when the Model is updated by the Controller, the View react to those changes and the User sees the updated data</i>.</p>
+        <p><img src="../../src/img/mvc_arhitecture_3.jpg"/></p>
+        <p>In Express, <i>the Controller is <b>the code or the functions that react to the incoming requests and set the response accordingly</b></i>, while <i>the Model is our data and also includes any functions that we use to access that database. The View is how that data from the Model is presented back to the user.</i></p>
+        `,
+        `<h3>Model</h3>
+        <ul>Model characteristics:
+          <li>- Responsible for <i>representing your data</i>;</li>
+          <li>- Responsible for <i>managing your data</i> (saving, updating, fetching, ...);</li>
+          <li>- Doesn't matter if you manage data in memory, files, databases;</li>
+          <li>- Contains <i>data-related logic</i>.</li>
+        </ul>
+        `,
+        `<h3>View</h3>
+        <ul>View characteristics:
+          <li>- What the users see;</li>
+          <li>- Shouldn't contain too much logic.</li>
+        </ul>
+        `,
+        `<h3>Controller</h3>
+        <ul>Controller characteristics:
+          <li>- Connects Model and View;</li>
+          <li>- Should only make sure that the two can communicate (in both directions).</li>
+        </ul>
+        <p>Controller should do everything that needs to be done to connect your Model and the View, so to get the data from A to B, and that can involve both directions. It can mean that through your View, for example, through a form, some data was sent to your Node.js application, and you now need to send that data to the Model to save it there, or it can of course mean you're fetching data via the Model and send that into a View, which is then returned to the user.</p>
+        `,
+        `<h3>Overview</h3>
+        <p><img src="../../src/img/mvc_arhitecture_1.jpg"/></p>
+        <p><img src="../../src/img/mvc_arhitecture_2.jpg"/></p>
+        `,
       ],
     },
   ],
@@ -1993,58 +2039,6 @@ app.listen(process.env.PORT);
       </code></pre>
       <p>NOTE: As <code>req.body</code>’s shape is based on user-controlled input, all properties and values in this object are untrusted and should be validated before trusting.</p>
       `,
-      ],
-    },
-  ],
-};
-
-const mvc = {
-  title: 'Intro to Back-End Architecture: MVC and Types of Logic',
-  titleDescription: 'Structuring your code',
-  sections: [
-    {
-      sectionTitle: 'What is the MVC (Model View Controller)?',
-      sectionSource: '',
-      highlights: {
-        highlight1: ['MVC'],
-      },
-      tooltips: [
-        `<p>In this module I want to dive into a very important aspect of building backend applications. We want to follow a certain <i>pattern for structuring our code</i> and with that, I don't really just mean how we split it over files or how we write the code, but I mean how we <i>logically separate our code</i> and the different functions it fulfills or the different things it does.</p>
-        `,
-        `<h3>The MVC Pattern</h3>
-        <p>What does MVC stand for or what is it? It's all about a <i>separation of concerns</i>, so making sure that <i>different parts of your code do different things</i>, and you clearly know which part is responsible for what. MVC stands for Model-View-Controller, so we work with <i>models</i>, <i>views</i> and <i>controllers</i>.</p>
-        <p>MVC is a pattern that tells us <b>how to organize the various different pieces of our code <u>based on what they do</u></b>.</p>`,
-        `<h3>How MVC works</h3>
-        <p>Our code is split into the Model, the View and the Controller, while we have the User who interacts with these components. These interactions are generally that the <i>User uses the Controller</i>, for example, by making requests. <i>The Controller understands and processes that User's requests and then manipulates the Model accordingly</i>, for example, by adding or removing data from a database.</p>
-        <p>And <i>when the Model is updated by the Controller, the View react to those changes and the User sees the updated data</i>.</p>
-        <p><img src="../../src/img/mvc_arhitecture_3.jpg"/></p>
-        <p>In Express, <i>the Controller is <b>the code or the functions that react to the incoming requests and set the response accordingly</b></i>, while <i>the Model is our data and also includes any functions that we use to access that database. The View is how that data from the Model is presented back to the user.</i></p>
-        `,
-        `<h3>Model</h3>
-        <ul>Model characteristics:
-          <li>- Responsible for <i>representing your data</i>;</li>
-          <li>- Responsible for <i>managing your data</i> (saving, updating, fetching, ...);</li>
-          <li>- Doesn't matter if you manage data in memory, files, databases;</li>
-          <li>- Contains <i>data-related logic</i>.</li>
-        </ul>
-        `,
-        `<h3>View</h3>
-        <ul>View characteristics:
-          <li>- What the users see;</li>
-          <li>- Shouldn't contain too much logic.</li>
-        </ul>
-        `,
-        `<h3>Controller</h3>
-        <ul>Controller characteristics:
-          <li>- Connects Model and View;</li>
-          <li>- Should only make sure that the two can communicate (in both directions).</li>
-        </ul>
-        <p>Controller should do everything that needs to be done to connect your Model and the View, so to get the data from A to B, and that can involve both directions. It can mean that through your View, for example, through a form, some data was sent to your Node.js application, and you now need to send that data to the Model to save it there, or it can of course mean you're fetching data via the Model and send that into a View, which is then returned to the user.</p>
-        `,
-        `<h3>Overview</h3>
-        <p><img src="../../src/img/mvc_arhitecture_1.jpg"/></p>
-        <p><img src="../../src/img/mvc_arhitecture_2.jpg"/></p>
-        `,
       ],
     },
   ],
@@ -5309,7 +5303,6 @@ export const dataStorage = [
   dynamic_routes_and_advanced_models,
   working_with_files,
   parsing_data,
-  mvc,
   error_handling_with_ExpressJS,
   sending_emails,
   understanding_validation,
