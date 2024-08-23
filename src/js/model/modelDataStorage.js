@@ -3,7 +3,7 @@ const introduction = {
   titleDescription: '',
   sections: [
     {
-      sectionTitle: 'What is Node.js? What it is used for?',
+      sectionTitle: 'What is Node.js? What it is Used For?',
       sectionSource: '',
       tooltips: [
         `<h3>What is Node.js?</h3>
@@ -264,8 +264,11 @@ get('https://someURL.com', (res) => {
       ],
     },
     {
-      sectionTitle: 'Node.js <code>global</code> object',
+      sectionTitle: 'Node.js global Object',
       sectionSource: '',
+      highlights: {
+        highlight2: ['global'],
+      },
       tooltips: [
         `<p>In Node.js, the <code>global</code> object is a <b>built-in object that serves as the top-level namespace</b> for variables, functions, and objects that are accessible from anywhere in your Node.js application. This object allows you to define properties and functions globally, meaning they can be accessed from any module within your application without requiring an import or export.</p>
         <p>The Node.js <code>global</code> object and the browser's <code>window</code> object serve similar purposes in their respective environments, but are fundamentally different in where and how they are used.</p>
@@ -473,7 +476,7 @@ const { add, subtract } = require('./mathFunctions');
       ],
     },
     {
-      sectionTitle: 'Understanding package.json file',
+      sectionTitle: 'Understanding package.json File',
       sectionSource: '',
       highlights: {
         highlight1: ['package.json', 'NPM Scripts'],
@@ -603,10 +606,10 @@ npm audit fix <i>--force</i>
       ],
     },
     {
-      sectionTitle: 'Using nodemon package for autorestarts',
+      sectionTitle: 'Using nodemon Package for Autorestarts',
       sectionSource: '',
       highlights: {
-        highlight2: ['nodemon package'],
+        highlight2: ['nodemon Package'],
       },
       tooltips: [
         `<p>nodemon is a very nice tool that helps us develop Node.js applications by <i>automatically restarting the Node.js application whenever we change some files in our working directory</i>.</p>
@@ -632,6 +635,66 @@ npm audit fix <i>--force</i>
 npm run start
        </code></pre>
        `,
+      ],
+    },
+    {
+      sectionTitle: 'Environment Variables',
+      sectionSource: '',
+      tooltips: [
+        `<h3>Introduction</h3>
+        <p>Environment variables has to do with Node.js development in general.</p>
+        <p><i>Node.js or Express.js apps can run in different environments, and the most important ones are the <u>development</u> environment and the <u>production</u> environment.</i> That's because depending on the environment, we might use different databases, or we might turn login on or off, or we might turn debugging on or off, or really all kinds of different settings that might change depending on the development that we're in. So this type of setting that I just mentioned, like different databases or login turned on or off, that will be based on environment variables.</p>
+        <p><b>By default, Express.js sets the environment to development</b>, which makes a lot of sense because that's what we're doing when we start a new project.</p>
+        <p><i>In Express.js, many packages depend on a special variable called <code>NODE_ENV</code>. <code>NODE_ENV</code> is a variable that's kind of a convention which should define whether we're in development or in production mode. However, <b>Express.js does not really define automatically the <code>NODE_ENV</code> variable</b>, so we as developers have to do that manually.</i></p>
+        <ul>There are multiple ways in which we can do it:
+          <li>- by using the command terminal: <b><code>NODE_ENV=development nodemon app.js</code></b>;</li>
+          <li>- by using a <b><code>config.env</code></b> file.</li>
+        </ul>
+        `,
+        `<h3>What are Environment Variables</h3>
+        <p>In Node.js, environment variables are <i><b>values that are set outside of the application</b> but <b>can be accessed within the application</b> code</i>. They provide a way to <i>configure and customize how the application behaves without modifying the source code</i>.</p>
+        <p>Environment variables are commonly <b>used to store sensitive information</b> <i>such as API keys, database credentials, or configuration parameters that vary between environments</i> (such as development, testing, and production).</p>`,
+        `<h3>Setting Environment Variables</h3>
+        <ul>Environment variables can be set in various ways:
+          <li>1. <i>Operating System Environment</i>: You can set environment variables directly in your operating system.</li>
+          <li>2. <b><code>.env</code> files</b>: It's common practice to use <code>.env</code> files to store environment variables in Node.js projects. These files are not loaded by default but can be loaded using packages like <code>dotenv</code>. <code>.env</code> files contain key-value pairs in the format KEY=value.</li>
+          <li>3. <b>Command Line</b>: You can also pass environment variables directly through the command line when running Node.js scripts.</li>
+        </ul>
+        `,
+        `<h3>Accessing Environment Variables in Node.js</h3>
+        <p>Once environment variables are set, Node.js applications can access them using the <code>process.env</code> object:
+        <pre><code>
+const myVariable = <b>process.env.MY_VARIABLE</b>;
+        </code></pre>
+        </p>
+        `,
+        `<h3>Best Practices</h3>
+        <p>1. <b>Keep Secrets Secure</b>: <i>Avoid storing sensitive information directly in your code.</i> Instead, use environment variables to store secrets and <i>avoid committing them to version control systems</i>.</p>
+        <p>2. Environment-Specific Configuration: <i>Use environment variables to configure your application for different environments (development, testing, production). This allows you to keep the same codebase but adapt the behavior based on the environment.</i></p>
+        <p>3. Use <code>.env</code> Files: When working with multiple environment variables, <i>use <code>.env</code> files and a package like <code>dotenv</code> to load them into your application</i>. This makes managing environment variables easier and more organized.</p>
+        <p>4. Document Dependencies: Document all required environment variables and their purpose in your project's documentation to make it easier for developers to set up the application in different environments.</p>
+        `,
+        `<h3>Example</h3>
+        <p>Let's say you have an application that connects to a database. You can use environment variables to specify the database connection details:
+        <pre><code>
+const dbConfig = {
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME
+};
+        </code></pre>
+        </p>
+        <p>Then, you would set these variables either <i>in your operating system environment</i>, a <code>.env</code> file, or <i>pass them through the command line</i>:
+        <pre><code>
+DB_HOST=localhost
+DB_USER=myuser
+DB_PASSWORD=secretpassword
+DB_NAME=mydatabase
+        </code></pre>
+        </p>
+        <p>With this setup, you can easily change the database configuration without modifying your code.</p>
+        `,
       ],
     },
     {
@@ -883,7 +946,7 @@ router
       ],
     },
     {
-      sectionTitle: 'Controlling the Node.js process',
+      sectionTitle: 'Controlling the Node.js Process',
       sectionSource: '',
       tooltips: [
         `<p>Remember when create a simple server? When we start that server and listening for incoming request, Node.js cannot simply exit the processs (exit the program), because the whole goal is to wait for the requests to come in.</p>
@@ -916,12 +979,11 @@ const working_with_ExpressJS = {
       sectionSource: '',
       tooltips: [
         `<h3>Working only with Node.js can be a pain</h3>
-        <p>With Node.js alone, you have to <i>write a lot of code to deal with basic things</i> like, for example, extracting the body of an incoming request. Now typically you don't want to do that, you want to focus on your business logic, the code that makes up your specific application, you don't want to work or you don't want to care about standard tasks like handling incoming requests or routing, and therefore we'll now have a look at Express.js.</p>
-        <p>NOTE: Express.js is a package/framework you can use for Node.js that will help you write better Node.js code and focus on your business logic. Now, of course you could stick to Vanilla Node.js and that works, and depending on the complexity of your application or the level of challenges you are seeking, you can absolutely stick to Vanilla Node.js, you can theoretically write everything on your own just with Vanilla Node.js.</p>
+        <p>With Node.js alone, you have to <i>write a lot of code to deal with basic things</i> like, for example, extracting the body of an incoming request. Now typically you don't want to do that, you want to focus on your business logic, the code that makes up your specific application, you don't want to care about standard tasks like handling incoming requests or routing.</p>
+        <p>Now, of course you could stick to Vanilla Node.js and that works, and depending on the complexity of your application or the level of challenges you are seeking, you can absolutely stick to Vanilla Node.js, you can theoretically write everything on your own just with Vanilla Node.js.</p>
         `,
         `<h3>What is Express.js and why do we use it?</h3>
-        <p>Express.js is a <i>framework</i> you can install as a third party package into your Node.js project and as such, it basically <i>helps you outsource some of that nitty-gritty work</i>, some of these details you don't want to care about, it gives you a rule set in which you work and a lot of utility functions that help you write cleaner code and focus on your core business.</p>
-        <p>A framework is basically a set of helper functions, tools & rules that help you build your applicatiion.</p>
+        <p>Express.js is a <b>framework</b> you can install as <b>a third party package into your Node.js project</b> that basically <i>gives you a set of helper functions, tools & rules that help to build your application</i> and as such, it basically <i>helps you outsource some of that nitty-gritty work</i>, some of these details you don't want to care about.</p>
         <ul>Express.js contains a very robust set of features:
           <li>- complex routing;</li>
           <li>- easier handling of requests and responses;</li>
@@ -931,21 +993,21 @@ const working_with_ExpressJS = {
         </ul>
         `,
         `<h3>How to install Express.js</h3>
-        <p>You install Express.js by typing in your VSCode terminal the <b><code>npm i express</code></b> command. This command will <i>install Express.js as a dependency to your project</i>.</p>
-        <p>Once you install Express.js, you need to import it in your <code>app.js</code> file and create your Node.js server. You do this like the example below:</p>
+        <p>You install Express.js by typing in your VSCode terminal the <b><code>npm i express</code></b> command. This command will <i>install Express.js as a dependency to your Node.js project</i>.</p>
+        <p>Once you install Express.js, you need to import it in your <code>server.js</code> file and create your Node.js server. You do this like the example below:</p>
         <pre><code>
-const express = require('express');
+<i>const express = require('express');</i>
 
-const port = 3000;
+const PORT = 3000;
 
-const app = express();
+<i>const app = express();</i>
 
-app.use((req, res, next) => {
+<i>app.use</i>((req, res, next) => {
   res.status(200).send('Hello from the server!');
 })
 
-app.listen(port, () => {
-  console.log('App start running!')
+<i>app.listen</i>(PORT, () => {
+  console.log('App start running!');
 });
         </code></pre>
         <p><b>Express.js handling incoming requests in a certain way called middleware functions. Middleware functions are a key characteristic of Express framework.</b></p>
@@ -953,7 +1015,7 @@ app.listen(port, () => {
       ],
     },
     {
-      sectionTitle: 'Express.js is all about Middleware Functions',
+      sectionTitle: 'Express.js is All About Middleware Functions',
       sectionSource: '',
       highlights: {
         highlight1: ['Middleware Functions'],
@@ -961,42 +1023,44 @@ app.listen(port, () => {
       tooltips: [
         `<h3>Middleware functions are a crucial aspect of Express.js</h3>
         <p>Express.js is all about middleware functions.</p>
-        <p>In Express.js, <b>an incoming request is automatically funneled through a bunch of middleware functions</b>, so instead of just having one request handler, you will actually have a possibility of hooking in multiple middleware functions which the request will go through until you send a response.</p>
-        <p>This allows you to split your code into multiple blocks/pieces, instead of having one huge middleware function that does everything, and this is the pluggable nature of Express.js, where you can easily add other third party packages which simply happen to give you such middleware functions that you can plug into Express.js and add certain functionalities.</p>
+        <p>In Express.js, <b>an <u>incoming request</u> is automatically funneled through a bunch of middleware functions</b>, so instead of just having one incoming request handler, you will actually have a possibility of hooking in multiple middleware functions which the incoming request will go through until you send a response. This allows you to split your code into multiple blocks/pieces, instead of having one huge middleware function that does everything, and this is the pluggable nature of Express.js, where you can easily add other third party packages which simply happen to give you such middleware functions that you can plug into Express.js and add certain functionalities.</p>
         <p>Middleware functions are <i>functions that have access to the <u><b>request</b> object</u> (req), the <u><b>response</b> object</u> (res), and <u>the <b>next()</b> middleware function</u> in the application's request-response cycle</i>.</p>
         <ul>Middleware functions can perform the following tasks:
           <li><i>- Execute any code.</i></li>
           <li><i>- Make changes to the request and the response objects (they can modify the request and response objects).</i></li>
-          <li>- End the request-response cycle.</li>
+          <li>- <i>End the request-response cycle.</i></li>
           <li>- Call the next middleware in the stack.</li>
         </ul>
         <p><i><b>If the current middleware function does not end the request-response cycle, it must call <code>next()</code> to pass control to the next middleware function.</b> Otherwise, the request will be left hanging.</i></p>
-        <p>Starting with Express 5, <i>middleware functions that return a Promise will call <code>next(value)</code> when they reject or throw an error</i>. <code>next()</code> will be called with either the rejected value or the thrown Error.</p>
         <p><img src="../../src/img/middleware_1.jpg"/></p>
-        <p>NOTE: A middleware function is executed every time an incoming request is received and the route path is matched.</p>
-        <p><i>Middleware functions can be <u>used globally</u>, meaning they are executed for every request, or they can be <u>applied to specific routes or groups of routes</u> using <code>app.use()</code> or <code>router.use()</code>.</i></p>
+        <p>IMPORTANT: <i>A middleware function is <b>executed every time an incoming request is received</b> and <b>the route path is matched</b>.</i></p>
+        `,
+        `<h3>3rd Party Packages Middleware Function vs Custom Middleware Function</h3>
         <p>Express.js provides a wide range of <i>middleware modules</i> that can be easily integrated into your application, or you can create <i>custom middleware functions</i> tailored to your specific requirements.</p>
         `,
       ],
     },
     {
-      sectionTitle: 'How to use middleware function: app.use()',
+      sectionTitle: 'How to Use Middleware Functions: app.use() & next()',
       sectionSource: '',
       highlights: {
-        highlight2: ['app.use()'],
+        highlight2: ['app.use()', 'next()'],
       },
       tooltips: [
         `<p><i>To load the middleware function, call <b><code>app.use()</code></b>, specifying the middleware function.</i> For example, the following code loads the <code>myLogger</code> middleware function before the route to the root path (/).
         <pre><code>
-const express = require('express')
-const app = express()
+// ##### First example #####
 
-const myLogger = function (req, res, next) {
-  console.log('LOGGED')
-  next()
-}
+const express = require('express');
+const app = express();
 
-<i>app.use(myLogger);</i>
+const myLogger = function <i>(req, res, next)</i> {
+  console.log('LOGGED');
+  <i>next()</i>;
+};
+
+//<i>Every time the app receives a request</i>, it prints the message “LOGGED” to the terminal.
+<i><b>app.use</b>(myLogger);</i>
 
 app.get('/', (req, res) => {
   res.send('Hello World!')
@@ -1004,18 +1068,20 @@ app.get('/', (req, res) => {
 
 app.listen(process.env.PORT)
         </code></pre>        
-        <p><i>Every time the app receives a request</i>, it prints the message “LOGGED” to the terminal.</p>`,
-        `<h3>Another example</h3>
+       
+        <p><p>In the second example below, <b><code>app.use()</code> is used to register a middleware function</b>. This middleware function logs the current timestamp to the console <u>every time a request is received</u>. <i>The <code>next()</code> function is called to pass control to the next middleware function in the stack.</i></p></p>
         <pre><code>
+// ##### Second example #####
+
 const express = require('express');
 const app = express();
 
-<i>app.use</i>((req, res, next) => {
+<b>app.use</b>(<i>(req, res, next)</i> => {
     console.log('Time:', Date.now());
     <i>next();</i>
 });
 
-<i>app.use</i>((req, res, next) => {
+<b>app.use</b>(<i>(req, res, next)</i> => {
     console.log('Text:', 'Some text to print!');
     <i>next();</i>
 });
@@ -1028,17 +1094,17 @@ app.listen(3000, () => {
     console.log('Server is running on port 3000');
 });
         </code></pre>
-        <p>In this example, <b><code>app.use()</code> is used to register a middleware function</b>. This middleware function logs the current timestamp to the console <u>every time a request is received</u>. <i>The <code>next()</code> function is called to pass control to the next middleware function in the stack.</i></p>
         <p>NOTE: Using <code>next()</code> allows the request to continue to the next middleware in line (next middleware function in the stack).</p>
         `,
         `<h3>More details about <code>app.use()</code> function</h3>
         <p>The <code>app.use()</code> function in Express.js is <b>used to <u>mount middleware functions</u> at a specified path</b>. These middleware functions will be <b><u>executed for every request</u> that matches the specified path</b>.</p>
-        <p>It can be used to <i>set up middleware <u>globally</u> for your entire application</i> or to <i>apply middleware to <u>specific routes or groups of routes</u></i>.</p>
         <ul>The <code>app.use()</code> function takes two arguments:
           <li>1. <b><code>path</code> (optional)</b>: <i>specifies the path for which the middleware function should be executed.</i> <b>If no path is specified, the middleware function will be executed for every incoming request.</b> This is useful for setting up middleware that needs to be applied globally, such as logging, parsing request bodies, or handling authentication.
           <pre><code>
+//In this example, the middleware function will be executed for every incoming request (globally - for your entire application)
+
 app.use((req, res, next) => {
-  //Middleware logic here
+  //Middleware logic that runs for every incoming request
   next();
 });
           </code></pre>
@@ -1046,10 +1112,11 @@ app.use((req, res, next) => {
 //In this example, the middleware function will only be executed for requests that start with /api
 
 app.use('/api', (req, res, next) => {
-  //Middleware logic for requests to /api/
+  //Middleware logic that runs only for incoming requests to /api path
   next();
 });
           </code></pre>
+          <p>IMPORTANT: <i>By using <b><code>app.use()</code></b> or <b><code>router.use()</code></b>, you can use middleware functions <b>globally</b> (for your entire application), meaning they are executed for every request, or <b>apply them to specific routes or groups of routes</b></i>.</p>
           </li>
           <li>2. <b><code>callback</code></b>: the <i>middleware function</i> or an <i>array of middleware functions</i> to be executed. These functions have access to the request (req), response (res), and the next middleware function (next) in the stack.
           <pre><code>
@@ -1071,7 +1138,6 @@ app.use('/api', [middleware1, middleware2]);
           </code></pre>
           </li>
         </ul>
-        <p>Overall, <code>app.use()</code> is a powerful function in Express.js that allows you to set up middleware for your application, making it easy to handle common tasks and modularize your code.</p>
         `,
         `<h3>More details about <code>next()</code> function</h3>
         <p>In Express.js, the <code>next()</code> function is a callback function that is <i><u>used within middleware functions</u> to pass control to the next middleware function <u>in the stack</u></i>. It is often <b>used to chain multiple middleware functions together</b>, <i>allowing each middleware function to perform its <u>specific tasks</u> before passing control to the next one</i>.</p>
@@ -1082,51 +1148,63 @@ app.use('/api', [middleware1, middleware2]);
           <li>3. <i>If <code>next()</code> is called <u>without any arguments</u>, Express.js proceeds to the next middleware function in the stack. <b>If there are no more middleware functions in the stack, Express.js proceeds to route handlers</b>, or if there are no route handlers, it sends the response back to the client.</i></li>
         </ul>
         <p><i><b>The <code>next()</code> function can also be used to handle errors within middleware functions.</b> If <code>next()</code> is called <u>with an argument</u> (usually an error object), Express.js will skip all remaining middleware functions in the stack and pass control to the error handling middleware (if one is defined).</i> This allows you to centralize error handling logic in a single middleware function.</p>
-        <p>If an error occurs in any middleware function or route handler and <code>next(err)</code> is called with the error object, Express.js will pass control to the error handling middleware, which can then handle the error and send an appropriate response back to the client.</p>
+        <p>NOTE: Starting with Express 5, <i>middleware functions that return a Promise will call <code>next(value)</code> when they reject or throw an error. <code>next()</code> will be called with either the rejected value or the thrown Error.</i></p>
         `,
       ],
     },
     {
-      sectionTitle: 'The order of middleware loading',
+      sectionTitle: 'The Order of Middleware Loading',
       sectionSource: '',
       tooltips: [
         `
       <p>The order of middleware loading is important: <b>middleware functions that are loaded first are also executed first</b>.</p>
       <p>If <code>myLogger</code> is loaded after the route to the root path, the request never reaches it and the app doesn't print “LOGGED”, because the route handler of the root path terminates the request-response cycle.</p>
-      <p>The middleware function <code>myLogger</code> simply prints a message, then passes on the request to the next middleware function in the stack by calling the <code>next()</code> function.</p>
       <pre><code>
-const express = require('express')
-const app = express()
+const express = require('express');
+const app = express();
 
 const myLogger = function (req, res, next) {
-  console.log('LOGGED')
-  next()
-}
+  console.log('LOGGED');
+  next();
+};
+
+//<i>This will terminate the request-response cycle by sending a response to the client!</i>
+app.get('/', (req, res) => {
+  res.send('Hello World!');
+});
+
+//<i>This will be NEVER BE EXECUTED, because the function above it terminates the request-response cycle!</i>
+app.use(myLogger);
+
+app.listen(process.env.PORT);
+      </code></pre>`,
+        `<p>The middleware function <code>myLogger</code> simply prints a message, then passes on the request to the next middleware function in the stack by calling the <code>next()</code> function.</p>
+      <pre><code>
+const express = require('express');
+const app = express();
+
+const myLogger = function (req, res, next) {
+  console.log('LOGGED');
+  next();
+};
 
 <i>app.use(myLogger);</i>
 
 app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
+  res.send('Hello World!');
+});
 
-app.listen(process.env.PORT)
+app.listen(process.env.PORT);
       </code></pre> 
       `,
       ],
     },
     {
-      sectionTitle: 'Make changes to the request and the response objects',
+      sectionTitle: 'Make Changes to The Request and The Response Objects',
       sectionSource: '',
       tooltips: [
         `
-<p>Next, we'll create a middleware function called “timeRequest” and add a property called <code>requestTime</code> to the request object.</p>
-        <pre><code>
-const timeRequest = function (req, res, next) {
-  req.requestTime = Date.now()
-  next()
-}
-        </code></pre>  
-        <p>The app now uses the <code>timeRequest</code> middleware function. Also, the callback function of the root path route uses the property that the middleware function adds to <code>req</code> (the request object).</p>
+        <p>Next, we'll create a middleware function called “timeRequest” and add a property called <code>requestTime</code> to the request object. The app now uses the <code>timeRequest</code> middleware function. Also, the callback function of the root path route uses the property that the middleware function adds to <code>req</code> (the request object).</p>
         <pre><code>
 const express = require('express')
 const app = express()
@@ -1149,7 +1227,7 @@ app.listen(process.env.PORT)
       ],
     },
     {
-      sectionTitle: 'Configurable middleware',
+      sectionTitle: 'Configurable Middleware',
       sectionSource: '',
       tooltips: [
         `
@@ -1171,7 +1249,7 @@ app.use(mw(<i>{ option1: '1', option2: '2' }</i>))
       ],
     },
     {
-      sectionTitle: 'Response methods',
+      sectionTitle: 'Type of Responses in Express.js',
       sectionSource: '',
       tooltips: [
         `<ul>The methods on the response object (<code>res</code>) can <i>send a response to the client, and terminate the request-response cycle</i>. If none of these methods are called from a route handler, the client request will be left hanging.
@@ -1185,66 +1263,6 @@ app.use(mw(<i>{ option1: '1', option2: '2' }</i>))
           <li>- <code>res.sendFile()</code>:	Send a file as an octet stream.</li>
           <li>- <code>res.sendStatus()</code>: Set the response status code and send its string representation as the response body.</li>
         </ul>`,
-      ],
-    },
-    {
-      sectionTitle: 'Environment Variables',
-      sectionSource: '',
-      tooltips: [
-        `<h3>Introduction</h3>
-        <p>Environment variables is not exactly about Express.js, it really has to do with Node.js development in general.</p>
-        <p><i>Node.js or Express.js apps can run in different environments, and the most important ones are the <u>development</u> environment and the <u>production</u> environment.</i> That's because depending on the environment, we might use different databases, or we might turn login on or off, or we might turn debugging on or off, or really all kinds of different settings that might change depending on the development that we're in. So this type of setting that I just mentioned, like different databases or login turned on or off, that will be based on environment variables.</p>
-        <p><i>By default, Express.js sets the environment to development</i>, which makes a lot of sense because that's what we're doing when we start a new project.</p>
-        <p>In Express.js, many packages depend on a special variable called <code>NODE_ENV</code>. <code>NODE_ENV</code> is a variable that's kind of a convention which should define whether we're in development or in production mode. However, Express.js does not really define automatically the <code>NODE_ENV</code> variable, so we as developers have to do that manually.</p>
-        <ul>There are multiple ways in which we can do it:
-          <li>- by using the command terminal: <code>NODE_ENV=development nodemon app.js</code>;</li>
-          <li>- by using a <code>config.env</code> file.</li>
-        </ul>
-        `,
-        `<h3>What are Environment Variables</h3>
-        <p>In Node.js, environment variables are <i><b>values that are set outside of the application</b> but <b>can be accessed within the application</b> code</i>. They provide a way to <i>configure and customize how the application behaves without modifying the source code</i>.</p>
-        <p>Environment variables are commonly <b>used to store sensitive information</b> such as API keys, database credentials, or configuration parameters that vary between environments (such as development, testing, and production).</p>`,
-        `<h3>Setting Environment Variables</h3>
-        <ul>Environment variables can be set in various ways:
-          <li>1. <i>Operating System Environment</i>: You can set environment variables directly in your operating system.</li>
-          <li>2. <b><code>.env</code> files</b>: It's common practice to use <code>.env</code> files to store environment variables in Node.js projects. These files are not loaded by default but can be loaded using packages like <code>dotenv</code>. <code>.env</code> files contain key-value pairs in the format KEY=value.</li>
-          <li>3. <b>Command Line</b>: You can also pass environment variables directly through the command line when running Node.js scripts.</li>
-        </ul>
-        `,
-        `<h3>Accessing Environment Variables in Node.js</h3>
-        <p>Once environment variables are set, Node.js applications can access them using the <code>process.env</code> object:
-        <pre><code>
-const myVariable = <b>process.env.MY_VARIABLE</b>;
-        </code></pre>
-        </p>
-        `,
-        `<h3>Best Practices</h3>
-        <p>1. Keep Secrets Secure: Avoid storing sensitive information directly in your code. Instead, use environment variables to store secrets and avoid committing them to version control systems.</p>
-        <p>2. Environment-Specific Configuration: Use environment variables to configure your application for different environments (development, testing, production). This allows you to keep the same codebase but adapt the behavior based on the environment.</p>
-        <p>3. Use <code>.env</code> Files: When working with multiple environment variables, use <code>.env</code> files and a package like <code>dotenv</code> to load them into your application. This makes managing environment variables easier and more organized.</p>
-        <p>4. Document Dependencies: Document all required environment variables and their purpose in your project's documentation to make it easier for developers to set up the application in different environments.</p>
-        `,
-        `<h3>Example</h3>
-        <p>Let's say you have an application that connects to a database. You can use environment variables to specify the database connection details:
-        <pre><code>
-const dbConfig = {
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME
-};
-        </code></pre>
-        </p>
-        <p>Then, you would set these variables either <i>in your operating system environment</i>, a <code>.env</code> file, or <i>pass them through the command line</i>:
-        <pre><code>
-DB_HOST=localhost
-DB_USER=myuser
-DB_PASSWORD=secretpassword
-DB_NAME=mydatabase
-        </code></pre>
-        </p>
-        <p>With this setup, you can easily change the database configuration without modifying your code.</p>
-        `,
       ],
     },
   ],
