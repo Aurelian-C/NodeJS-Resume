@@ -2592,586 +2592,6 @@ process.on('unhandledRejection'</i>, (err) => {
   ],
 };
 
-const sending_emails = {
-  title: 'Sending Emails',
-  titleDescription: 'Communicating with the Outside World',
-  sections: [
-    {
-      sectionTitle: 'How Does Sending Emails Work?',
-      sectionSource: '',
-      tooltips: [
-        `<h3>How does sending mails work?</h3>
-      <p>It's important to understand that Node.js or Express.js are runtimes that we use for writing our server side logic, but <i>with Node.js or Express.js you can't trivially create a mailing server</i>.</p>
-      <p>Handling mails is totally different to handling incoming requests and responses, it's a totally different technology, something totally different happens behind the scenes. Therefore in reality, you will very likely never implement your own mail server because that is a very complex task, creating a mail server that is capable of handling thousands of emails at the same time, sending them and so on, security, all that stuff is highly complex, so <i>in reality you typically use third party mail servers for sending emails</i>.</p>
-      <p>By the way, all major web applications you might be interacting with, including Udemy, don't have their own mail servers, they are using third party providers like AWS or whatever it is for sending emails.</p>
-      `,
-      ],
-    },
-    {
-      sectionTitle: 'Using Nodemailer to Send an Email',
-      sectionSource: '',
-      highlights: {
-        highlight1: ['Nodemailer'],
-      },
-      tooltips: [
-        `<p><i>Node.js or Express.js won't send emails on its own, you need some third party service for that.</i></p>
-        <p>You can use a packages called <code>nodemailer</code> for sending email from Node.js or Express.js</p>
-        <pre><code>
-const nodemailer = require('nodemailer');
-
-const sendEmail = async options => {
-  //1) Create a transporter
-  const transporter = nodemailer.createTransport({
-    host: process.env.EMAIL_HOST,
-    port: process.env.EMAIL_PORT,
-    auth: {
-      user: process.env.EMAIL_USERNAME,
-      pass: process.env.EMAIL_PASSWORD
-    }
-  });
-
-  //2) Define the email options
-  const mailOptions = {
-    from: 'Jonas Schmedtmann <hello@jonas.io>',
-    to: options.email,
-    subject: options.subject,
-    text: options.message
-    // html:
-  };
-
-  //3) Actually send the email
-  await transporter.sendMail(mailOptions);
-};
-
-module.exports = sendEmail;
-        </code></pre>
-        `,
-        `<p>Using Gmail for sending emails is not at all a good idea for a production app, because you can only send 500 emails per day, and also, you will probably very quickly be marked as a spammer, and from there, it will only go downhill. So, unless you build a private app, and you just send emails to yourself, or, like 10 friends, well, then you should use another service. Some well-known ones are <b>SendGrid</b> and <b>Mailgun</b>.</p>`,
-      ],
-    },
-    {
-      sectionTitle: 'Potential Limitation for Large Scale Apps',
-      sectionSource: '',
-      tooltips: [``],
-    },
-  ],
-};
-
-const understanding_validation = {
-  title: 'Understanding Validation: Form, User Input & Validation',
-  titleDescription: 'Getting that Precious User Input',
-  sections: [
-    {
-      sectionTitle: 'Why Should We Use Validation?',
-      sectionSource: '',
-      tooltips: [
-        `<h3>Client-Side vs Server-Side Validation</h3>
-        <p>Validating user inputs and forms in a web application is essential for <i>security</i>, <i>data integrity</i>, and <i>user experience</i>. Both client-side and server-side validations play crucial roles, and <i>implementing validation on both ends is considered the best approach</i>.</p>`,
-        `<h3>Client-side Validation</h3>
-        <p>Client-side validation occurs in the user's browser before the data is sent to the server. This is typically done using JavaScript.</p>
-        <ul>Advantages:
-          <li>- <i>Immediate Feedback</i>: Users get immediate feedback on their inputs, which enhances the user experience by allowing them to correct errors on-the-fly without waiting for a server response.</li>
-          <li>- <i>Reduced Server Load</i>: By catching common input errors on the client side, it reduces the number of requests made to the server, hence lowering the server's workload and network traffic.</li>
-        </ul>
-        <ul>Considerations:
-          <li>- <i>Cannot Be Trusted Alone</i>: Since client-side code can be modified or bypassed by an attacker, you cannot rely on client-side validation for security.</li>
-          <li>- <i>Compatibility Issues</i>: You must ensure that validations work across different browsers and devices.</li>
-        </ul>
-        `,
-        `<h3>Server-side Validation</h3>
-        <p>Server-side validation is performed on the server, after the data has been submitted.</p>
-        <ul>Advantages:
-          <li>- <b>Security</b>: <i>Server-side validation is secure because the user cannot bypass or modify the validation logic.</i> It is the final checkpoint for ensuring that the data adhering to your application’s rules and requirements is saved in your database.</li>
-          <li>- <b>Data Integrity</b>: <i>It ensures that only valid data is processed and stored, protecting your application against malicious data and attacks</i>, such as SQL injection, cross-site scripting (XSS), etc.</li>
-        </ul>
-        <ul>Considerations:
-          <li>- <i>User Experience</i>: Solely relying on server-side validation can deteriorate the user experience, as it requires a round trip to the server to validate inputs, causing delays in feedback.</li>
-          <li>- <i>Increased Server Load</i>: Every form submission requires server processing, which can increase the workload on the server.</li>
-        </ul>        
-        `,
-        `<h3>Best Approach: Combination of Both</h3>
-        <ul>The best practice is to implement both client-side and server-side validation:
-          <li>- Use client-side validation to provide immediate feedback and improve the user experience. This is your first line of defense against incorrect or incomplete data submission.</li>
-          <li>- Implement server-side validation as the primary security measure to ensure that the data is valid, secure, and consistent with your application's rules, regardless of the client-side validation outcome.</li>
-        </ul>
-        <p>This dual-layer approach <i>maximizes security and user experience</i>, ensuring that your application is robust against malicious activities while being user-friendly. <b>Always remember the golden rule of web development: "Never trust user input."</b></p>
-        `,
-      ],
-    },
-    {
-      sectionTitle: 'Setup & Basic Validation: express-validator package',
-      sectionSource: '',
-      highlights: {
-        highlight1: ['express-validator'],
-      },
-      tooltips: [
-        `<p>To add validation, we'll use a third party package. The package we'll be using is called <i><code>express-validator</code></i>.</p>
-        <p>Typically you want to <i>validate on your <code>app.post()</code> or your non-get routes</i>, because you want to validate whenever the user sends data, and that is not the case for our <code>app.get()</code> routes.</p>
-        `,
-      ],
-    },
-    {
-      sectionTitle: 'Built-In & Custom Validators',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Adding Async Validation',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Sanitizing Data with <code>express-validator</code>',
-      sectionSource: '',
-      tooltips: [
-        `<h3>Sanitizing Data: Visual vs Security</h3>
-      <p>Visual sanitizing data is a type of sanitizing data which makes sense to ensure that <i>your data is stored in a uniform format</i> (ex: trim all white spaces in an email, lowercase all letters in an email etc.). This type of data sanitization is only for visual aspects, not for security reasons.</p>
-      `,
-      ],
-    },
-  ],
-};
-
-const file_upload_and_download = {
-  title: 'File Upload & Download',
-  titleDescription: 'Handling Files Correctly',
-  sections: [
-    {
-      sectionTitle:
-        'Handling File Uploads with Multer when Using Forms Rendered by Server',
-      sectionSource: '',
-      highlights: {
-        highlight2: ['Multer'],
-      },
-      tooltips: [
-        `<p>When using forms rendered by server, you need to specify an attribute to the form element called <b><code>enctype="multipart/form-data"</code></b>.</p>
-        <p><i>Multer will not process any form which is not multipart (multipart/form-data)</i>:</p>
-        <pre><code>
-form action="/admin/edit-product" method="POST" <b>enctype="multipart/form-data"</b>
-        </code></pre>
-        `,
-      ],
-    },
-    {
-      sectionTitle: 'Handling File Uploads with Multer in REST APIs',
-      highlights: {
-        highlight1: ['Multer in REST APIs'],
-      },
-      sectionSource: '',
-      tooltips: [
-        `<p>Multer is a third party package that <i>parses incoming requests for files</i>, request with mixt data: text and file data.</p>
-        <p>Multer is a Node.js middleware for handling multipart/form-data, which is primarily used for uploading files. <i>Multer will not process any form which is not multipart (multipart/form-data)</i>.</p>
-        <p>Like <code>bodyParser</code> package, <i><code>multer</code> is a middleware which we <u>execute on every incoming request</u></i>, and it then simply has a look at that request, sees if it's multipart/form-data and tries to extract files if that is the case.</p>`,
-        `<h3>Frontend code</h3>
-        <pre><code>
-function submitForm(e) {
-  e.preventDefault();
-
-  <i>const formData = <b>new FormData()</b>;
-  <b>formData.append</b>('userName', 'someUserName');
-  <b>formData.append</b>('photo', FileList);</i>
-  
-  fetch('http://localhost:8080/updatePhoto', {
-    <i><b>method</b>: 'PATCH',
-    <b>body</b>: formData</i>,
-  })   
-}
-        </code></pre>`,
-        `<h3>Server code</h3>
-        <pre><code>
-const express = require('express');
-<i>const multer = require('multer');</i>
-
-const app = express();
-
-<i>const upload = multer({ dest: 'public/img' });</i>
-
-function uploadPhoto(req, res, next) {
-  upload<i>.single</i>('photo');
-}
-
-function updateMe(req, res, next) {
-  console.log(<i>req.file</i>);
-  console.log(<i>req.body</i>);
-}
-
-app.patch('/updatePhoto', uploadPhoto, updateMe)
-
-app.listen(process.env.PORT);
-        </code></pre>
-        <p>In the code above we included the Multer package and then with that we created an <code>upload</code> variable. The <code>upload</code> is just to define a couple of settings, where in the above example we only define the destination.  Then we use that <code>upload</code> to create a new middleware, and that middleware will handle upload file.</p>
-        <p>We use <code>upload.single()</code> because we only have one single file that we want to upload. <code>upload.single()</code> takes as an argument the name of the field that hold the file. The name must match with the name in the UI form.</p>
-        <p><code>upload.single()</code> will put some information about the file on the request object.</p>
-        <p>NOTE: When we upload images, we won't use JSON data because <i>JSON data is only text</i>, so only data that can be represented as a text. A file can't be, or not easily can be JSON format, it will be very big quickly and very big files are a huge issue or impossible to upload in JSON format. So <b>we can't use JSON for data where we have both a file and normal text data</b>.</p>
-        <p>Uploaded images/videos/big files are not directly uploaded into the database, we just upload them into our file system, and then in the database we put a link basically to that image.</p>
-  `,
-        `<h3>Key features and uses of Multer</h3>
-  <p>1. <i>File Uploads</i>: Multer is used to handle file uploads, such as images, videos, documents, and other binary data, from HTML forms. It can process both single and multiple file uploads.</p>
-  <p>2. <i>Configuration</i>: Multer allows you to configure various options, such as where to store uploaded files, how to name them, and size limits for uploaded files.</p>
-  <p>3. <i>Middleware</i>: Multer is typically used as middleware in Express.js applications. It can be added to specific routes to process file uploads. Multer processes the uploaded files and makes them accessible in the request object for further handling.</p>
-  <p>4. <i>Storage Engines</i>: Multer supports different storage engines, including disk storage, memory storage, and cloud storage solutions like Amazon S3. You can choose the storage engine that best suits your project's needs.</p>
-  <p>5. <i>File Validation</i>: Multer can validate uploaded files based on file type, file size, and other criteria. This helps ensure that only acceptable files are processed.</p>
-  `,
-      ],
-    },
-    {
-      sectionTitle:
-        'Configuring Multer to Adjust Filename & Filtering Files by Mimetype',
-      sectionSource: '',
-      tooltips: [
-        `<pre><code>
-const express = require('express');
-const multer = require('multer');
-      
-const app = express();
-      
-const <b>multerStorage</b> = <i>multer.diskStorage</i>({
-  <i>destination</i>: (req, file, cb) => {
-    cb(null, 'public/img');
-  },
-  <i>filename</i>: (req, file, cb) => {
-    const fileExtension = file.mimetype.split('/)[1];
-    cb(null, 'user-' + req.user.id + '-' + Date.now() + fileExtension)
-})
-      
-//A user can only upload image files
-const <b>multerFilter</b> = (req, file, cb) => {
-  if (file.mimetype.startsWith('image')) {
-    cb(null, true);
-  } else {
-    cb('error', false)
-  }
-}
-      
-const <b>upload</b> = multer({
-  <i>storage</i>: multerStorage,
-  <i>fileFilter</i>: multerFilter
-});
-      
-function uploadPhoto(req, res, next) {
-  upload<i>.single</i>('photo');
-}
-      
-function updateMe(req, res, next) {
-  console.log(req.file);
-  console.log(req.body);
-}
-      
-app.patch('/updatePhoto', uploadPhoto, updateMe)
-      
-app.listen(process.env.PORT);
-        </code></pre>`,
-      ],
-    },
-    {
-      sectionTitle: 'Resize Images with sharp',
-      sectionSource: '',
-      highlights: {
-        highlight1: ['Resize Images'],
-        highlight2: ['sharp'],
-      },
-      tooltips: [
-        `<p>When doing image processing like resizing images after uploading an image, then it's always best to not even save the image to the disk, but instead save it to memory.</p>
-        <p>For that we need to modify the <code>storage</code> property to configure Multer, and instead of <code>multer.diskStorage</code> to pass <code>multer.memoryStorage</code>.</p>
-        <p>With <code>multer.memoryStorage</code> the image will be stored as a buffer, and that buffer is then available at <code>req.file.buffer</code>.</p>
-        <p>Calling the <code>sharp()</code> function will create an object on which we can chain multiple methods in order to do our image processing.</p>
-        <pre><code>
-const express = require('express');
-const multer = require('multer');
-<i>const sharp = require('sharp');</i>
-
-const app = express();
-
-const multerStorage = <i>multer.memoryStorage()</i>;
-
-const multerFilter = (req, file, cb) => {
-  if (file.mimetype.startsWith('image')) {
-    cb(null, true);
-  } else {
-    cb('error', false);
-  }
-}
-
-const upload = multer({
-  storage: multerStorage,
-  fileFilter: multerFilter
-});
-
-function uploadPhoto(req, res, next) {
-  upload.single('photo');
-}
-
-<i>const resizePhoto = async (req, res, next) => {
-  if (!req.file) return next();
-
-  req.file.filename = 'user-' + req.user.id + '-' + Date.now();
-
-  await <b>sharp(req.file.buffer)
-    .resize</b>(500, 500)
-    <b>.toFormat</b>('jpeg')
-    <b>.jpeg</b>({ quality: 90 })
-    <b>.toFile</b>('public/img/' + req.file.filename)
-
-  next();
-}</i>
-
-function updateMe(req, res, next) {
-  console.log(req.file);
-  console.log(req.body);
-}
-
-app.patch('/updatePhoto', uploadPhoto, resizePhoto, updateMe)
-
-app.listen(process.env.PORT);
-        </code></pre>
-        `,
-      ],
-    },
-    {
-      sectionTitle: 'Uploading & Proccessing Multiple Images',
-      sectionSource: '',
-      tooltips: [
-        `        <pre><code>
-const express = require('express');
-const multer = require('multer');
-const sharp = require('sharp');
-
-const app = express();
-
-const multerStorage = multer.memoryStorage();
-
-const multerFilter = (req, file, cb) => {
-  if (file.mimetype.startsWith('image')) {
-    cb(null, true);
-  } else {
-    cb('error', false);
-  }
-}
-
-const upload = multer({
-  storage: multerStorage,
-  fileFilter: multerFilter
-});
-
-<i>function uploadPhotos(req, res, next) {
-  //When we have multiple images with the <u>same HTML "name" attribute</u>
-  <b>upload.array</b>('images', 8);
-
-  //When we have multiple images with <u>mixed HTML "name" attribute</u>
-  // <b>upload.fields</b>([
-  //   {name: 'imageCover', maxCount: 1},
-  //   {name: 'images', maxCount: 8}
-  // ]);
-
-
-  //When we have only one <u>image</u>
-  //<b>upload.single</b>('image');
-}</i>
-
-const resizePhotos = async (req, res, next) => {
-  if (!<b>req.files</b>) return next();
-
-  <i>req.body.images = [];</i>
-  <b>await Promise.all</b>(
-    <i>req.files.images</i>.map(async (file, idx) => {
-      const filename = 'user-' + req.user.id + '-' + Date.now() + '-' + idx + '.jpeg';
-      
-      await sharp(file.buffer)
-        .resize(500, 500)
-        .toFormat('jpeg')
-        .jpeg({ quality: 90 })
-        .toFile('public/img/' + filename)
-        
-      <i>req.body.images.push(filename);</i>
-    })
-  );
-
-  next();
-}
-
-function updatePhotos(req, res, next) {
-  console.log(req.file);
-  console.log(req.body);
-}
-
-app.patch('/updatePhotos', uploadPhotos, resizePhotos, updatePhotos)
-
-app.listen(process.env.PORT);
-        </code></pre>`,
-      ],
-    },
-    {
-      sectionTitle: 'Storing File Data in the Database',
-      sectionSource: '',
-      tooltips: [
-        `<p>Files like images, videos, PDFs etc, should not be stored in a database, they are too big. It's too inefficient to store files in a database and query them from there. You need to <i>store files on file system</i>, but you need to <i>store the path to the file in the database</i>.</p>`,
-      ],
-    },
-    {
-      sectionTitle: 'Downloading Files with Authentication',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Setting File Type Headers',
-      sectionSource: '',
-      highlights: {
-        highlight1: ['File Type Headers'],
-      },
-      tooltips: [
-        `<p>Setting headers to files that you are download, you control how the browser should handle the incoming data. For example, should it automatically open a file, should it instead let you download it?</p>`,
-      ],
-    },
-    {
-      sectionTitle: 'Restricting File Access',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Streaming Data vs Preloading Data',
-      sectionSource: '',
-      highlights: {
-        highlight1: ['Streaming Data'],
-      },
-      tooltips: [
-        `<p><code>fs.readFile()</code> vs <code>fs.createReadStream()</code></p>
-        <p>We can <code>fs.pipe(res)</code> our readable stream, the file stream into the response, and that means that the response will be streamed to the browser and will contain the data, and the data will basically be downloaded by the browser step by step, and for large files this is a huge advantage because Node.js never has to preload all the data into memory, but just streams it to the client on the fly, and the most it has to store is one chunk of data.</p>
-        <pre><code>
-const fs = require('fs');
-
-function downloadPDF(req, res, next) {
-    const file = <i>fs.createReadStream</i>(invoicePath);
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', 'inline');
-    <i>file.pipe(res);</i>
-};
-        </code></pre>
-        `,
-      ],
-    },
-    {
-      sectionTitle: 'Using PDFKit for .pdf Generation',
-      sectionSource: '',
-      highlights: {
-        highlight2: ['PDFKit'],
-      },
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Deleting Files',
-      sectionSource: '',
-      tooltips: [
-        `<pre><code>
-const fs = require('fs');
-
-const deleteFile = (filePath) => {
-    <i>fs.unlink</i>(filePath, (err) => {
-        if (err) {
-            throw (err);
-        }
-    });
-}
-
-exports.deleteFile = deleteFile;      
-      </code></pre>`,
-      ],
-    },
-  ],
-};
-
-const adding_pagination = {
-  title: 'Adding Pagination',
-  titleDescription: 'Fetching Data in Chuncks',
-  sections: [
-    {
-      sectionTitle: 'Adding Pagination Links',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Retrieving a Chunk of Data',
-      sectionSource: '',
-      highlights: {
-        highlight1: ['Chunk of Data'],
-      },
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Skip & Limit with SQL',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Preparing Pagination Data on the Server',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Adding Dynamic Pagination Buttons',
-      sectionSource: '',
-      tooltips: [``],
-    },
-  ],
-};
-
-const understanding_async_requests = {
-  title: 'Understanding Async Requests',
-  titleDescription: 'Behind-The-Scenes Work',
-  sections: [
-    {
-      sectionTitle: 'What are Async Requests?',
-      sectionSource: '',
-      highlights: {
-        highlight1: ['Async Requests'],
-      },
-      tooltips: [
-        `<h3>Traditional Request-Response flow on Web Applications</h3>
-        <p>Thus far we always had a look at a particular kind of request and response. The request was always a request sent from our browser, when we submitted a form or entered a URL or clicked a link, and the response always was either a redirect or a new HTML page. Now that can take you very far, but <i>sometimes, you get some requests that will only happen behind the scenes, that means you don't want to get back a new HTML page, you only want to exchange some data with the server</i>. We'll have a look at what asynchronous JavaScript requests are, why we would use them, and how we will use them.</p>
-        <p>In a web/mobile application you have your frontend(client-side) and you have your backend(server-side). Now typically, you send a request from your client to the server and you get back a response. Up until now, the response always was a HTML page or a redirect to another route that then returned also a HTML page.</p>
-        <p>Now there is nothing wrong with that, but there are tasks where you don't want to reload the HTML page just to, for example delete an item. And actually, in modern web applications, the portion that happens behind the scenes grows, since we can do a lot with JavaScript in the browser where we never need to fetch a new HTML page, but where we constantly change the existing HTML page, as this is faster than loading a new one, but that's something I'll cover in the restful API modules.</p>
-        `,
-        `<h3>What are Asynchronous Requests?</h3>
-        <p>The idea behind asynchronous requests is that you do send the request, but that request typically contains just some data in a special format named JSON, and that data is sent to the server, to a certain URL or a route accepted by that server (so that logic doesn't change). The server can do whatever it wants to do with that, and then we return a response, and that response is also returned behind the scenes, so it's NOT a new HTML page that needs to be rendered, it's instead again just some data in that <i>JSON format</i> typically.</p>
-        <p>That is how client-server can communicate through JavaScript, so through client-side JavaScript and the server-side logic, <i>without exchanging a new HTML page</i>. That allows you to do some work behind the scenes without interrupting the user flow, without reloading the HTML page.</p>
-        `,
-      ],
-    },
-    {
-      sectionTitle: 'The JSON Data Format',
-      sectionSource: '',
-      highlights: {
-        highlight1: ['JSON'],
-      },
-      tooltips: [
-        `<p>JSON stands for JavaScript Object Notation. JSON data looks a lot like a normal JavaScript object, but one important difference is that all key names are enclosed by double quotation marks <code>"</code>. Besides that, you can store text (string), numeric (integers and floats) and boolean data as well as nested objects and arrays.</p>`,
-      ],
-    },
-    {
-      sectionTitle: 'Adding Client-Side JS Code',
-      sectionSource: '',
-      tooltips: [``],
-    },
-    {
-      sectionTitle: 'Sending & Handling Background Requests',
-      sectionSource: '',
-      tooltips: [
-        `<p><pre><code>
-function asyncRequest(req, res, next) {
-    res.status(200)<i>.json({ message: "Success", data: ["str1", "str2"] })</i>;
-}
-        </code></pre></p>
-        <p><i>NOTE: <code>.json()</code> will automatically transform a JavaScript object to JSON format.</i></p>
-        `,
-      ],
-    },
-    {
-      sectionTitle: 'Manipulating the DOM',
-      sectionSource: '',
-      tooltips: [``],
-    },
-  ],
-};
-
 const adding_authentication = {
   title: 'Authentication & Authorization',
   titleDescription: 'Restricting Access',
@@ -3977,6 +3397,586 @@ app.listen(process.env.PORT);
       </code></pre>
       `,
       ],
+    },
+  ],
+};
+
+const sending_emails = {
+  title: 'Sending Emails',
+  titleDescription: 'Communicating with the Outside World',
+  sections: [
+    {
+      sectionTitle: 'How Does Sending Emails Work?',
+      sectionSource: '',
+      tooltips: [
+        `<h3>How does sending mails work?</h3>
+      <p>It's important to understand that Node.js or Express.js are runtimes that we use for writing our server side logic, but <i>with Node.js or Express.js you can't trivially create a mailing server</i>.</p>
+      <p>Handling mails is totally different to handling incoming requests and responses, it's a totally different technology, something totally different happens behind the scenes. Therefore in reality, you will very likely never implement your own mail server because that is a very complex task, creating a mail server that is capable of handling thousands of emails at the same time, sending them and so on, security, all that stuff is highly complex, so <i>in reality you typically use third party mail servers for sending emails</i>.</p>
+      <p>By the way, all major web applications you might be interacting with, including Udemy, don't have their own mail servers, they are using third party providers like AWS or whatever it is for sending emails.</p>
+      `,
+      ],
+    },
+    {
+      sectionTitle: 'Using Nodemailer to Send an Email',
+      sectionSource: '',
+      highlights: {
+        highlight1: ['Nodemailer'],
+      },
+      tooltips: [
+        `<p><i>Node.js or Express.js won't send emails on its own, you need some third party service for that.</i></p>
+        <p>You can use a packages called <code>nodemailer</code> for sending email from Node.js or Express.js</p>
+        <pre><code>
+const nodemailer = require('nodemailer');
+
+const sendEmail = async options => {
+  //1) Create a transporter
+  const transporter = nodemailer.createTransport({
+    host: process.env.EMAIL_HOST,
+    port: process.env.EMAIL_PORT,
+    auth: {
+      user: process.env.EMAIL_USERNAME,
+      pass: process.env.EMAIL_PASSWORD
+    }
+  });
+
+  //2) Define the email options
+  const mailOptions = {
+    from: 'Jonas Schmedtmann <hello@jonas.io>',
+    to: options.email,
+    subject: options.subject,
+    text: options.message
+    // html:
+  };
+
+  //3) Actually send the email
+  await transporter.sendMail(mailOptions);
+};
+
+module.exports = sendEmail;
+        </code></pre>
+        `,
+        `<p>Using Gmail for sending emails is not at all a good idea for a production app, because you can only send 500 emails per day, and also, you will probably very quickly be marked as a spammer, and from there, it will only go downhill. So, unless you build a private app, and you just send emails to yourself, or, like 10 friends, well, then you should use another service. Some well-known ones are <b>SendGrid</b> and <b>Mailgun</b>.</p>`,
+      ],
+    },
+    {
+      sectionTitle: 'Potential Limitation for Large Scale Apps',
+      sectionSource: '',
+      tooltips: [``],
+    },
+  ],
+};
+
+const understanding_validation = {
+  title: 'Understanding Validation: Form, User Input & Validation',
+  titleDescription: 'Getting that Precious User Input',
+  sections: [
+    {
+      sectionTitle: 'Why Should We Use Validation?',
+      sectionSource: '',
+      tooltips: [
+        `<h3>Client-Side vs Server-Side Validation</h3>
+        <p>Validating user inputs and forms in a web application is essential for <i>security</i>, <i>data integrity</i>, and <i>user experience</i>. Both client-side and server-side validations play crucial roles, and <i>implementing validation on both ends is considered the best approach</i>.</p>`,
+        `<h3>Client-side Validation</h3>
+        <p>Client-side validation occurs in the user's browser before the data is sent to the server. This is typically done using JavaScript.</p>
+        <ul>Advantages:
+          <li>- <i>Immediate Feedback</i>: Users get immediate feedback on their inputs, which enhances the user experience by allowing them to correct errors on-the-fly without waiting for a server response.</li>
+          <li>- <i>Reduced Server Load</i>: By catching common input errors on the client side, it reduces the number of requests made to the server, hence lowering the server's workload and network traffic.</li>
+        </ul>
+        <ul>Considerations:
+          <li>- <i>Cannot Be Trusted Alone</i>: Since client-side code can be modified or bypassed by an attacker, you cannot rely on client-side validation for security.</li>
+          <li>- <i>Compatibility Issues</i>: You must ensure that validations work across different browsers and devices.</li>
+        </ul>
+        `,
+        `<h3>Server-side Validation</h3>
+        <p>Server-side validation is performed on the server, after the data has been submitted.</p>
+        <ul>Advantages:
+          <li>- <b>Security</b>: <i>Server-side validation is secure because the user cannot bypass or modify the validation logic.</i> It is the final checkpoint for ensuring that the data adhering to your application’s rules and requirements is saved in your database.</li>
+          <li>- <b>Data Integrity</b>: <i>It ensures that only valid data is processed and stored, protecting your application against malicious data and attacks</i>, such as SQL injection, cross-site scripting (XSS), etc.</li>
+        </ul>
+        <ul>Considerations:
+          <li>- <i>User Experience</i>: Solely relying on server-side validation can deteriorate the user experience, as it requires a round trip to the server to validate inputs, causing delays in feedback.</li>
+          <li>- <i>Increased Server Load</i>: Every form submission requires server processing, which can increase the workload on the server.</li>
+        </ul>        
+        `,
+        `<h3>Best Approach: Combination of Both</h3>
+        <ul>The best practice is to implement both client-side and server-side validation:
+          <li>- Use client-side validation to provide immediate feedback and improve the user experience. This is your first line of defense against incorrect or incomplete data submission.</li>
+          <li>- Implement server-side validation as the primary security measure to ensure that the data is valid, secure, and consistent with your application's rules, regardless of the client-side validation outcome.</li>
+        </ul>
+        <p>This dual-layer approach <i>maximizes security and user experience</i>, ensuring that your application is robust against malicious activities while being user-friendly. <b>Always remember the golden rule of web development: "Never trust user input."</b></p>
+        `,
+      ],
+    },
+    {
+      sectionTitle: 'Setup & Basic Validation: express-validator package',
+      sectionSource: '',
+      highlights: {
+        highlight1: ['express-validator'],
+      },
+      tooltips: [
+        `<p>To add validation, we'll use a third party package. The package we'll be using is called <i><code>express-validator</code></i>.</p>
+        <p>Typically you want to <i>validate on your <code>app.post()</code> or your non-get routes</i>, because you want to validate whenever the user sends data, and that is not the case for our <code>app.get()</code> routes.</p>
+        `,
+      ],
+    },
+    {
+      sectionTitle: 'Built-In & Custom Validators',
+      sectionSource: '',
+      tooltips: [``],
+    },
+    {
+      sectionTitle: 'Adding Async Validation',
+      sectionSource: '',
+      tooltips: [``],
+    },
+    {
+      sectionTitle: 'Sanitizing Data with <code>express-validator</code>',
+      sectionSource: '',
+      tooltips: [
+        `<h3>Sanitizing Data: Visual vs Security</h3>
+      <p>Visual sanitizing data is a type of sanitizing data which makes sense to ensure that <i>your data is stored in a uniform format</i> (ex: trim all white spaces in an email, lowercase all letters in an email etc.). This type of data sanitization is only for visual aspects, not for security reasons.</p>
+      `,
+      ],
+    },
+  ],
+};
+
+const file_upload_and_download = {
+  title: 'File Upload & Download',
+  titleDescription: 'Handling Files Correctly',
+  sections: [
+    {
+      sectionTitle:
+        'Handling File Uploads with Multer when Using Forms Rendered by Server',
+      sectionSource: '',
+      highlights: {
+        highlight2: ['Multer'],
+      },
+      tooltips: [
+        `<p>When using forms rendered by server, you need to specify an attribute to the form element called <b><code>enctype="multipart/form-data"</code></b>.</p>
+        <p><i>Multer will not process any form which is not multipart (multipart/form-data)</i>:</p>
+        <pre><code>
+form action="/admin/edit-product" method="POST" <b>enctype="multipart/form-data"</b>
+        </code></pre>
+        `,
+      ],
+    },
+    {
+      sectionTitle: 'Handling File Uploads with Multer in REST APIs',
+      highlights: {
+        highlight1: ['Multer in REST APIs'],
+      },
+      sectionSource: '',
+      tooltips: [
+        `<p>Multer is a third party package that <i>parses incoming requests for files</i>, request with mixt data: text and file data.</p>
+        <p>Multer is a Node.js middleware for handling multipart/form-data, which is primarily used for uploading files. <i>Multer will not process any form which is not multipart (multipart/form-data)</i>.</p>
+        <p>Like <code>bodyParser</code> package, <i><code>multer</code> is a middleware which we <u>execute on every incoming request</u></i>, and it then simply has a look at that request, sees if it's multipart/form-data and tries to extract files if that is the case.</p>`,
+        `<h3>Frontend code</h3>
+        <pre><code>
+function submitForm(e) {
+  e.preventDefault();
+
+  <i>const formData = <b>new FormData()</b>;
+  <b>formData.append</b>('userName', 'someUserName');
+  <b>formData.append</b>('photo', FileList);</i>
+  
+  fetch('http://localhost:8080/updatePhoto', {
+    <i><b>method</b>: 'PATCH',
+    <b>body</b>: formData</i>,
+  })   
+}
+        </code></pre>`,
+        `<h3>Server code</h3>
+        <pre><code>
+const express = require('express');
+<i>const multer = require('multer');</i>
+
+const app = express();
+
+<i>const upload = multer({ dest: 'public/img' });</i>
+
+function uploadPhoto(req, res, next) {
+  upload<i>.single</i>('photo');
+}
+
+function updateMe(req, res, next) {
+  console.log(<i>req.file</i>);
+  console.log(<i>req.body</i>);
+}
+
+app.patch('/updatePhoto', uploadPhoto, updateMe)
+
+app.listen(process.env.PORT);
+        </code></pre>
+        <p>In the code above we included the Multer package and then with that we created an <code>upload</code> variable. The <code>upload</code> is just to define a couple of settings, where in the above example we only define the destination.  Then we use that <code>upload</code> to create a new middleware, and that middleware will handle upload file.</p>
+        <p>We use <code>upload.single()</code> because we only have one single file that we want to upload. <code>upload.single()</code> takes as an argument the name of the field that hold the file. The name must match with the name in the UI form.</p>
+        <p><code>upload.single()</code> will put some information about the file on the request object.</p>
+        <p>NOTE: When we upload images, we won't use JSON data because <i>JSON data is only text</i>, so only data that can be represented as a text. A file can't be, or not easily can be JSON format, it will be very big quickly and very big files are a huge issue or impossible to upload in JSON format. So <b>we can't use JSON for data where we have both a file and normal text data</b>.</p>
+        <p>Uploaded images/videos/big files are not directly uploaded into the database, we just upload them into our file system, and then in the database we put a link basically to that image.</p>
+  `,
+        `<h3>Key features and uses of Multer</h3>
+  <p>1. <i>File Uploads</i>: Multer is used to handle file uploads, such as images, videos, documents, and other binary data, from HTML forms. It can process both single and multiple file uploads.</p>
+  <p>2. <i>Configuration</i>: Multer allows you to configure various options, such as where to store uploaded files, how to name them, and size limits for uploaded files.</p>
+  <p>3. <i>Middleware</i>: Multer is typically used as middleware in Express.js applications. It can be added to specific routes to process file uploads. Multer processes the uploaded files and makes them accessible in the request object for further handling.</p>
+  <p>4. <i>Storage Engines</i>: Multer supports different storage engines, including disk storage, memory storage, and cloud storage solutions like Amazon S3. You can choose the storage engine that best suits your project's needs.</p>
+  <p>5. <i>File Validation</i>: Multer can validate uploaded files based on file type, file size, and other criteria. This helps ensure that only acceptable files are processed.</p>
+  `,
+      ],
+    },
+    {
+      sectionTitle:
+        'Configuring Multer to Adjust Filename & Filtering Files by Mimetype',
+      sectionSource: '',
+      tooltips: [
+        `<pre><code>
+const express = require('express');
+const multer = require('multer');
+      
+const app = express();
+      
+const <b>multerStorage</b> = <i>multer.diskStorage</i>({
+  <i>destination</i>: (req, file, cb) => {
+    cb(null, 'public/img');
+  },
+  <i>filename</i>: (req, file, cb) => {
+    const fileExtension = file.mimetype.split('/)[1];
+    cb(null, 'user-' + req.user.id + '-' + Date.now() + fileExtension)
+})
+      
+//A user can only upload image files
+const <b>multerFilter</b> = (req, file, cb) => {
+  if (file.mimetype.startsWith('image')) {
+    cb(null, true);
+  } else {
+    cb('error', false)
+  }
+}
+      
+const <b>upload</b> = multer({
+  <i>storage</i>: multerStorage,
+  <i>fileFilter</i>: multerFilter
+});
+      
+function uploadPhoto(req, res, next) {
+  upload<i>.single</i>('photo');
+}
+      
+function updateMe(req, res, next) {
+  console.log(req.file);
+  console.log(req.body);
+}
+      
+app.patch('/updatePhoto', uploadPhoto, updateMe)
+      
+app.listen(process.env.PORT);
+        </code></pre>`,
+      ],
+    },
+    {
+      sectionTitle: 'Resize Images with sharp',
+      sectionSource: '',
+      highlights: {
+        highlight1: ['Resize Images'],
+        highlight2: ['sharp'],
+      },
+      tooltips: [
+        `<p>When doing image processing like resizing images after uploading an image, then it's always best to not even save the image to the disk, but instead save it to memory.</p>
+        <p>For that we need to modify the <code>storage</code> property to configure Multer, and instead of <code>multer.diskStorage</code> to pass <code>multer.memoryStorage</code>.</p>
+        <p>With <code>multer.memoryStorage</code> the image will be stored as a buffer, and that buffer is then available at <code>req.file.buffer</code>.</p>
+        <p>Calling the <code>sharp()</code> function will create an object on which we can chain multiple methods in order to do our image processing.</p>
+        <pre><code>
+const express = require('express');
+const multer = require('multer');
+<i>const sharp = require('sharp');</i>
+
+const app = express();
+
+const multerStorage = <i>multer.memoryStorage()</i>;
+
+const multerFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith('image')) {
+    cb(null, true);
+  } else {
+    cb('error', false);
+  }
+}
+
+const upload = multer({
+  storage: multerStorage,
+  fileFilter: multerFilter
+});
+
+function uploadPhoto(req, res, next) {
+  upload.single('photo');
+}
+
+<i>const resizePhoto = async (req, res, next) => {
+  if (!req.file) return next();
+
+  req.file.filename = 'user-' + req.user.id + '-' + Date.now();
+
+  await <b>sharp(req.file.buffer)
+    .resize</b>(500, 500)
+    <b>.toFormat</b>('jpeg')
+    <b>.jpeg</b>({ quality: 90 })
+    <b>.toFile</b>('public/img/' + req.file.filename)
+
+  next();
+}</i>
+
+function updateMe(req, res, next) {
+  console.log(req.file);
+  console.log(req.body);
+}
+
+app.patch('/updatePhoto', uploadPhoto, resizePhoto, updateMe)
+
+app.listen(process.env.PORT);
+        </code></pre>
+        `,
+      ],
+    },
+    {
+      sectionTitle: 'Uploading & Proccessing Multiple Images',
+      sectionSource: '',
+      tooltips: [
+        `        <pre><code>
+const express = require('express');
+const multer = require('multer');
+const sharp = require('sharp');
+
+const app = express();
+
+const multerStorage = multer.memoryStorage();
+
+const multerFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith('image')) {
+    cb(null, true);
+  } else {
+    cb('error', false);
+  }
+}
+
+const upload = multer({
+  storage: multerStorage,
+  fileFilter: multerFilter
+});
+
+<i>function uploadPhotos(req, res, next) {
+  //When we have multiple images with the <u>same HTML "name" attribute</u>
+  <b>upload.array</b>('images', 8);
+
+  //When we have multiple images with <u>mixed HTML "name" attribute</u>
+  // <b>upload.fields</b>([
+  //   {name: 'imageCover', maxCount: 1},
+  //   {name: 'images', maxCount: 8}
+  // ]);
+
+
+  //When we have only one <u>image</u>
+  //<b>upload.single</b>('image');
+}</i>
+
+const resizePhotos = async (req, res, next) => {
+  if (!<b>req.files</b>) return next();
+
+  <i>req.body.images = [];</i>
+  <b>await Promise.all</b>(
+    <i>req.files.images</i>.map(async (file, idx) => {
+      const filename = 'user-' + req.user.id + '-' + Date.now() + '-' + idx + '.jpeg';
+      
+      await sharp(file.buffer)
+        .resize(500, 500)
+        .toFormat('jpeg')
+        .jpeg({ quality: 90 })
+        .toFile('public/img/' + filename)
+        
+      <i>req.body.images.push(filename);</i>
+    })
+  );
+
+  next();
+}
+
+function updatePhotos(req, res, next) {
+  console.log(req.file);
+  console.log(req.body);
+}
+
+app.patch('/updatePhotos', uploadPhotos, resizePhotos, updatePhotos)
+
+app.listen(process.env.PORT);
+        </code></pre>`,
+      ],
+    },
+    {
+      sectionTitle: 'Storing File Data in the Database',
+      sectionSource: '',
+      tooltips: [
+        `<p>Files like images, videos, PDFs etc, should not be stored in a database, they are too big. It's too inefficient to store files in a database and query them from there. You need to <i>store files on file system</i>, but you need to <i>store the path to the file in the database</i>.</p>`,
+      ],
+    },
+    {
+      sectionTitle: 'Downloading Files with Authentication',
+      sectionSource: '',
+      tooltips: [``],
+    },
+    {
+      sectionTitle: 'Setting File Type Headers',
+      sectionSource: '',
+      highlights: {
+        highlight1: ['File Type Headers'],
+      },
+      tooltips: [
+        `<p>Setting headers to files that you are download, you control how the browser should handle the incoming data. For example, should it automatically open a file, should it instead let you download it?</p>`,
+      ],
+    },
+    {
+      sectionTitle: 'Restricting File Access',
+      sectionSource: '',
+      tooltips: [``],
+    },
+    {
+      sectionTitle: 'Streaming Data vs Preloading Data',
+      sectionSource: '',
+      highlights: {
+        highlight1: ['Streaming Data'],
+      },
+      tooltips: [
+        `<p><code>fs.readFile()</code> vs <code>fs.createReadStream()</code></p>
+        <p>We can <code>fs.pipe(res)</code> our readable stream, the file stream into the response, and that means that the response will be streamed to the browser and will contain the data, and the data will basically be downloaded by the browser step by step, and for large files this is a huge advantage because Node.js never has to preload all the data into memory, but just streams it to the client on the fly, and the most it has to store is one chunk of data.</p>
+        <pre><code>
+const fs = require('fs');
+
+function downloadPDF(req, res, next) {
+    const file = <i>fs.createReadStream</i>(invoicePath);
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', 'inline');
+    <i>file.pipe(res);</i>
+};
+        </code></pre>
+        `,
+      ],
+    },
+    {
+      sectionTitle: 'Using PDFKit for .pdf Generation',
+      sectionSource: '',
+      highlights: {
+        highlight2: ['PDFKit'],
+      },
+      tooltips: [``],
+    },
+    {
+      sectionTitle: 'Deleting Files',
+      sectionSource: '',
+      tooltips: [
+        `<pre><code>
+const fs = require('fs');
+
+const deleteFile = (filePath) => {
+    <i>fs.unlink</i>(filePath, (err) => {
+        if (err) {
+            throw (err);
+        }
+    });
+}
+
+exports.deleteFile = deleteFile;      
+      </code></pre>`,
+      ],
+    },
+  ],
+};
+
+const adding_pagination = {
+  title: 'Adding Pagination',
+  titleDescription: 'Fetching Data in Chuncks',
+  sections: [
+    {
+      sectionTitle: 'Adding Pagination Links',
+      sectionSource: '',
+      tooltips: [``],
+    },
+    {
+      sectionTitle: 'Retrieving a Chunk of Data',
+      sectionSource: '',
+      highlights: {
+        highlight1: ['Chunk of Data'],
+      },
+      tooltips: [``],
+    },
+    {
+      sectionTitle: 'Skip & Limit with SQL',
+      sectionSource: '',
+      tooltips: [``],
+    },
+    {
+      sectionTitle: 'Preparing Pagination Data on the Server',
+      sectionSource: '',
+      tooltips: [``],
+    },
+    {
+      sectionTitle: 'Adding Dynamic Pagination Buttons',
+      sectionSource: '',
+      tooltips: [``],
+    },
+  ],
+};
+
+const understanding_async_requests = {
+  title: 'Understanding Async Requests',
+  titleDescription: 'Behind-The-Scenes Work',
+  sections: [
+    {
+      sectionTitle: 'What are Async Requests?',
+      sectionSource: '',
+      highlights: {
+        highlight1: ['Async Requests'],
+      },
+      tooltips: [
+        `<h3>Traditional Request-Response flow on Web Applications</h3>
+        <p>Thus far we always had a look at a particular kind of request and response. The request was always a request sent from our browser, when we submitted a form or entered a URL or clicked a link, and the response always was either a redirect or a new HTML page. Now that can take you very far, but <i>sometimes, you get some requests that will only happen behind the scenes, that means you don't want to get back a new HTML page, you only want to exchange some data with the server</i>. We'll have a look at what asynchronous JavaScript requests are, why we would use them, and how we will use them.</p>
+        <p>In a web/mobile application you have your frontend(client-side) and you have your backend(server-side). Now typically, you send a request from your client to the server and you get back a response. Up until now, the response always was a HTML page or a redirect to another route that then returned also a HTML page.</p>
+        <p>Now there is nothing wrong with that, but there are tasks where you don't want to reload the HTML page just to, for example delete an item. And actually, in modern web applications, the portion that happens behind the scenes grows, since we can do a lot with JavaScript in the browser where we never need to fetch a new HTML page, but where we constantly change the existing HTML page, as this is faster than loading a new one, but that's something I'll cover in the restful API modules.</p>
+        `,
+        `<h3>What are Asynchronous Requests?</h3>
+        <p>The idea behind asynchronous requests is that you do send the request, but that request typically contains just some data in a special format named JSON, and that data is sent to the server, to a certain URL or a route accepted by that server (so that logic doesn't change). The server can do whatever it wants to do with that, and then we return a response, and that response is also returned behind the scenes, so it's NOT a new HTML page that needs to be rendered, it's instead again just some data in that <i>JSON format</i> typically.</p>
+        <p>That is how client-server can communicate through JavaScript, so through client-side JavaScript and the server-side logic, <i>without exchanging a new HTML page</i>. That allows you to do some work behind the scenes without interrupting the user flow, without reloading the HTML page.</p>
+        `,
+      ],
+    },
+    {
+      sectionTitle: 'The JSON Data Format',
+      sectionSource: '',
+      highlights: {
+        highlight1: ['JSON'],
+      },
+      tooltips: [
+        `<p>JSON stands for JavaScript Object Notation. JSON data looks a lot like a normal JavaScript object, but one important difference is that all key names are enclosed by double quotation marks <code>"</code>. Besides that, you can store text (string), numeric (integers and floats) and boolean data as well as nested objects and arrays.</p>`,
+      ],
+    },
+    {
+      sectionTitle: 'Adding Client-Side JS Code',
+      sectionSource: '',
+      tooltips: [``],
+    },
+    {
+      sectionTitle: 'Sending & Handling Background Requests',
+      sectionSource: '',
+      tooltips: [
+        `<p><pre><code>
+function asyncRequest(req, res, next) {
+    res.status(200)<i>.json({ message: "Success", data: ["str1", "str2"] })</i>;
+}
+        </code></pre></p>
+        <p><i>NOTE: <code>.json()</code> will automatically transform a JavaScript object to JSON format.</i></p>
+        `,
+      ],
+    },
+    {
+      sectionTitle: 'Manipulating the DOM',
+      sectionSource: '',
+      tooltips: [``],
     },
   ],
 };
@@ -5298,15 +5298,13 @@ export const dataStorage = [
   parsing_data,
   error_handling_with_ExpressJS,
   understanding_validation,
-  file_upload_and_download,
-
-  sending_emails,
-  adding_pagination,
-  understanding_async_requests,
-
   adding_authentication,
   authentication_with_JWT,
   security,
+  file_upload_and_download,
+  sending_emails,
+  adding_pagination,
+  understanding_async_requests,
   understanding_async_await_in_NodeJS,
   server_side_rendering,
   sessions_and_cookies,
