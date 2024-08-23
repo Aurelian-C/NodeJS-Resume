@@ -1700,41 +1700,47 @@ const working_with_files = {
         highlight2: ['fs.readFile()', 'fs.writeFile()'],
       },
       tooltips: [
-        `<pre><code>
-<i>const fs = require('<b>fs</b>');</i>
-const path = require('path');
+        `<p>In Node.js, <i>the <code>fs</code> (File System) module allows you to <b>interact with the file system on your computer</b></i>. Two commonly used methods in this module are <code>fs.readFile</code> and <code>fs.writeFile</code>, which are used for reading and writing files, respectively.</p>
+        <p>NOTE: These methods are asynchronous, meaning they do not block the event loop.</p>
+        `,
+        `<h3>fs.readFile()</h3>
+        <ul><code>fs.readFile</code> reads the contents of a file <u>asynchronously</u>. Takes as arguments:
+          <li>1. <b><code>path</code></b>: the path to the file you want to read.</li>
+          <li>2. <b><code>encoding</code> (optional)</b>: the character encoding to use. Commonly utf8.</li>
+          <li>3. <b><code>callback</code></b>: a callback function that is <i>executed after the file is read. This callback function receives two arguments: <code>err</code> (if an error occurs) and <code>data</code> (the file content).</i></li>
+        </ul>
+        <pre><code>
+const fs = require('fs');
 
-const filePath = path.join(path.dirname(process.mainModule.filename), 'data', 'products.json');
-
-const getProductsFromFile = cb => {
-  <b>fs.readFile</b>(filePath, (err, fileContent) => {
-    if (err) {
-      cb([]);
-    } else {
-      cb(JSON.parse(fileContent));
-    }
-  });
-};
-
-module.exports = class Product {
-  constructor(t) {
-    this.title = t;
+fs.readFile('path/to/file', 'utf8', (err, data) => {
+  if (err) {
+    console.error('Error reading file:', err);
+    return;
   }
 
-  save() {
-    getProductsFromFile(products => {
-      products.push(this);
-      <b>fs.writeFile</b>(filePath, JSON.stringify(products), err => {
-        console.log(err);
-      });
-    });
-  }
-
-  static fetchAll(cb) {
-    getProductsFromFile(cb);
-  }
-};     
+  console.log('File contents:', data);
+});     
       </code></pre>`,
+        `<h3>fs.writeFile()</h3>
+        <ul><code>fs.writeFile</code> writes data to a file <u>asynchronously</u>. <i>If the file does not exist, it will be created. If the file exists, it will be overwritten.</i> Takes as arguments:
+          <li>1. <b><code>path</code></b>: the path to the file where the data will be written.</li>
+          <li>2. <b><code>data</code></b>: the content to write to the file.</li>
+          <li>3. <b><code>encoding</code> (optional)</b>: the character encoding to use. Commonly utf8.</li>
+          <li>4. <b><code>callback</code></b>: a callback function that is <i>executed after the file is written. It receives one argument: <code>err</code> (if an error occurs).</i></li>
+        </ul>
+        <pre><code>
+const fs = require('fs');
+
+fs.writeFile('path/to/file', 'data', 'utf8', (err) => {
+  if (err) {
+    console.error('Error writing to file:', err);
+    return;
+  }
+  console.log('File has been written');
+});
+      </code></pre>`,
+        `<h3>Error Handling</h3>
+      <p><i>Both <code>fs.readFile</code> and <code>fs.writeFile</code> take callback functions where the first parameter is always the error object (err). It's good practice to check for this error before proceeding with the rest of your logic.</i></p>`,
         `<p>IMPORTANT: It's important to understand that <i>working with <u>files for data storage</u> is suboptimal for bigger amounts of data</i>.</p>`,
       ],
     },
@@ -1936,19 +1942,19 @@ app.listen(process.env.PORT);
       ],
     },
     {
-      sectionTitle: 'More about <code>__dirname</code> variable',
+      sectionTitle: 'More about <code>__dirname</code> global variable',
       sectionSource: '',
       highlights: {},
       tooltips: [
         `
-    <p>In Node.js, <code><b>./</b>folder/fileName</code> and <code>__dirname + '/folder/fileName'</code> are used to specify file paths, but they have different behaviors and use cases.</p>`,
+    <p>In Node.js, <code><b>./</b>folder/fileName</code> and <code><b>__dirname</b> + '/folder/fileName'</code> are used to specify file paths, but they have <u>different behaviors and use cases</u>.</p>`,
         `<h3>Setting a Path with <code>./folder/fileName</code></h3>
-      <p>Relative Path: <code>./folder/fileName</code> is a relative path, meaning it is <i>relative to the current working directory (CWD) from which the Node.js process was started</i>.</p>
-      <p>Usage: <b>This path changes based on where the Node.js process is executed from.</b> If you run your script from different directories, the path might not resolve correctly.</p>`,
+      <p><b>Relative Path</b>: <i><code>./folder/fileName</code> is a relative path</i>, meaning it is <i>relative to the current working directory (CWD) from which the Node.js process was started</i>.</p>
+      <p><b>This path changes based on where the Node.js process is executed from.</b> If you run your script from different directories, the path might not resolve correctly.</p>`,
         `<h3>Setting a Path with <code>__dirname + '/folder/fileName'</code></h3>
-      <p>Absolute Path: <i><code>__dirname</code> is an absolute path to the directory that contains the currently executing script, not the CWD</i>.</p>
-      <p>Usage: This path is stable and reliable, as it always points to the same directory regardless of where the Node.js process is started from.</p>
-      <p><code>__dirname</code> is a <b>global variable</b> made available by Node.js (environment variable) that tells you <i>the <u>absolute path of the directory</u> containing the currently executing file</i>.</p>
+      <p><b>Absolute Path</b>: <i><code>__dirname</code> is an absolute path to the directory that contains the currently executing script, not the CWD</i>.</p>
+      <p><i><b>This path is stable and reliable</b>, as it always points to the same directory regardless of where the Node.js process is started from.</i></p>
+      <p><code>__dirname</code> is a <b>global variable</b> made available by Node.js (environment variable) that tells you the <u>absolute path of the directory</u> containing the currently executing file.</p>
       `,
         `<h3>Key Differences between <code>./folder/fileName</code> and <code>__dirname + '/folder/fileName'</code></h3>
     <ul>Scope:
@@ -1963,7 +1969,7 @@ app.listen(process.env.PORT);
       <li>- Use <code>./folder/fileName</code> when the file path is meant to be relative to the working directory of the process.</li>
       <li>- Use <code>__dirname + '/folder/fileName'</code> when the file path needs to be relative to the script's location, ensuring consistency regardless of the CWD.</li>
     </ul>
-    <p>In summary, using <code>__dirname</code> is generally more robust and reliable, especially when your Node.js application may be executed from various directories.</p>
+    <p><i>In summary, using <code>__dirname</code> is generally more robust and reliable, especially when your Node.js application may be executed from various directories.</i></p>
     `,
       ],
     },
@@ -2051,10 +2057,10 @@ const parsing_data = {
         highlight2: ['body-parser'],
       },
       tooltips: [
-        `<p><i>By default, <code>req.body</code> doesn't try to parse the incoming request.</i> For that, we need to install a 3rd party packages.</p>
+        `<p><b>By default, <code>req.body</code> doesn't try to parse the incoming request.</b> For that, we need to install a 3rd party packages.</p>
         <p><code>body-parser</code> package is a npm package for Node.js body parsing middleware. You install it with <i><code>npm install body-parser</code></i> command.</p>
-        <p><code>body-parser</code> parse incoming request bodies in a middleware before your handlers, available under the <code>req.body</code> property.</p>
-        <p><i><code>bodyParser.urlencoded()</code> will not parse all kinds of possible bodies</i>, files, json and so on, but will parse bodies like sent through a form. If we have other bodies like files, we'll <u>use different parsers</u>, and this makes Express.js so extensible. If we need something, we can plug it in.</p>
+        <p><code>body-parser</code> <b>parse incoming request bodies in a middleware before your handlers</b>, available under the <code>req.body</code> property.</p>
+        <p><b><code>bodyParser.urlencoded()</code> will not parse all kinds of possible bodies</b>, files, JSON and so on, but will parse bodies like sent through a form. If we have other bodies like files, we'll <u>use different parsers</u>, and this makes Express.js so extensible. If we need something, we can plug it in.</p>
         `,
         `<h3>An example of parsing an incoming request body</h3>
         <pre><code>
@@ -2063,7 +2069,7 @@ const express = require('express');
 
 const app = express();
 
-app.use(<i>bodyParser.urlencoded({ extended: false })</i>);
+app.use(<b>bodyParser.urlencoded({ extended: false })</b>);
 
 app.use('/', (req, res, next) => {
     next();
