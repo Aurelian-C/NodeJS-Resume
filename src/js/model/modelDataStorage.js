@@ -746,6 +746,97 @@ DB_NAME=mydatabase
   ],
 };
 
+const working_with_REST_APIs = {
+  title: 'Working with REST APIs',
+  titleDescription: 'Decoupling Frontend and Backend',
+  sections: [
+    {
+      sectionTitle: 'What are REST APIs and Why Do We Use Them?',
+      sectionSource: '',
+      tooltips: [
+        `<p>REST APIs are there to solve one problem: <i>not every Frontend (User Interface) requires HTML Pages from your server! So not every Frontend Web App might want your server to generate the HTML code, which effectively is the UI</i>.</p>
+        <p><i>With REST APIs we <b>only transfer <u>Data</u> instead of <u>UI</u> (HTML Pages)</b></i>.</p>`,
+        `<h3>"Traditional" server-side logic vs REST APIs</h3>
+        <p>It's important to highlight that in REST APIs only the request and the response data changes, but not the general server-side logic.</p>
+        <ul>A REST APIs don't differ to much in what happens on the server from a Traditional Web Server. It only different in:
+           <li>- Traditional Web Server render the views on the server-side, but REST APIs only return data, not the views.</li>
+        </ul>
+        <p>Most of the server-side code does not change when we build REST APIs, only request + response data is affected.</p>
+        <p>The most important thing a REST API offers is that we can have <i>a single REST API with many consumers</i>: browsers, native mobiles systems (android, IOS), native app (Windows or MacOS). In "traditional" server, with the HTML pages generated on the server, only browsers can use that server.</p>
+        `,
+      ],
+    },
+    {
+      sectionTitle: 'The REST API Arhitecture',
+      sectionSource: '',
+      highlights: {
+        highlight1: ['REST API Arhitecture'],
+      },
+      tooltips: [
+        `<h3>Separate API into logical resources</h3>
+        <p>A resource is an object or representation of something, which has data associated to it. Any information that can be <u>named</u> can be a resource.</p>
+        <p>We need to <i>expose these resources</i>, which means to <b>make available the data using some structured URLs that the client can send a request to</b>. So our API will have many different endpoints, and <i>each endpoint will send different data back to the client</i>, or also perform different actions.</p>
+        <p><img src="../../src/img/rest_api_arhitecture_1.jpg"/></p>`,
+        `<h3>Endpoints should contain only resources!</h3>
+        <p><i><b>Endpoints should contain only resources (nouns)</b>, and use HTTP methods in order to perform actions on data!</i> So to perform different actions (reading / creating / updating / deleting) on data, <i>the API should use the right HTTP method and not the URL</i>.</p>
+        <p><b>Endpoints should only contain our resources and not the actions that can be performed on them</b>, because they will quickly become a nightmare to maintain.</p>
+        <p>For example, <code>/getTour</code> endpoint is to get data about a tour. So we should simply name the endpoint <code>/tours</code> and send the data whenever a GET request is made to <code>/tours</code> endpoint. Just like this, we only have resources in the endpoint and not actions, because the action is now in the HTTP method.</p>
+        <p><img src="../../src/img/rest_api_arhitecture_2.jpg"/></p>
+        <p>What's is important to understand is that we have a single resource in <code>/tours</code> endpoint that <i>performs different actions on data based on different HTTP methods</i>. So, for example, if the <code>/tours</code> endpoint is accessed with GET method, we send data to the client. But if the same <code>/tours</code> endpoint is accessed with POST method, we expect data to come in with an incoming request, so that we can then create a new resource on the server side. So that is really the beauty of only using HTTP methods, rather than messing with verbs in endpoint names.</p>
+        `,
+        `<h3>Accessing Data with REST APIs: Send data as JSON</h3>
+        <ul>Data Formats:
+          <li>- HTML;</li>
+          <li>- Plain Text;</li>
+          <li>- XML;</li>
+          <li>- JSON;</li>
+        </ul>
+        <p><img src="../../src/img/rest_api_arhitecture_3.jpg"/></p>
+        <p>When we send a JSON response back to the client, <i>there is are a couple of standards to <b>formatting the response before sending</b></i>. We're gonna use a very simple one called <b>JSend</b>. We simply create a new object, then add a <code>status</code> message to it in order to inform the client whether the request was a success, fail or error, and then we put our original data into a new object called <code>data</code>.</p>
+        `,
+        `<h3>REST APIs are stateless</h3>
+        <p>In REST APIs <b>all state is handled <u>on the client</u></b>. This means that <b>each incoming request must contain <u>all</u> the information necessary to process a certain request from the server</b>. <i>The server should <u>not</u> have to remember previous requests in order to process the current request.</i></p>
+        <p>In REST APIs the server does not save response history between requests.</p>
+        <p><img src="../../src/img/rest_api_arhitecture_4.jpg"/></p>`,
+        `<h3>REST APIs - The Core Principles</h3>
+        <ul>REST Concepts & Ideas:
+          <li>- <i>REST APIs are <b>all about data</b>, no UI logic in exchanged;</i></li>
+          <li>- <i>REST APIs are normal Node.js servers which <b>expose different endpoints</b> (HTTP method + path) for clients to send request to;</i></li>
+          <li>- <i><b>JSON is the common data format</b> that is used both for requests and resposnes;</i></li>
+          <li>- REST APIs are <b>decoupled from the clients</b> that use them.</li>
+        </ul>
+        `,
+      ],
+    },
+    {
+      sectionTitle: 'Sending POST Requests From The Client',
+      sectionSource: '',
+      tooltips: [
+        `<h3>The old way of submiting forms & sending HTTP "POST" request</h3>
+        <pre><code>
+form <i>action="/feed/post"</i> <i>method="POST"</i>
+        </code></pre>`,
+        `<h3>Sending "POST" requests in REST APIs</h3>
+        <pre><code>
+fetch('http://localhost:8080/feed/post', {
+  <i><b>method</b>: 'POST',
+  <b>headers</b>: {
+    'Content-Type': 'application/json'
+  }
+  <b>body</b>: JSON.stringify</i>({ title: 'A title', content: 'Some content...'})
+})      
+      </code></pre>
+      <p>Attach data in JSON format and let the other end know by setting the "Content-Type" header.</p>
+      <ul><b>Express.js set the "Conten-Type" header automatically when using the <code>res.json()</code> method.</b> In the browser, setting the "Content-Type" header depends on which method you use:
+        <li>- when using the <i>Fetch API</i> we had to set it manually;</li>
+        <li>- when you would use <i>Axios library</i> in browser-side JavaScript for sending async requests, it would be done automatically.</li>
+      </ul>
+      `,
+      ],
+    },
+  ],
+};
+
 const understanding_the_basics = {
   title: 'Understanding the Basics',
   titleDescription: 'The Essential Knownledge You Need',
@@ -1277,68 +1368,90 @@ const routing = {
       sectionSource: '',
       tooltips: [
         `<p>Routing refers to <i>how an <b>application's endpoints (URIs)</b> respond to <b>client requests</b></i>.</p>
-        <p>You define routing using methods of the Express app object that correspond to HTTP methods: for example, <code>app.get()</code> to handle GET requests and <code>app.post</code> to handle POST requests. You can also use <code>app.all()</code> to handle all HTTP methods and <code>app.use()</code> to specify middleware as the callback function.</p>
-        <p><i>These routing methods specify a callback function (sometimes called “handler functions”) called when the application receives a request to the specified route (endpoint) and HTTP method.</i> In other words, the application “listens” for requests that match the specified route(s) and method(s), and when it detects a match, it calls the specified callback function.</p>
-        <p>In fact, <i>the routing methods can have more than one callback function as arguments</i>. With multiple callback functions, it is important to provide <code>next</code> as an argument to the callback function and then call <code>next()</code> within the body of the function to hand off control to the next callback.</p>`,
+        <p><b>You define routing using methods of the Express <code>app</code> object that correspond to HTTP methods</b>: for example, <code>app.get()</code> to handle GET requests and <code>app.post</code> to handle POST requests.</p>
+        <p>You can also <b>use <code>app.all()</code> to handle all HTTP methods</b> and <b><code>app.use()</code> to specify middleware as the callback function</b>.</p>
+        <p><i>These routing methods specify a callback function (sometimes called “handler functions”) called when the application receives an incoming request to the specified route (endpoint) and HTTP method.</i> In other words, the application “listens” for requests that match the specified route(s) and method(s), and when it detects a match, it calls the specified callback function.</p>
+        <p>In fact, <b>the routing methods can have more than one callback function as arguments</b>. <i>With multiple callback functions, it is important to provide <code>next</code> as an argument to the callback function</i> and then call <code>next()</code> within the body of the function to hand off control to the next callback.</p>`,
         `<h3>Route methods</h3>
-        <p>A route method is derived from one of the HTTP methods, and is attached to an instance of the express class. Express supports methods that correspond to all HTTP request methods: get, post, and so on.</p>
-        <pre><code>
-// GET method route
-app<b>.get</b>('/', (req, res) => {
-  res.send('GET request to the homepage')
-})
-
-// POST method route
-app<b>.post</b>('/', (req, res) => {
-  res.send('POST request to the homepage')
-})
-      </code></pre>
-      <p>There is a special routing method, <code>app.all()</code>, used to <i>load middleware functions at a path for all HTTP request methods</i>. For example, the following handler is executed for requests to the route “/secret” whether using GET, POST, PUT, DELETE.</p>
-              <pre><code>
-app<b>.all</b>('/secret', (req, res, next) => {
-  console.log('Accessing the secret section ...')
-  next() // pass control to the next handler
-})
-      </code></pre>
-
-      `,
-      ],
-    },
-    {
-      sectionTitle: 'Handling different routes with <code>app.use()</code>',
-      sectionSource: '',
-      tooltips: [
-        `<pre><code>
-const express = require('express');
-
-const app = express();
-        
-app.use(<b>'/'</b>, (req, res, next) => {
-  console.log('This middleware ALWAYS RUNS even if you access "/add-product" path! app.use() that has the "/" path will run for ALL ACCESED PATHS that starts with "/".');
-  <i>next();</i>
-});
-        
-app.use(<b>'/add-product'</b>, (req, res, next) => {
-  console.log('First middleware!');
-  <i>res.send('Add Products Page');</i>
-});
-        
-app.use(<b>'/'</b>, (req, res, next) => {
-  console.log('Second middleware!');
-  <i>res.send('Hello from the other side!');</i>
-});
-        
-app.listen(process.env.PORT);
-      </code></pre>`,
-        `<h3>Basic routing</h3>
-        <p>Routing refers to determining how an application responds to a client request to a particular endpoint, which is a URI (or path) and a specific HTTP request method (GET, POST, and so on).</p>
-        <p>Each route can have one or more handler functions, which are executed when the route is matched.</p>
+        <p>A route method is derived from one of the HTTP methods, and is attached to an instance of the express class. Express supports methods that correspond to all HTTP request methods: GET, POST, and so on.</p>
         <ul>Route definition takes the following structure: <code>app.<i>METHOD</i>(PATH, HANDLER)</code>, where:
           <li>- <code>app</code> is an instance of express;</li>
           <li>- <code>METHOD</code> is an HTTP request method, in lowercase;</li>
           <li>- <code>PATH</code> is a path on the server;</li>
           <li>- <code>HANDLER</code> is the function executed when the route is matched.</li>
         </ul>
+        <pre><code>
+//GET method route
+<i>app<b>.get</b></i>('/', (req, res) => {
+  res.send('GET request to the homepage');
+});
+
+//POST method route
+<i>app<b>.post</b></i>('/', (req, res) => {
+  res.send('POST request to the homepage');
+});
+      </code></pre>
+      <p>There is a special routing method, <code>app.all()</code>, used to <i>load middleware functions at a path for all HTTP request methods</i>. For example, the following handler is executed for requests to the route “/secret” whether using GET, POST, PUT, DELETE.</p>
+              <pre><code>
+<i>app<b>.all</b></i>('/secret', (req, res, next) => {
+  console.log('Accessing the secret section ...');
+  next(); //pass control to the next handler
+});
+      </code></pre>
+
+      `,
+      ],
+    },
+    {
+      sectionTitle: 'Using express.Router()',
+      sectionSource: '',
+      highlights: {
+        highlight2: ['express.Router()'],
+      },
+      tooltips: [
+        `<p>With Express.js routing we can <i>execute different code for different incoming requests and paths</i>.</p>
+        <p>When the application grows, we want to <i>split our routing code over multiple files</i>. Express.js  gives us a pretty nice way of outsourcing routing into other files. You can <b>use the <code>express.Router</code> to split your routes across files</b>.</p>
+        <p>The convention is to create in your application a new folder called "routes". In this folder you will store all your files related to Express.js routes code that should execute for different paths. Use the <code>express.Router</code> class to create modular, mountable route handlers. <i>A Router instance is a complete middleware and routing system</i>; for this reason, it is often referred to as a “mini-app”.</p>
+        `,
+        `<p>Create a router file named birds.js in the app directory, with the following content:</p>
+        <pre><code>
+const express = require('express');
+<i>const router = <b>express.Router()</b>;</i>
+
+<i>//Middleware that is specific to this router</i>
+const timeLog = (req, res, next) => {
+  console.log('Time: ', Date.now());
+  next();
+}
+
+<i>router.use</i>(timeLog)
+
+//Define the main page for this route
+<i>router.get</i>('/', (req, res) => {
+  res.send('Birds home page');
+})
+
+//Define the about route
+<i>router.get</i>('/about', (req, res) => {
+  res.send('About birds');
+})
+
+<i>module.exports = router</i>
+        </code></pre>
+
+        <p>Then, load the router module in the app:</p>
+        <pre><code>
+const express = require('express');
+<i>const birdsRouter = require('./birds')</i>
+
+const app = express();
+
+<i><b>app.use</b>('/birds', birdsRouter);</i>
+
+app.listen(process.env.PORT);
+        </code></pre>
+        <p><i>The router is mounted on <code>/birds</code> using <code>app.use('/birds', birdsRouter);</code>, meaning any routes defined in <code>birdsRouter</code> will be prefixed with <code>/birds</code>.</i> The app will now be able to handle requests to <code>/birds</code> and <code>/birds/about</code>, as well as call the <code>timeLog</code> middleware function that is specific to the route.</p>
+        <p>By using <code>express.Router()</code>, you can <b>simplify the paths to be relative to the router they're mounted on</b>.</p>
         `,
       ],
     },
@@ -1376,87 +1489,33 @@ const updateBook = (req, res) => {
       ],
     },
     {
-      sectionTitle: 'Using Express Router',
-      sectionSource: '',
-      tooltips: [
-        `<p>With Express.js routing we can <i>execute different code for different incoming requests and paths</i>.</p>
-        <p>When the application grows, we want to <i>split our routing code over multiple files</i>. Express.js  gives us a pretty nice way of outsourcing routing into other files. You can <i>use the <code>express.Router</code> to split your routes across files</i>.</p>
-        <p>The convention is to create in your application a new folder called "routes". In this folder you will store all your files related to Express.js routes code that should execute for different paths.</p>
-        <p>Use the <code>express.Router</code> class to create modular, mountable route handlers. A Router instance is a complete middleware and routing system; for this reason, it is often referred to as a “mini-app”.</p>
-        `,
-        `<p>Create a router file named birds.js in the app directory, with the following content:</p>
-        <pre><code>
-const express = require('express');
-<i>const router = <b>express.Router()</b>;</i>
-
-<i>//Middleware that is specific to this router</i>
-const timeLog = (req, res, next) => {
-  console.log('Time: ', Date.now());
-  next();
-}
-
-<i>router.use</i>(timeLog)
-
-//Define the main page for this route
-<i>router.get</i>('/', (req, res) => {
-  res.send('Birds home page');
-})
-
-//Define the about route
-<i>router.get</i>('/about', (req, res) => {
-  res.send('About birds');
-})
-
-<i>module.exports = router</i>
-        </code></pre>
-
-        <p>Then, load the router module in the app:</p>
-        <pre><code>
-const express = require('express');
-<i>const birds = require('./birds')</i>
-
-const app = express();
-
-<i><b>app.use</b>('/birds', birds);</i>
-
-app.listen(process.env.PORT);
-        </code></pre>
-        <p>The app will now be able to handle requests to <code>/birds</code> and <code>/birds/about</code>, as well as call the <code>timeLog</code> middleware function that is specific to the route.</p>
-        <p>By using <code>express.Router()</code>, you can <b>simplify the paths to be relative to the router they're mounted on</b>.</p>
-        `,
-      ],
-    },
-    {
       sectionTitle:
-        'Limiting middleware execution by filtering a HTTP request by paths and methods',
+        'Limiting Middleware Execution by Filtering a HTTP Request by Path and/or by Method',
       sectionSource: '',
       highlights: {
         highlight1: ['filtering a HTTP request by paths and methods'],
       },
       tooltips: [
         `<h3>Filtering request by method</h3>
-        <p><i>If you filter requests by method, paths are matched exactly</i>, otherwise, with <code>app.use()</code> the first segment of a URL is matched.</p>
+        <p><code>app.route(path)</code> <i>returns an instance of a single route</i>, which you can then use to handle HTTP verbs with optional middleware. <i>Use <code>app.route()</code> to avoid duplicate route names</i> (and thus typo errors).</p>
         <pre><code>
 const express = require("express");
 
-const router = express.Router();
-        
-// The same path (/add-product) can be used if the method is different (.get), because is treated as a different URL path
-// /admin/add-product => GET
-<i>router<b>.get</b>("/add-product"</i>, (req, res, next) => {
-  res.send('Form submision!');
-});
-        
-// The same path (/add-product) can be used if the method is different (.post), because is treated as a different URL path
-// /admin/add-product => POST
-<i>router<b>.post</b>("/add-product"</i>, (req, res, next) => {
-   res.redirect("/");
-});
+const app = express();
 
-module.exports = router;
+<i>app
+  <b>.route</b>("/add-product")
+  <b>.get</b>((req, res, next) => {
+    res.send('Form submision!');
+  })
+  <b>.post</b>((req, res, next) => {
+    res.redirect("/");
+ });</i>
+
+app.listen(8080);
         </code></pre>
-        <p>NOTE: You can simplify the above code by using <code>.route()</code>:</p>
-                <pre><code>
+        <p>You can to the same thing with <code>express.Router()</code>:</p>
+        <pre><code>
 const express = require("express");
 
 const router = express.Router();
@@ -1486,7 +1545,7 @@ const shopRoutes = require('./routes/shop');
 app.use(bodyParser.urlencoded({extended: false}));
 
 <i>app.use(<b>'/admin'</b>, adminRoutes);</i>
-app.use(shopRoutes);
+<i>app.use(shopRoutes);</i>
 
 app.use((req, res, next) => {
     res.status(404).send('Page not found!');
@@ -1499,11 +1558,12 @@ app.listen(process.env.PORT);
       <p>With <code>app.get("/")</code>, <code>app.post("/")</code> an so on, you make sure that you filter middleware execution not only by a specified HTTP method, but even by an exact match for the <code>/</code> path.</p>`,
       ],
     },
+
     {
       sectionTitle: 'Chaining Multiple Middleware Functions for the Same Route',
       sectionSource: '',
       tooltips: [
-        `<p>Chaining multiple middleware functions for the same route in Express.js allows you to <i>perform a series of operations or checks sequentially before finally handling the request</i>. This feature is extremely <i>useful for structuring your application in a modular way, where you can separate concerns</i>, such as authentication, logging, data validation, etc., into different middleware functions.</p>
+        `<p>Chaining multiple middleware functions for the same route in Express.js allows you to <i>perform a series of operations or checks sequentially before finally handling the request</i>. This feature is extremely <i>useful for structuring your application in a modular way, where you can separate concerns</i>, such as authentication, logging, data validation, etc., <i>into different middleware functions</i>.</p>
         <p>Chaining middleware functions is a powerful feature in Express.js that helps keep your code clean, organized, and modular, making it easier to maintain and scale your application.</p>
         `,
         `<h3>Basic Syntax</h3>
@@ -1522,7 +1582,7 @@ app.get(
         <p>Each middleware function has access to the <code>request</code> object (req), the <code>response</code> object (res), and the <code>next</code> function in the application's request-response cycle. The <code>next</code> function is a function in the Express router which, when invoked, executes the middleware succeeding the current middleware.</p>
         `,
         `<h3>Using <code>router</code></h3>
-        <ul>For more complex applications, you might want to use <code>express.Router</code> to organize your routes and middleware. This allows you to define route handlers and middleware in a modular, mountable way. Here's a quick example:
+        <ul>For more complex applications, you might want to use <code>express.Router</code> to organize your routes and middleware. Here's a quick example:
         <li>
           <pre><code>
 const express = require('express');
@@ -1530,18 +1590,13 @@ const router = express.Router();
 
 router.get(
   '/example',
-  middlewareFunction1,
+  <i>middlewareFunction1,
   middlewareFunction2,
-  finalHandlerFunction
+  finalHandlerFunction</i>
 );
-
-app.use('/', router);
           </code></pre>
         </li>
       </ul>
-        `,
-        `<h3>Error Handling Middleware</h3>
-        <p>Express also allows you to define error-handling middleware functions that have four arguments instead of three (<code>err, req, res, next</code>). These are defined in the same way but are designed to handle errors that occur in the preceding middleware/functions.</p>
         `,
       ],
     },
@@ -1556,12 +1611,13 @@ const dynamic_routes_and_advanced_models = {
       sectionTitle: 'Module introduction',
       sectionSource: '',
       tooltips: [
-        `<p>We need the ability to <b>pass some dynamic data through our routes</b>. We want to be able to <i>encode some information in our URL</i>, so that we can, for example, pass a product ID as part of the URL. In this module, you will learn how you can do that, how you can actually <i>submit or send data through the URL</i>, and when you would not do that and put your data into the request body instead.</p>
-        <ul>You will learn about how to:
+        `<p>We need the ability to <b>pass some dynamic data through our routes</b>. We want to be able to <i>encode some information in our URL</i>, so that we can, for example, pass a "productId" or "userId" as part of the URL.</p>
+        <ul>In this module, you will learn how you can <i>submit or send data through the URL</i>, and when you would not do that and <i>put your data into the request body instead</i>. You will learn how to:
          <li>- pass <i>Route <u>Dynamic</u> Params</i>;</li>
          <li>- pass <i>Route <u>Optional</u> Params</i>;</li>
          <li>- use <i><u>Query</u> Params</i>;</li>
-        </ul>`,
+        </ul>
+        `,
       ],
     },
     {
@@ -1571,26 +1627,26 @@ const dynamic_routes_and_advanced_models = {
         highlight1: ['Dynamic Params'],
       },
       tooltips: [
-        `<p>Route parameters are named URL segments that are used to capture the values specified at their position in the URL. <i>The captured values are populated in the <b><code>req.params</code></b> object</i>, with the name of the route parameter specified in the path as their respective keys.</p>
+        `<p>Route parameters are <b>named URL segments</b> that are <i>used to capture the values specified at their position in the URL. The captured values are populated in the <b><code>req.params</code></b> object, with the name of the route parameter specified in the path as their respective keys.</i></p>
         <pre><code>
 Route path: /users/<b>:userId</b>/books/<b>:bookId</b>
-Request URL: http://localhost:3000/users/34/books/8989
-<b>req.params</b>: { "userId": "34", "bookId": "8989" }
+Request URL: http://localhost:3000/users/<i>34</i>/books/<i>8989</i>
+<b>req.params</b>: { <i>"userId"</i>: "34", <i>"bookId"</i>: "8989" }
         </code></pre>
-        <p>To define routes with route parameters, simply specify the route parameters in the path of the route as shown below.</p>
+        <p>To define routes with route parameters, simply specify the route parameters in the path of the route as shown below:</p>
         <pre><code>
-app.get('/users/<i>:userId</i>/books/<i>:bookId</i>', (req, res) => {
-  res.send(req.params)
+app.get('/users/<b>:userId</b>/books/<b>:bookId</b>', (req, res) => {
+  res.send(req.params);
 })     
       </code></pre>
       <p>NOTE: The name of route parameters must be made up of “word characters” ([A-Za-z0-9_]).</p>
       <pre><code>
 exports.getProduct = (req, res, next) => {
   <i>const prodId = <b>req.params</b>.productId;</i>
-  console.log(prodId);
   res.redirect('/');
 };      
       </code></pre>
+      <p>IMPORTANT: <b>The extracted value from <code>req.params</code> will always be a string!</b> So boolean true or false will be extracted as string "true" or "false".</p>
       `,
       ],
     },
@@ -1606,6 +1662,7 @@ app.get('/api/tours/:product/<b>:id?</b>', req, res, next) => {
   console.log(<i>req.params</i>);
 };      
       </code></pre>
+      <p>IMPORTANT: <b>The extracted value from <code>req.params</code> will always be a string!</b> So boolean true or false will be extracted as string "true" or "false".</p>
       `,
       ],
     },
@@ -1624,7 +1681,7 @@ exports.getProduct = (req, res, next) => {
 };      
       </code></pre>
       
-      <p>IMPORTANT: <i>The extracted value from query params will always be a string!</i> So boolean <code>true</code> or <code>false</code> will be extracted as string "true" or "false".</p>
+      <p>IMPORTANT: <b>The extracted value from query params will always be a string!</b> So boolean <code>true</code> or <code>false</code> will be extracted as string "true" or "false".</p>
       `,
       ],
     },
@@ -2168,7 +2225,11 @@ app.listen(8080);
         highlight2: ['Global Error Handling Middleware'],
       },
       tooltips: [
-        `<p>To define an error handling middleware, all we need to do is to <i><b>give the middleware function 4 arguments</b>, and Express.js will then automatically recognize it as an error handling middleware</i>, and therefore, <b>only call it when there is an error</b>.</p>
+        `<h3>Introduction to Error Handling Middleware</h3>
+        <p>Express allows you to <i><b>define error-handling middleware functions</b> that have four arguments instead of three (<code>err, req, res, next</code>)</i>. These are defined in the same way but are designed to handle errors that occur in the preceding middleware/functions.</p>
+        `,
+        `<h3>Global Error Handling Middleware</h3>
+        <p>To define an error handling middleware, all we need to do is to <i><b>give the middleware function 4 arguments</b>, and Express.js will then automatically recognize it as an error handling middleware</i>, and therefore, <b>only call it when there is an error</b>.</p>
         <p>To pass an error from our routes handlers to the error handling middleware, we need to <b>pass that error as an argument to <code>next()</code> function</b>. <i>If the <code>next()</code> function receives an argument, no matter what it is, Express.js will automatically know that there was an error, so it will assume that whatever we pass into <code>next()</code> is gonna be an error, and that applies to every <code>next()</code> function in every single middleware anywhere in our application</i>.</p>
         <p>IMPORTANT: <b>Whenever we pass anything into <code>next()</code> function, Express.js will assume that it is an error, and it will then skip all the other middlewares in the middleware stack and sent the error that we passed in to our global error handling middleware, which will then, of course, be executed.</b></p>
         <pre><code>
@@ -3107,93 +3168,6 @@ function asyncRequest(req, res, next) {
       sectionTitle: 'Manipulating the DOM',
       sectionSource: '',
       tooltips: [``],
-    },
-  ],
-};
-
-const working_with_REST_APIs = {
-  title: 'Working with REST APIs',
-  titleDescription: 'Decoupling Frontend and Backend',
-  sections: [
-    {
-      sectionTitle: 'What are REST APIs and why do we use Them?',
-      sectionSource: '',
-      tooltips: [
-        `<p>REST APIs are there to solve one problem: <i>not every Frontend (User Interface) requires HTML Pages from your server! So not every UI might want your server to generate the HTML code, which effectively is the UI</i>.</p>
-        <p><i>With REST APIs we <b>transfer <u>Data</u> instead of <u>UI</u> (HTML Pages)</b></i>.</p>
-        <p>It's also important to highlight that in REST APIs only the response and the request data changes, but not the general server-side logic. So everything you learned about validating, reaching out to databases, handling files on the server, all these things don't change, you do that in exactly the same way when building a REST API, and that is really important because often, REST APIs and traditional web apps where you render the views on the server-side are seen as two totally different things. They are not, they only differ in the response and in the kind of data you expect, but they don't differ in what happens on the server, besides the fact that you don't render the view.</p>
-        <p>Most of the server-side code does not change when we build REST APIs, only reqeust + response data is affected.</p>
-        `,
-        `<h3>"Traditional" server-side logic vs REST APIs</h3>
-        <p>The most important thing a REST API offers is that we can have <i>a single REST API with many consumers</i>: browsers, native mobiles systems (android, IOS), native app (Windows or MacOS).
-        <p>In "traditional" server, with the HTML pages generated on the server, only browsers can use that server.</p>
-        `,
-      ],
-    },
-    {
-      sectionTitle: 'The REST API Arhitecture',
-      sectionSource: '',
-      tooltips: [
-        `<h3>Separate API into logical resources</h3>
-        <p>A resource is an object or representation of something, which has data associated to it. Any information that can be <u>named</u> can be a resource.</p>
-        <p>We need to <i>expose these resources</i>, which means to <i>make available the data using some structured URLs</i> that the client can send a request to. So our API will have many different endpoints, and <i>each endpoint will send different data back to the client</i>, or also perform different actions.</p>
-        <p><img src="../../src/img/rest_api_arhitecture_1.jpg"/></p>`,
-        `<h3>Endpoints should contain only resources!</h3>
-        <p><i><b>Endpoints should contain only resources (nouns)</b>, and use HTTP methods in order to perform actions on data!</i> So to perform different actions (reading / creating / updating / deleting) on data, the API should use the right HTTP method and not the URL.</p>
-        <p><i>Endpoints should only contain our resources and not the actions that can be performed on them</i>, because they will quickly become a nightmare to maintain.</p>
-        <p>For example, <code>/getTour</code> endpoint is to get data about a tour. So we should simply name the endpoint <code>/tours</code> and send the data whenever a GET request is made to <code>/tours</code> endpoint. Just like this, we only have resources in the endpoint and not actions, because the action is now in the HTTP method.</p>
-        <p><img src="../../src/img/rest_api_arhitecture_2.jpg"/></p>
-        <p>What's is important to understand is that we have a single resource in <code>/tours</code> endpoint that <i>performs different actions on data based on different HTTP methods</i>. So, for example, if the <code>/tours</code> endpoint is accessed with GET method, we send data to the client. But if the same <code>/tours</code> endpoint is accessed with POST method, we expect data to come in with a request, so that we can then create a new resource on the server side. So that is really the beauty of only using HTTP methods, rather than messing with verbs in endpoint names.</p>
-        `,
-        `<h3>Accessing Data with REST APIs: Send data as JSON</h3>
-        <ul>Data Formats:
-          <li>- HTML;</li>
-          <li>- Plain Text;</li>
-          <li>- XML;</li>
-          <li>- JSON;</li>
-        </ul>
-        <p><img src="../../src/img/rest_api_arhitecture_3.jpg"/></p>
-        <p>When we send a JSON response back to the client, there is are a couple of standards to formatting the response before sending. We're gonna use a very simple one called JSend. We simply create a new object, then add a <code>status</code> message to it in order to inform the client whether the request was a success, fail or error, nd then we put our original data into a new object called <code>data</code>.</p>
-        `,
-        `<h3>REST APIs are stateless</h3>
-        <p>In REST APIs <i>all state is handled <u>on the client</u></i>. This means that each request must contain <u>all</u> the information necessary to process a certain request from the server. <i>The server should <u>not</u> have to remember previous requests in order to process the current request.</i></p>
-        <p>In REST APIs the server does not save response history between requests.</p>
-        <p><img src="../../src/img/rest_api_arhitecture_4.jpg"/></p>`,
-        `<h3>REST APIs - The Core Principles</h3>
-        <ul>REST Concepts & Ideas:
-          <li>- <i>REST APIs are all about data, no UI logic in exchanged;</i></li>
-          <li>- <i>REST APIs are normal Node.js servers</i> which expose different endpoints (HTTP method + path) for clients to send request to;</li>
-          <li>- <i>JSON is the common data format</i> that is used both for requests and resposnes;</li>
-          <li>- REST APIs are decoupled from the clients that use them.</li>
-        </ul>
-        `,
-      ],
-    },
-    {
-      sectionTitle: 'Sending POST Requests From The Client',
-      sectionSource: '',
-      tooltips: [
-        `<h3>The old way of submiting forms & sending HTTP "POST" request</h3>
-        <pre><code>
-form <i>action="/feed/post"</i> <i>method="POST"</i>
-        </code></pre>`,
-        `<h3>Sending "POST" requests in REST APIs</h3>
-        <pre><code>
-fetch('http://localhost:8080/feed/post', {
-  <i><b>method</b>: 'POST',
-  <b>headers</b>: {
-    'Content-Type': 'application/json'
-  }
-  <b>body</b>: JSON.stringify</i>({ title: 'A title', content: 'Some content...'})
-})      
-      </code></pre>
-      <p>Attach data in JSON format and let the other end know by setting the "Conten-Type" header.</p>
-      <ul><i>Express.js set the "Conten-Type" header automatically when using the <code>res.json()</code> method.</i> In the browser, setting the "Conten-Type" header depends on which method you use:
-        <li>- when using the <i>Fetch API</i> we had to set it manually;</li>
-        <li>- when you would use <i>Axios library</i> in browser-side JavaScript for sending async requests, it would be done automatically</li>
-      </ul>
-      `,
-      ],
     },
   ],
 };
@@ -5315,6 +5289,7 @@ export const dataStorage = [
   introduction,
   how_node_works,
   development_workflow,
+  working_with_REST_APIs,
   understanding_the_basics,
   working_with_ExpressJS,
   routing,
@@ -5322,12 +5297,13 @@ export const dataStorage = [
   working_with_files,
   parsing_data,
   error_handling_with_ExpressJS,
-  sending_emails,
   understanding_validation,
   file_upload_and_download,
+
+  sending_emails,
   adding_pagination,
   understanding_async_requests,
-  working_with_REST_APIs,
+
   adding_authentication,
   authentication_with_JWT,
   security,
