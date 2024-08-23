@@ -776,6 +776,7 @@ app.listen(port, () => {
         <p><b>Response <u>Headers</u></b>: Headers <i>provide essential information about the response</i> such as content type, status, etc.</p>
         <p><b>Response <u>Body</u></b>: The body contains <i>the data sent back to the client</i>.</p>
         <p><b>Response <u>Status Codes</u></b>: Status codes <i>indicate the result of the HTTP response</i>.</p>
+        <p><img src="../../src/img/http_methods_status_code_01.jpg"/></p>
         <ul>Sending <i>Different Types of Responses</i>:
           <li>- <code>res<b>.send()</b></code> - Sends <i>various types</i> of responses (HTML, plain text, etc.);</li>
           <li>- <code>res<b>.json()</b></code> - Sends a <i>JSON</i> response;</li>
@@ -1324,51 +1325,40 @@ const updateBook = (req, res) => {
 const express = require('express');
 <i>const router = <b>express.Router()</b>;</i>
 
-// Middleware that is specific to this router
+<i>//Middleware that is specific to this router</i>
 const timeLog = (req, res, next) => {
-  console.log('Time: ', Date.now())
-  next()
+  console.log('Time: ', Date.now());
+  next();
 }
 
-router.use(timeLog)
+<i>router.use</i>(timeLog)
 
-// Define the home page route
-router.get('/', (req, res) => {
-  res.send('Birds home page')
+//Define the main page for this route
+<i>router.get</i>('/', (req, res) => {
+  res.send('Birds home page');
 })
 
-// Define the about route
-router.get('/about', (req, res) => {
-  res.send('About birds')
+//Define the about route
+<i>router.get</i>('/about', (req, res) => {
+  res.send('About birds');
 })
 
-module.exports = router
+<i>module.exports = router</i>
         </code></pre>
 
         <p>Then, load the router module in the app:</p>
-        <pre><code>
-const express = require('express');
-
-<i>const router = express.Router();</i>
-
-<i>router.get</i>('/', (req, res, next) => {
-  res.send('Hello from Express!');
-});
-
-<i>module.exports = router;</i>
-        </code></pre>
-
         <pre><code>
 const express = require('express');
 <i>const birds = require('./birds')</i>
 
 const app = express();
 
-<i>app.use('/birds', birds);</i>
+<i><b>app.use</b>('/birds', birds);</i>
 
 app.listen(process.env.PORT);
         </code></pre>
         <p>The app will now be able to handle requests to <code>/birds</code> and <code>/birds/about</code>, as well as call the <code>timeLog</code> middleware function that is specific to the route.</p>
+        <p>By using <code>express.Router()</code>, you can <b>simplify the paths to be relative to the router they're mounted on</b>.</p>
         `,
       ],
     },
@@ -1579,7 +1569,7 @@ exports.getProduct = (req, res, next) => {
 
 const working_with_files = {
   title: 'Working with Local Files',
-  titleDescription: 'Fetch/store local files & handling files paths',
+  titleDescription: 'Fetch/store/send local files & handling files paths',
   sections: [
     {
       sectionTitle:
@@ -1625,6 +1615,97 @@ module.exports = class Product {
 };     
       </code></pre>`,
         `<p>IMPORTANT: It's important to understand that <i>working with <u>files for data storage</u> is suboptimal for bigger amounts of data</i>.</p>`,
+      ],
+    },
+    {
+      sectionTitle: 'Serving Files with sendFile() function',
+      sectionSource: '',
+      highlights: {
+        highlight2: ['sendFile()'],
+      },
+      tooltips: [
+        `<p>It's important to know that you're not limited to <code>send()</code> dummy text or anything like that, you can <code>sendFiles()</code> to your users, for example HTML files or images.</p>`,
+        `<pre><code>
+<i>const path = require('path');</i>
+const express = require('express');
+const router = express.Router();
+
+router.get('/add-product', (req, res, next) => {
+  <i>res.<b>sendFile</b>(<b>path.join</b>(<b>__dirname</b>, '..', 'images', 'someImage.jpg'));</i>
+});
+
+module.exports = router;
+        </code></pre>
+        `,
+        `<h3>More about <code>res.sendFile()</code> function</h3>
+        <p>The <code>res.sendFile()</code> function <i>transfers the file at the given path</i> and <i>it sets the Content-Type response HTTP header field based on the filename extension</i>.</p>
+        <p>Unless the <code>root</code> option is set in the options object, <i>path must be an <u>absolute path</u> to the file</i>.</p>
+        <ul>This API <i>provides access to data on the running file system</i>. Ensure that either:
+          <li>a) the way in which the path argument was constructed into an absolute path is secure if it contains user input or</li>
+          <li>b) set the root option to the absolute path of a directory to contain access within.</li>
+        </ul>
+        <p>When the <code>root</code> option is provided, the path argument is allowed to be a relative path, including containing <code>..</code>. Express.js will validate that the relative path provided as path will resolve within the given <code>root</code> option.</p>
+        `,
+        `<h3>More about <code>path.join()</code> method</h3>
+        <p>The <code>path.join()</code> method <i>joins the specified <u>path segments</u> into <u>one path</u></i>. You can specify as many path segments as you like.</p>
+        <p>The specified <i>path segments must be <u>strings</u></i>, separated by comma <code>,</code>.</p>
+        <p>We're using <code>path.join()</code> because this will automatically build the path in a way that works on both Linux and Windows systems.</p>
+        `,
+      ],
+    },
+    {
+      sectionTitle: 'Serving static files with express.static()',
+      highlights: {
+        highlight2: ['express.static()'],
+      },
+      sectionSource: '',
+      tooltips: [
+        `<p>To serve static files such as images, CSS files, and JavaScript files, use the <b><code>express.static</code> built-in middleware function</b> in Express.js.</p>
+        <p>The function signature is: <code>express.static(root, [options])</code>. The <code>root</code> argument specifies <i>the root directory from which to serve static assets</i>.</p>
+        <p>For example, use the following code to serve images, CSS files, and JavaScript files in a directory named public:</p>
+        <pre><code>
+<b>app.use(express.static('public'))</b>
+        </code></pre>
+        <p>Now, you can load the files that are in the public directory:</p>
+        <pre><code>
+http://localhost:3000/images/kitten.jpg
+http://localhost:3000/css/style.css
+http://localhost:3000/js/app.js
+http://localhost:3000/images/bg.png
+http://localhost:3000/hello.html
+        </code></pre>
+        <p>NOTE: <i><b>Express.js looks up the files <u>relative to the static directory</u></b>, so the name of the static directory is not part of the URL.</i></p>
+        <p><i>To use multiple static assets directories, call the <code>express.static()</code> middleware function multiple times:</i></p>
+        <pre><code>
+app.use(express.static('public'))
+app.use(express.static('files'))
+        </code></pre>
+        <p>NOTE: <i>Express.js looks up the files in the order in which you set the static directories with the <code>express.static()</code> middleware function.</i></p>
+        `,
+        `<h3>Another example</h3>
+        <p>However, <b>the path that you provide to the <code>express.static()</code> function is <u>relative to the directory from where you launch your node process</u></b>. <i>If you run the express app from another directory, it’s safer to use the absolute path of the directory that you want to serve:</i></p>
+        <pre><code>
+const path = require('path');
+const express = require('express');
+const bodyParser = require('body-parser');
+
+const app = express();
+
+const adminRoutes = require('./routes/admin');
+const shopRoutes = require('./routes/shop');
+
+app.use(bodyParser.urlencoded({extended: false}));
+<i>app.use(express.static(path.join(__dirname, 'public')));</i>
+
+app.use('/admin', adminRoutes);
+app.use(shopRoutes);
+
+app.use((req, res, next) => {
+    res.status(404).sendFile(path.join(__dirname, 'views', '404.html'));
+});
+
+app.listen(process.env.PORT);      
+      </code></pre>`,
       ],
     },
     {
@@ -1928,9 +2009,17 @@ const mvc = {
         highlight1: ['MVC'],
       },
       tooltips: [
-        `<p>In this module I want to dive into a very important aspect of building backend applications. We want to follow a certain <i>pattern for structuring our code</i> and with that, I don't really just mean how we split it over files or how we write the code, but I mean how we <i>logically separate our code</i> and the different functions it fulfills or the different things it does.</p>`,
+        `<p>In this module I want to dive into a very important aspect of building backend applications. We want to follow a certain <i>pattern for structuring our code</i> and with that, I don't really just mean how we split it over files or how we write the code, but I mean how we <i>logically separate our code</i> and the different functions it fulfills or the different things it does.</p>
+        `,
         `<h3>The MVC Pattern</h3>
-        <p>What does MVC stand for or what is it? It's all about a <i>separation of concerns</i>, so making sure that different parts of your code do different things, and you clearly know which part is responsible for what. MVC stands for Model View Controller, so we work with <i>models</i>, <i>views</i> and <i>controllers</i>.</p>`,
+        <p>What does MVC stand for or what is it? It's all about a <i>separation of concerns</i>, so making sure that <i>different parts of your code do different things</i>, and you clearly know which part is responsible for what. MVC stands for Model-View-Controller, so we work with <i>models</i>, <i>views</i> and <i>controllers</i>.</p>
+        <p>MVC is a pattern that tells us <b>how to organize the various different pieces of our code <u>based on what they do</u></b>.</p>`,
+        `<h3>How MVC works</h3>
+        <p>Our code is split into the Model, the View and the Controller, while we have the User who interacts with these components. These interactions are generally that the <i>User uses the Controller</i>, for example, by making requests. <i>The Controller understands and processes that User's requests and then manipulates the Model accordingly</i>, for example, by adding or removing data from a database.</p>
+        <p>And <i>when the Model is updated by the Controller, the View react to those changes and the User sees the updated data</i>.</p>
+        <p><img src="../../src/img/mvc_arhitecture_3.jpg"/></p>
+        <p>In Express, <i>the Controller is <b>the code or the functions that react to the incoming requests and set the response accordingly</b></i>, while <i>the Model is our data and also includes any functions that we use to access that database. The View is how that data from the Model is presented back to the user.</i></p>
+        `,
         `<h3>Model</h3>
         <ul>Model characteristics:
           <li>- Responsible for <i>representing your data</i>;</li>
@@ -2843,60 +2932,6 @@ app.listen(process.env.PORT);
       sectionSource: '',
       tooltips: [
         `<p>Files like images, videos, PDFs etc, should not be stored in a database, they are too big. It's too inefficient to store files in a database and query them from there. You need to <i>store files on file system</i>, but you need to <i>store the path to the file in the database</i>.</p>`,
-      ],
-    },
-    {
-      sectionTitle: 'Serving static files with express.static()',
-      highlights: {
-        highlight2: ['express.static()'],
-      },
-      sectionSource: '',
-      tooltips: [
-        `<p>To serve static files such as images, CSS files, and JavaScript files, use the <code>express.static</code> built-in middleware function in Express.js.</p>
-        <p>The function signature is: <code>express.static(root, [options])</code>. The <code>root</code> argument specifies <i>the root directory from which to serve static assets</i>.</p>
-        <p>For example, use the following code to serve images, CSS files, and JavaScript files in a directory named public:</p>
-        <pre><code>
-app.use(express.static('public'))
-        </code></pre>
-        <p>Now, you can load the files that are in the public directory:</p>
-        <pre><code>
-http://localhost:3000/images/kitten.jpg
-http://localhost:3000/css/style.css
-http://localhost:3000/js/app.js
-http://localhost:3000/images/bg.png
-http://localhost:3000/hello.html
-        </code></pre>
-        <p><i>NOTE: Express.js looks up the files relative to the static directory, so the name of the static directory is not part of the URL.</i></p>
-        <p>To use multiple static assets directories, call the express.static middleware function multiple times:</p>
-        <pre><code>
-app.use(express.static('public'))
-app.use(express.static('files'))
-        </code></pre>
-        <p><i>NOTE: Express.js looks up the files in the order in which you set the static directories with the <code>express.static</code> middleware function.</i></p>
-        `,
-        `<h3>Another example</h3>
-        <pre><code>
-const path = require('path');
-const express = require('express');
-const bodyParser = require('body-parser');
-
-const app = express();
-
-const adminRoutes = require('./routes/admin');
-const shopRoutes = require('./routes/shop');
-
-app.use(bodyParser.urlencoded({extended: false}));
-<i>app.use(express.static(path.join(__dirname, 'public')));</i>
-
-app.use('/admin', adminRoutes);
-app.use(shopRoutes);
-
-app.use((req, res, next) => {
-    res.status(404).sendFile(path.join(__dirname, 'views', '404.html'));
-});
-
-app.listen(process.env.PORT);      
-      </code></pre>`,
       ],
     },
     {
