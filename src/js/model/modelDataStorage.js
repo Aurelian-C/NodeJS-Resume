@@ -127,7 +127,7 @@ console.log('Reading file...');
         `,
         `<h3>Node.js vs other programming languages</h3>
         <p>In other programming languages, like PHP, it works very differently, because you get one new thread for each new user, which really works completely different. But the creator of Node.js found this model to be the best solution for building highly performant and scalable web applications.</p>`,
-        `<h3>Node.js top-level code it's <u>only executed once</u> when the server starts</h3>
+        `<h3>Loading Data On Sever Startup: Use Synchronous Functions</h3>
         <p><i>The code that is outside the callback functions, so the so called <b>top level code is <u>only executed once</u> we start the server</b>, and so in that situation, it doesn't matter at all if it blocks the code execution, because it happens only once, and only when the server actually starts:</i></p>
         <pre><code>
 const http = require('http');
