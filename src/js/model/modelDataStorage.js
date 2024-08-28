@@ -648,7 +648,7 @@ npm run start
         <p><i>In Express.js, many packages depend on a special variable called <code>NODE_ENV</code>. <code>NODE_ENV</code> is a variable that's kind of a convention which should define whether we're in development or in production mode. However, <b>Express.js does not really define automatically the <code>NODE_ENV</code> variable</b>, so we as developers have to do that manually.</i></p>
         <ul>There are multiple ways in which we can do it:
           <li>- by using the command terminal: <b><code>NODE_ENV=development nodemon app.js</code></b>;</li>
-          <li>- by using a <b><code>config.env</code></b> file.</li>
+          <li>- by using a <b><code>.env</code></b> file.</li>
         </ul>
         `,
         `<h3>What are Environment Variables</h3>
@@ -657,7 +657,7 @@ npm run start
         `<h3>Setting Environment Variables</h3>
         <ul>Environment variables can be set in various ways:
           <li>1. <i>Operating System Environment</i>: You can set environment variables directly in your operating system.</li>
-          <li>2. <b><code>.env</code> files</b>: It's common practice to use <code>.env</code> files to store environment variables in Node.js projects. These files are not loaded by default but can be loaded using packages like <code>dotenv</code>. <code>.env</code> files contain key-value pairs in the format KEY=value.</li>
+          <li>2. <b><code>.env</code> files</b>: It's common practice to use <code>.env</code> files to store environment variables in Node.js projects. <i>These files are not loaded by default but can be loaded using packages like <b><code>dotenv</code></b>.</i> <code>.env</code> files contain key-value pairs in the format KEY=value.</li>
           <li>3. <b>Command Line</b>: You can also pass environment variables directly through the command line when running Node.js scripts.</li>
         </ul>
         `,
@@ -671,7 +671,7 @@ const myVariable = <b>process.env.MY_VARIABLE</b>;
         `<h3>Best Practices</h3>
         <p>1. <b>Keep Secrets Secure</b>: <i>Avoid storing sensitive information directly in your code.</i> Instead, use environment variables to store secrets and <i>avoid committing them to version control systems</i>.</p>
         <p>2. Environment-Specific Configuration: <i>Use environment variables to configure your application for different environments (development, testing, production). This allows you to keep the same codebase but adapt the behavior based on the environment.</i></p>
-        <p>3. Use <code>.env</code> Files: When working with multiple environment variables, <i>use <code>.env</code> files and a package like <code>dotenv</code> to load them into your application</i>. This makes managing environment variables easier and more organized.</p>
+        <p>3. Use <code>.env</code> Files: When working with multiple environment variables, <b>use <code>.env</code> files and a package like <code>dotenv</code> to load them into your application</b>. This makes managing environment variables easier and more organized.</p>
         <p>4. Document Dependencies: Document all required environment variables and their purpose in your project's documentation to make it easier for developers to set up the application in different environments.</p>
         `,
         `<h3>Example</h3>
