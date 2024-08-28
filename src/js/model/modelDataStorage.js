@@ -665,8 +665,8 @@ npm run start
         <p>Because environments variables are not loaded by default, you need to require the <code>dotenv</code> package. <i><code>dotenv</code> package loads environment variables from a <code>.env</code> file into <code>process.env</code>.</i></p>
         <p>NOTE: Require the <code>dotenv</code> package at the top of your <code>server.js</code> file.</p>
         <pre><code>
-const dotenv = require('dotenv');
-dotenv.config({ path: './.env' });
+const dotenv = require(<b>'dotenv'</b>);
+<b>dotenv.config({ path: './.env' });</b>
         </code></pre>
         <p>Once environment variables are set, Node.js applications can access them using the <code>process.env</code> object:
         <pre><code>
