@@ -648,7 +648,7 @@ npm run start
         <p><i>In Express.js, many packages depend on a special variable called <code>NODE_ENV</code>. <code>NODE_ENV</code> is a variable that's kind of a convention which should define whether we're in development or in production mode. However, <b>Express.js does not really define automatically the <code>NODE_ENV</code> variable</b>, so we as developers have to do that manually.</i></p>
         <ul>There are multiple ways in which we can do it:
           <li>- by using the command terminal: <b><code>NODE_ENV=development nodemon app.js</code></b>;</li>
-          <li>- by using a <b><code>.env</code></b> file.</li>
+          <li>- by using a <b><code>.env</code></b> file: <b><code>require('dotenv').config();</code></b>.</li>
         </ul>
         `,
         `<h3>What are Environment Variables</h3>
@@ -662,6 +662,12 @@ npm run start
         </ul>
         `,
         `<h3>Accessing Environment Variables in Node.js</h3>
+        <p>Because environments variables are not loaded by default, you need to require the <code>dotenv</code> package. <i><code>dotenv</code> package loads environment variables from a <code>.env</code> file into <code>process.env</code>.</i></p>
+        <p>NOTE: Require the <code>dotenv</code> package at the top of your <code>server.js</code> file.</p>
+        <pre><code>
+const dotenv = require('dotenv');
+dotenv.config({ path: './.env' });
+        </code></pre>
         <p>Once environment variables are set, Node.js applications can access them using the <code>process.env</code> object:
         <pre><code>
 const myVariable = <b>process.env.MY_VARIABLE</b>;
