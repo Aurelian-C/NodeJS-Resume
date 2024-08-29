@@ -3301,7 +3301,7 @@ function checkLoggedIn(req, res, next) {
     });
   }
   next();
-}
+};
 
 app.get('/auth/google',
   passport.authenticate('google', {
