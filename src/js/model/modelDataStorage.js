@@ -2056,7 +2056,7 @@ const parsing_data = {
   sections: [
     {
       sectionTitle:
-        'Parsing data on incoming Requests with body-parser package',
+        'Parsing Data on Incoming Requests with body-parser Package',
       sectionSource: '',
       highlights: {
         highlight1: ['Parsing data on incoming Requests'],
@@ -2100,7 +2100,7 @@ app.listen(process.env.PORT);
     },
     {
       sectionTitle:
-        'Parsing JSON Requests with express.json() build-in middleware',
+        'Parsing JSON Data on Incoming Requests with express.json() Build-In Middleware',
       sectionSource: '',
       highlights: {
         highlight2: ['express.json()'],
@@ -2166,27 +2166,28 @@ const adding_authentication = {
       ],
     },
     {
-      sectionTitle: 'Encrypting vs Hashing Passwords',
+      sectionTitle: 'Encrypting vs Hashing Passwords with bcryptjs Package',
       sectionSource: '',
       highlights: {
         highlight1: ['Encrypting vs Hashing'],
+        highlight2: ['bcryptjs'],
       },
       tooltips: [
         `<p>You can hashing passwords string by install a third party package: <code>npm install <b>bcryptjs</b></code>.</p>
-        <p>bcryptjs is a package that helps us with hashing passwords.</p>`,
+        <p><code>bcryptjs</code> is a package that helps us with hashing passwords.</p>`,
         `<h3>Encryption vs Hashing Passwords</h3>
         <p>There's two ways to take a password and encode it in some way that makes it different. One is encryption and the other is hashing.</p>
         <p>Encryption and hashing are both <i><u>cryptographic techniques</u> used to protect sensitive information</i> like passwords. However, they serve different purposes and have different properties when it comes to password security.</p>
         <ul>Encryption:
-          <li>- Encryption is a <i>reversible process</i> where data (plaintext) is converted into an unreadable format (ciphertext) using an encryption algorithm and a key.</li>
+          <li>- <b>Encryption is a <u>reversible process</u></b> where data (plaintext) is converted into an unreadable format (ciphertext) using an encryption algorithm and a key.</li>
           <li>- The key is required to decrypt the ciphertext back into plaintext.</li>
           <li>- <i>In the context of passwords, encryption isn't typically used directly. Instead, passwords are often hashed before storage, and encryption is used for other types of data protection.</i></li>
           <li>- With encryption, if someone gains access to the key, they can decrypt the data, potentially compromising the security of the passwords.</li>
         </ul>
         <ul>Hashing:
-          <li>- Hashing is a <i>one-way process</i> where data is transformed into a fixed-size string of characters (hash value) using a hashing algorithm.</li>
-          <li>- <i>Unlike encryption, hashing is not reversible. Once data is hashed, it cannot be transformed back into its original form.</i></li>
-          <li>- For password storage, the hash value of a password is stored instead of the password itself.</li>
+          <li>- <b>Hashing is a <u>one-way process</u></b> where data is transformed into a fixed-size string of characters (hash value) using a hashing algorithm.</li>
+          <li>- <b>Unlike encryption, hashing is not reversible. Once data is hashed, it cannot be transformed back into its original form.</b></li>
+          <li>- <i>For password storage, the hash value of a password is stored instead of the password itself.</i></li>
           <li>- <i>When a user attempts to log in, the password they provide is hashed and compared to the stored hash value.</i></li>
         </ul>
         `,
@@ -2194,14 +2195,14 @@ const adding_authentication = {
         <ul>Hash functions have some important properties for password security:
           <li>1. Deterministic: The same input always produces the same hash value.</li>
           <li>2. Pre-image resistance: Given a hash value, it should be computationally infeasible to determine the input that produced it.</li>
-          <li>3. Collision resistance: It should be computationally infeasible to find two different inputs that produce the same hash value./li>
+          <li>3. Collision resistance: It should be computationally infeasible to find two different inputs that produce the same hash value.</li>
           <li>4. Non-reversible: The original input cannot be derived from the hash value.</li>
         </ul>
         <p>Common hashing algorithms include SHA-256, bcrypt, and Argon2.</p>
         `,
         `<h3>Security</h3>
-        <p>Hashing is generally considered more secure for password storage because it's not reversible. Even if an attacker gains access to the hashed passwords, they cannot obtain the original passwords (assuming a secure hashing algorithm is used).</p>
-        <p>Encryption, on the other hand, introduces the risk that an attacker could gain access to the decryption key and decrypt the passwords.</p>`,
+        <p><i>Hashing is generally considered more secure for password storage because it's not reversible. Even if an attacker gains access to the hashed passwords, they cannot obtain the original passwords (assuming a secure hashing algorithm is used).</i></p>
+        <p><i>Encryption, on the other hand, introduces the risk that an attacker could gain access to the decryption key and decrypt the passwords.</i></p>`,
         `<h3>Usage</h3>
         <p>Hashing is commonly used for password storage and verification.</p>
         <p>Encryption is used for securing data in transit or at rest, such as encrypting files, communications, or databases.</p>
@@ -2215,14 +2216,53 @@ const adding_authentication = {
       ],
     },
     {
-      sectionTitle: 'How Does Authentication Work: JSON Web Token (JWT)',
+      sectionTitle:
+        'Cookie-Based Authentication vs. Token-Based Authentication',
+      sectionSource: '',
+      tooltips: [
+        `<p>Both cookies and tokens provide <i>two different ways of passing authentication data to the server</i>.</p>
+        <p><img src="../../src/img/sessions_vs_cookies.jpg"/></p>
+        `,
+        `<h3>What is a Cookie?</h3>
+        <p>In the context of browsers and servers, a "cookie" refers to <i>a small <b>piece of string data</b> sent from a website and stored on the user's device by the user's web browser</i>. Cookies are <i>commonly used to remember information about the user</i>, such as their preferences, login credentials, or items added to a shopping cart.</p>
+        <p>When you visit a website, <u>the server sends a cookie to your browser, which then stores it on your device</u>. The next time you visit the same website, <u>your browser sends the stored cookie back to the server along with your request</u>. This allows the server to recognize you and provide personalized content or functionality based on your previous interactions.</p>
+        `,
+        `<h3>Cookie-Based Authentication</h3>
+        <p>Cookie-based authentication has been the default, tried-and-true method for handling user authentication for a long time.</p>
+        <p><i>Cookie-based authentication is <b>stateful</b>.</i> This means that an authentication record or session must be <i>kept both server and client-side. The server needs to keep track of active sessions in a database, while on the front-end a cookie is created that holds a session identifier</i>, thus the name cookie based authentication.</p>
+        <ul>Let's look at the flow of traditional cookie-based authentication:
+          <li>1. User enters their login credentials.</li>
+          <li>2. Server verifies the credentials are correct and creates a session which is then stored in a database.</li>
+          <li>3. A cookie with the session ID is placed in the users browser.</li>
+          <li>4. On subsequent requests, the session ID is verified against the database and if valid the request processed.</li>
+          <li>5. Once a user logs out of the app, the session is destroyed both client-side and server-side.</li>
+        </ul>
+        `,
+        `<h3>Token-Based Authentication</h3>
+        <p>Token-based authentication has gained prevalence over the last few years due to the rise of single page applications, web APIs, and the Internet of Things (IoT).<i> When we talk about authentication with tokens, we generally talk about authentication with JSON Web Tokens (JWTs).</i></p>
+        <p><i>Token-based authentication is <b>stateless</b>.</i> The server does not keep a record of which users are logged in or which JWTs have been issued. Instead, <i>every request to the server is accompanied by a token which the server uses to verify the authenticity of the request.</i> The token is generally sent as an addition <code>Authorization</code> header in the form of Bearer {JWT}, but can additionally be sent in the body of a POST request or even as a query parameter.</p>
+        <ul>Let's see how this flow works:
+          <li>1. User enters their login credentials.</li>
+          <li>2. Server verifies the credentials are correct and returns a signed token.</li>
+          <li>3. This token is stored client-side, most commonly in local storage - but can be stored in session storage or a cookie as well.</li>
+          <li>4. Subsequent requests to the server include this token as an additional <code>Authorization</code> header or through one of the other methods mentioned above.</li>
+          <li>5. The server decodes the JWT and if the token is valid processes the request.</li>
+          <li>6. Once a user logs out, the token is destroyed client-side, no interaction with the server is necessary.</li>
+        </ul>
+        `,
+        `<h3>Server-Side vs Client-Side Sessions With Cookies</h3>`,
+      ],
+    },
+    {
+      sectionTitle:
+        'How Authentication Work in REST APIs: JSON Web Token (JWT)',
       sectionSource: '',
       highlights: {
         highlight2: ['JSON Web Token (JWT)'],
       },
       tooltips: [
         `<h3>A REST API is stateless</h3>
-        <p>In REST APIs all state is handled <i>on the client</i>. This means that each request must contain <u>all</u> the information necessary to process a certain request from the server. <i>The server should <u>not</u> have to remember previous requests in order to process the current request.</i></p>
+        <p><i>In REST APIs all state is handled <u>on the client</u>. This means that <b>each request must contain <u>all</u> the information necessary to process a certain request from the server</b>. The server should <u>not</u> have to remember previous requests in order to process the current request.</i></p>
         `,
         `<h3>How Does Authentication Work?</h3>
     <p>In REST APIs, we still have our client-side and server-side. The client still sends authentication credentials to the server.</p>
@@ -2615,102 +2655,6 @@ app.listen(3000);
       `,
       ],
     },
-  ],
-};
-
-const sessions_and_cookies = {
-  title: 'Authentication & Authorization: Sessions & Cookies',
-  titleDescription: 'Persisting Data across Requests',
-  sections: [
-    {
-      sectionTitle: 'What is a Cookie?',
-      sectionSource: '',
-      highlights: {
-        highlight1: ['Cookie'],
-      },
-      tooltips: [
-        `<h3>What is a cookie when we talk about browsers and servers?</h3>
-        <p>In the context of browsers and servers, a "cookie" refers to <i>a small <b>piece of data</b> sent from a website and stored on the user's device by the user's web browser</i>. Cookies are <i>commonly used to remember information about the user</i>, such as their preferences, login credentials, or items added to a shopping cart.</p>
-        <p><i>When you visit a website, <u>the server sends a cookie to your browser, which then stores it on your device</u>. The next time you visit the same website, <u>your browser sends the stored cookie back to the server along with your request</u>. This allows the server to recognize you and provide personalized content or functionality based on your previous interactions.</i></p>
-        <ul>Cookies can be either <i><b>session</b> cookies</i> or <i><b>persistent</b> cookies</i>:
-          <li>1. Session cookies: these are <i>temporary cookies that are erased when you close your browser</i>. They are typically used to maintain your session state while you navigate a website, such as keeping you logged in.
-          <li>2. Persistent cookies: these cookies <i>remain on your device even after you close your browser</i>. They are <i>used to remember your preferences or login information across multiple sessions</i>, such as language preferences or customization settings.</li></li>
-        </ul>
-        <p>Cookies play a crucial role in enhancing user experience on the web by enabling personalized content and functionality, but they also raise privacy concerns. Some users may be wary of cookies tracking their online behavior, leading to debates over privacy regulations and the development of technologies like browser cookie settings and privacy-focused browsing modes.</p>
-        `,
-      ],
-    },
-    {
-      sectionTitle: 'What is a Session?',
-      sectionSource: '',
-      highlights: {
-        highlight1: ['Session'],
-      },
-      tooltips: [
-        `<p>Sessions and cookies are both mechanisms used in web development to manage user interactions and maintain stateful information, but they serve different purposes and have distinct characteristics.</p>
-        <ul>Differences:
-          <li>1. <i><u>Storage Location</u>: <b>Sessions store data on the server-side</b>, typically in memory or a database, while <b>cookies store data on the client-side</b>, within the user's browser.</i></li>
-          <li>2. <u>Data Storage Capacity</u>: Sessions can store larger amounts of data since they are not limited by the size constraints of HTTP headers (like cookies are). Cookies, on the other hand, are limited to around 4KB of data per domain.</li>
-          <li>3. <u>Lifetime</u>: Sessions are typically temporary and expire after a certain period of inactivity or when the user closes their browser. Cookies can have varying lifetimes, including session cookies (which expire when the browser is closed) and persistent cookies (which have an expiration date set by the server).</li>
-          <li>4. <i><u>Security</u>: Sessions are generally considered more secure than cookies because session data is stored on the server-side, reducing the risk of data tampering or theft by malicious actors.</i> However, cookies can be encrypted or set with the 'HttpOnly' flag to enhance security.</li>
-        </ul>
-        `,
-        `<h3>When to use each?</h3>
-        <ul>Use Sessions When:
-          <li>- You need to <i>store sensitive information</i> such as user authentication tokens or session-specific data.</li>
-          <li>- You want to <i>minimize the amount of data stored on the client-side for security reasons</i>.</li>
-          <li>- You require a larger storage capacity for session data.</li>
-          <li>- You need to maintain state across multiple HTTP requests within a single browsing session.</li>
-        </ul>
-        <ul>Use Cookies When:
-          <li>- You need to <i>persistently identify users</i> across multiple sessions or visits to the site.</li>
-          <li>- You want to <i>store non-sensitive information</i> such as user preferences or browsing history.</li>
-          <li>- You want to implement features like remembering login credentials, language preferences, or shopping cart contents.</li>
-          <li>- You need to <i>share data between the client and server in a lightweight and efficient manner</i>.</li>
-        </ul>
-        <p>In practice, web developers often use a combination of sessions and cookies to achieve specific functionality and balance security, performance, and usability requirements. For example, <i>sessions may be used for managing user authentication and storing sensitive data, while cookies may be used for personalization and user tracking</i>.</p>
-        <p>In general, use a session for any data that belongs to a user that you don't want to lose after every response you send from the server, and that should not be visible to other users.</p>
-        `,
-      ],
-    },
-    {
-      sectionTitle:
-        'Cookie-Based Authentication vs. Token-Based Authentication',
-      sectionSource: '',
-      tooltips: [
-        `<p>Both cookies and tokens provide <i>two different ways of passing authentication data to the server</i>.</p>
-        <p><img src="../../src/img/sessions_vs_cookies.jpg"/></p>
-        `,
-        `<h3>Cookie-Based Authentication</h3>
-        <p>Cookie-based authentication has been the default, tried-and-true method for handling user authentication for a long time.</p>
-        <p><i>Cookie-based authentication is <b>stateful</b>.</i> This means that an authentication record or session must be kept both server and client-side. The server needs to keep track of active sessions in a database, while on the front-end a cookie is created that holds a session identifier, thus the name cookie based authentication.</p>
-        <ul>Let's look at the flow of traditional cookie-based authentication:
-          <li>1. User enters their login credentials.</li>
-          <li>2. Server verifies the credentials are correct and creates a session which is then stored in a database.</li>
-          <li>3. A cookie with the session ID is placed in the users browser.</li>
-          <li>4. On subsequent requests, the session ID is verified against the database and if valid the request processed.</li>
-          <li>5. Once a user logs out of the app, the session is destroyed both client-side and server-side.</li>
-        </ul>
-        `,
-        `<h3>Token-Based Authentication</h3>
-        <p>Token-based authentication has gained prevalence over the last few years due to the rise of single page applications, web APIs, and the Internet of Things (IoT). When we talk about authentication with tokens, we generally talk about authentication with JSON Web Tokens (JWTs).</p>
-        <p><i>Token-based authentication is <b>stateless</b>.</i> The server does not keep a record of which users are logged in or which JWTs have been issued. Instead, every request to the server is accompanied by a token which the server uses to verify the authenticity of the request. The token is generally sent as an addition Authorization header in the form of Bearer {JWT}, but can additionally be sent in the body of a POST request or even as a query parameter.</p>
-        <ul>Let's see how this flow works:
-          <li>1. User enters their login credentials.</li>
-          <li>2. Server verifies the credentials are correct and returns a signed token.</li>
-          <li>3. This token is stored client-side, most commonly in local storage - but can be stored in session storage or a cookie as well.</li>
-          <li>4. Subsequent requests to the server include this token as an additional Authorization header or through one of the other methods mentioned above.</li>
-          <li>5. The server decodes the JWT and if the token is valid processes the request.</li>
-          <li>6. Once a user logs out, the token is destroyed client-side, no interaction with the server is necessary.</li>
-        </ul>
-        `,
-      ],
-    },
-    {
-      sectionTitle: 'Server VS Client Side Sessions With Cookies',
-      sectionSource: '',
-      tooltips: [`<p></p>`],
-    },
     {
       sectionTitle: 'Session Middleware in Express',
       sectionSource: '',
@@ -2911,8 +2855,8 @@ app.listen(process.env.PORT);
 };
 
 const security = {
-  title: 'Authentication & Authorization: Security',
-  titleDescription: 'Secure your JWT Tokens & API against Hackers Attacks',
+  title: 'Secure Your REST APIs',
+  titleDescription: 'Secure your REST APIs with best practices',
   sections: [
     {
       sectionTitle: 'Same Origin Policy & CORS Errors',
@@ -5472,7 +5416,6 @@ export const dataStorage = [
   working_with_files,
   parsing_data,
   adding_authentication,
-  sessions_and_cookies,
   security,
   error_handling_with_ExpressJS,
   understanding_validation,
