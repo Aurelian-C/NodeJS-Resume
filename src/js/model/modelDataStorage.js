@@ -2131,479 +2131,6 @@ app.listen(process.env.PORT);
   ],
 };
 
-const error_handling_with_ExpressJS = {
-  title: 'Debugging & Error Handling',
-  titleDescription: 'Fixing Error & Fail Gracefully',
-  sections: [
-    {
-      sectionTitle: 'Setting up ESLint',
-      sectionSource: '',
-      tooltips: [
-        `<p>ESLint is basically a program that constantly scans our code and finds potential coding errors or simply bad coding practices that it thinks are wrong. It's very configurable so that you can really fine tune it to your needs, and coding habits.</p>`,
-      ],
-    },
-    {
-      sectionTitle: 'Debugging errors in Visual Studio Code',
-      sectionSource: '',
-      tooltips: [
-        `<ul>
-        <li>- Use the VS Code debugger to step into your code and go through it step by step;</li>
-        <li>- Analyze variable values at runtime;</li>
-        <li>- Look into (and manipulate) variables at runtime;</li>
-        <li>- Set breakpoints cleverly (i.e. respect the async/event-driven nature).</li>
-      </ul>`,
-      ],
-    },
-    {
-      sectionTitle: 'Debugging Node.js with ndb package',
-      sectionSource: '',
-      highlights: {
-        highlight1: ['ndb'],
-      },
-      tooltips: [
-        `<p>You can debug Node.js code by installing a 3rd party package called <code>ndb</code>: <code>npm install <b>ndb</b> --global</code>.</p>`,
-        `<p>In <code>package.json</code> file, you add a new script for <code>ndb</code>.</p>
-        <pre><code>
-{
-  "scripts": {
-    "start": "nodemon server.js",
-    "start:prod": "NODE_ENV=production nodemon server.js",
-    <b>"debug": "ndb server.js"</b>
-  },
-}       
-        </code></pre>`,
-      ],
-    },
-    {
-      sectionTitle:
-        'An Overview of Error Handling: Operational vs Programming Errors',
-      sectionSource: '',
-      highlights: {
-        highlight2: ['Operational vs Programming Errors'],
-      },
-      tooltips: [
-        `
-      <p>Up until this point we haven't really <i>handled errors in a central place in our application</i>. What we did was to simply send back an error message as JSON in each route handler in case something went wrong.</p>
-      <ul>Let's take a minute to just get a brief overview of error handling in Express.js. There are two types of errors that can occur: 
-        <li>- <i><b>operational</b> errors</i>;</li>
-        <li>- <i><b>programming</b> errors</i>.</li>
-      </ul>
-      <p>Operational errors are problems that we can predict will inevitably happen at some point in the future, so we just need to handle them in advance. <i>They have nothing to do with bugs in our code. Instead, they depend on the user, or the system, or the network.</i> So, things like a user accessing an invalid route, inputting invalid data, or an application failing to connect to the database. All these are operational errors that we will need to handle in order to prepare our application for these cases.</p>
-      <p>On the other hand, we have programming errors. <i>Programming errors are simply bugs that we developers introduce into our code.</i> Like, for example, trying to read properties from an <code>undefined</code> variable, using <code>await</code> without <code>async</code>, accidentally using <code>request.query</code> instead of <code>request.body</code>, or many other errors that we might make. This are really inevitable but also more difficult to find and to handle.</p>
-      <p>It's important that you understand this crucial difference between operational errors and programming errors. <i>When we're talking about error handling with Express.js, we mainly just mean operational errors, because these are the ones that are easy to catch and to handle with our Express.js application.</i></p>
-      <p>Express.js actually comes with error handling out of the box. So, all we have to do is to <i>write a global Express.js error handling middleware which will then catch errors coming from all over the application</i>. So, no matter if it's an error coming from a route handler, or a model validator or really, someplace else, the goal is that <b>all these errors end up in one central error handling middleware</b>. So that we can send a nice response back to the client letting them know what happened.</p>
-      <p>The beauty of having <b>a global error handling middleware</b> is that it allows for a nice separation of concerns. So, we don't have to worry about error handling right in our business logic or our controllers, or really anywhere in our application. We can simply send the errors down to the error handler which will then decide what to do with them next.</p>
-      <p><img src="../../src/img/error_handling_1.jpg"/></p>
-      `,
-      ],
-    },
-    {
-      sectionTitle: 'Handling Unhandled Routes (URL/path)',
-      sectionSource: '',
-      highlights: {
-        highlight1: ['Unhandled Routes'],
-      },
-      tooltips: [
-        `<p>Express.js automatically sends a <code>404 Not Found</code> error code in case that we try to access a route (path or URL) that has not any handler attach to it.</p>
-        <p>We can create a handle function for all the routes that are not cached by other routers handlers, so we can write a middleware function that <i>handle undefined routes, so routes that we didn't assign any handler</i> yet. <b>This middleware function should be the last part after all our other routes</b>, because remember that all middleware functions are executed in the order they are in the code.</p>
-        <pre><code>
-const express = require('express');
-
-const tourRouter = require('./routes/tourRoutes');
-const userRouter = require('./routes/userRoutes');
-
-const app = express();
-
-app.use('/api/v1/tours', tourRouter);
-app.use('/api/v1/users', userRouter);
-
-<i>app<b>.all</b>(<b>'*'</b>, (req, res, next) => {
-  res.status(404).json({
-    status: 'fail',
-    message: "Can't find {req.originalUrl} in this server!"
-  })
-});</i>
-
-app.listen(8080);
-      </code></pre>
-      <p>NOTE: <code>app.use()</code> will only see whether URL starts with specified path. But, <b><code>app.all()</code> will match the complete path</b>.</p>
-      `,
-      ],
-    },
-    {
-      sectionTitle: 'Implementing a Global Error Handling Middleware',
-      sectionSource: '',
-      highlights: {
-        highlight2: ['Global Error Handling Middleware'],
-      },
-      tooltips: [
-        `<h3>Introduction to Error Handling Middleware</h3>
-        <p>Express allows you to <i><b>define error-handling middleware functions</b> that have four arguments instead of three (<code>err, req, res, next</code>)</i>. These are defined in the same way but are designed to handle errors that occur in the preceding middleware/functions.</p>
-        `,
-        `<h3>Global Error Handling Middleware</h3>
-        <p>To define an error handling middleware, all we need to do is to <i><b>give the middleware function 4 arguments</b>, and Express.js will then automatically recognize it as an error handling middleware</i>, and therefore, <b>only call it when there is an error</b>.</p>
-        <p>To pass an error from our routes handlers to the error handling middleware, we need to <b>pass that error as an argument to <code>next()</code> function</b>. <i>If the <code>next()</code> function receives an argument, no matter what it is, Express.js will automatically know that there was an error, so it will assume that whatever we pass into <code>next()</code> is gonna be an error, and that applies to every <code>next()</code> function in every single middleware anywhere in our application</i>.</p>
-        <p>IMPORTANT: <b>Whenever we pass anything into <code>next()</code> function, Express.js will assume that it is an error, and it will then skip all the other middlewares in the middleware stack and sent the error that we passed in to our global error handling middleware, which will then, of course, be executed.</b></p>
-        <pre><code>
-const express = require('express');
-
-const tourRouter = require('./routes/tourRoutes');
-const userRouter = require('./routes/userRoutes');
-
-const app = express();
-
-app.use('/api/v1/tours', tourRouter);
-app.use('/api/v1/users', userRouter);
-
-// Handle all unhandled routes
-app.all('*', (req, res, next) => {
-  const error = new Error('Error message!');
-  error.statusCode = 404;
-  error.status = 'fail';
-  <b>next(error)</b>;
-})
-
-// Handle all errors globally
-<i>app.use((<b>err</b>, req, res, next) => {
-  err.statusCode = err.statusCode || 500;
-  err.status = err.status || 'error;
-
-  res.status(err.statusCode).json({
-    status: err.status,
-    message: err.message
-  })
-});</i>
-      </code></pre>        
-        `,
-        `<h3>Refactoring your Global Error Handling Middleware</h3>
-        <p>You can refactor your code and creating a class for handling building errors. This class will inherit from the <code>Error</code> object.</p>
-        <pre><code>
-class AppError extends Error {
-  constructor(message, statusCode) {
-    <i>super(message);</i>
-
-    <i>this.statusCode</i> = statusCode;
-    <i>this.status</i> = String(statusCode).startsWith('4') ? 'fail' : 'error';
-    <i>this.isOperational</i> = true;
-
-    Error.captureStackTrace(this, this.constructor);
-  }
-}
-
-module.exports = AppError;
-        </code></pre>
-        <p><code>this.isOperational</code> is used to <i>identify only operational errors</i>, not programming errors. We are doing that so later we can then test for <code>this.isOperational</code> property and only send error messages back to the client for only operational errors that we created using the <code>AppError</code> class.</p>
-        <p>This is useful because some other crazy unexpected errors that might happen in our application, for example a programming error, or some bug in one of the packages that we require into our app, and these errors will then of course not have the <code>this.isOperational</code> property on them.</p>
-        <pre><code>
-const express = require('express');
-
-<i>const AppError = require('./utils/AppError');</i>
-
-const tourRouter = require('./routes/tourRoutes');
-const userRouter = require('./routes/userRoutes');
-
-const app = express();
-
-app.use('/api/v1/tours', tourRouter);
-app.use('/api/v1/users', userRouter);
-
-// Handle all unhandled routes
-app.all('*', (req, res, next) => {
-  // const error = new Error('Error message!');
-  // error.statusCode = 404;
-  // error.status = 'fail';
-
-  <i>next(new AppError('Error Message!', 404));</i>
-})
-
-// Handle all errors globally
-app.use((<b>err</b>, req, res, next) => {
-  err.statusCode = err.statusCode || 500;
-  err.status = err.status || 'error;
-
-  res.status(err.statusCode).json({
-    status: err.status,
-    message: err.message
-  })
-});
-      </code></pre>       
-        `,
-      ],
-    },
-    {
-      sectionTitle: 'Handle Synchronous vs Asynchronous Errors',
-      sectionSource: '',
-      tooltips: [
-        `<p>If your server <i>thrown errors</i> and you don't <i>handle them</i>, your server just crashes. Now how can we handle errors?</p>
-        <p>One solution for synchronous code, so code that executes line by line immediately and does not wait for anything (for example where we don't interact with files or where we don't send requests), such code can  be wrapped with try/catch block.</p>
-        <p>We also have async operations that can fail, and such operations when using Promises are handled with <code>then()</code> and <code>catch()</code>.</p>
-        `,
-        `<h3>Synchronous errors: handling errors with <code>try {} catch {}</code> block</h3>
-        <p>To handle errors for synchronous code use <code>try {} catch {}</code> block.</p>
-        <p>With try/catch we <code>try{}</code> a certain code, and then we have to add <code>catch{}</code> where we catch a potential error that might have been thrown, and in <code>catch{}</code> we can handle errors.</p>
-        <pre><code>
-function sum(a, b) {
-    if (a && b) return a + b;
-    throw new Error('Invalid arguments');
-};
-
-// console.log(sum(1));
-
-try {
-    console.log(sum(1));
-} catch (error) {
-    console.log('Error occurred!');
-    console.log(error);
-}
-
-console.log('This works!');
-        </code></pre>
-        <p><i>NOTE: If you don't use try/catch, when a error occurrs, the call stack is blocked and you can't continue after the error line. If you handle errors with try/catch, when a error occurrs, the error is handle in catch block, BUT the call stack can continue to run after the catch block.</i></p>
-        <p>When you use try/catch and handle a error inside of it, the call stack will never be blocked, and it can continue running after the error line.</p>
-        `,
-        `<h3>Asynchronous errors: handling errors with <code>then()</code> and <code>catch()</code></h3>
-        <p>To handle errors for asynchronous code use <code>then()</code> and <code>catch()</code>.</p>`,
-        `<h3>Extra: Catching Errors in Async Functions</h3>
-        <p>By implementing the code below, <i>you get rid of <code>try/catch</code> block</i> in your <u>asynchronous</u> functions.</p>
-        <pre><code>
-module.exports = <i>fn</i> => {
-  return (req, res, next) => {
-    <i>fn(req, res, next)<b>.catch(next)</b>;</i>
-  };
-};      
-      </code></pre>
-      <pre><code>
-<i>const catchAsync = require('./../utils/catchAsync');
-const AppError = require('./../utils/appError');</i>
-
-exports.getAllTours = <b>catchAsync</b>(<i>async (req, res, next)</i> => {
-  const features = new APIFeatures(Tour.find(), req.query)
-    .filter()
-    .sort()
-    .limitFields()
-    .paginate();
-  const tours = await features.query;
-
-  // SEND RESPONSE
-  res.status(200).json({
-    status: 'success',
-    results: tours.length,
-    data: {
-      tours
-    }
-  });
-});
-
-exports.getTour = <b>catchAsync</b>(<i>async (req, res, next)</i> => {
-  const tour = await Tour.findById(req.params.id);
-
-  <i>if (!tour) {
-    return next(new AppError('No tour found with that ID', 404));
-  }</i>
-
-  res.status(200).json({
-    status: 'success',
-    data: {
-      tour
-    }
-  });
-});
-
-exports.updateTour = <b>catchAsync</b>(<i>async (req, res, next)</i> => {
-  const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-    runValidators: true
-  });
-
-  <i>if (!tour) {
-    return next(new AppError('No tour found with that ID', 404));
-  }</i>
-
-  res.status(200).json({
-    status: 'success',
-    data: {
-      tour
-    }
-  });
-});
-
-exports.deleteTour = <b>catchAsync</b>(<i>async (req, res, next)</i> => {
-  const tour = await Tour.findByIdAndDelete(req.params.id);
-
-  <i>if (!tour) {
-    return next(new AppError('No tour found with that ID', 404));
-  }</i>
-
-  res.status(204).json({
-    status: 'success',
-    data: null
-  });
-});
-      </code></pre>
-        `,
-      ],
-    },
-    {
-      sectionTitle:
-        'Environment Variables & Handle Errors in Different Environments: Development vs Production',
-      sectionSource: '',
-      tooltips: [
-        `<p>The idea behind "Errors During Development vs Production" is to <i>send different error messages for the development and production environment</i>. Is not a good practice to send the same response error message to everyone. In production, we want to leak as little information about our errors to the client as possible. So in that case, we only want to send a nice, human-friendly message so that the user knows what's wrong. On the other hand, when written development, we want to get as much information about the error that occurred as possible.</p>`,
-        `<p>We can distinguish between the development and the production environment by setting a <i><code>.env</code> file</i> where we save our informations about development environment, for example, <i><code>NODE_ENV=development</code></i>. Then, we can read that information with <i><code>process.env.NODE_ENV</code></i> and send different errors in development or production environment.</p>
-        <pre><code>
-const <i>sendErrorDev</i> = (err, res) => {
-  res.status(err.statusCode).json({
-    status: err.status,
-    error: err,
-    message: err.message,
-    stack: err.stack
-  });
-};
-
-const <i>sendErrorProd</i> = (err, res) => {
-  // Operational errors, trusted errors: send message to client
-  if (<i>err.isOperational</i>) {
-    res.status(err.statusCode).json({
-      status: err.status,
-      message: err.message
-    });
-
-    // Programming errors or other unknown errors: <b>don't leak errors details to the client</b>
-  } else {
-    // 1) Log error
-    console.error(err);
-
-    // 2) Send generic message
-    res.status(500).json({
-      status: 'error',
-      message: 'Something went very wrong!'
-    });
-  }
-};
-
-module.exports = (err, req, res, next) => {
-  err.statusCode = err.statusCode || 500;
-  err.status = err.status || 'error';
-
-  if (<b>process.env.NODE_ENV === 'development'</b>) {
-    <i>sendErrorDev(err, res);</i>
-  } else if (<b>process.env.NODE_ENV === 'production'</b>) {
-    let error = { ...err };
-    <i>sendErrorProd(error, res);</i>
-  }
-};
-        </code></pre>
-        `,
-        `<pre><code>
-const express = require('express');
-<i>const globalErrorHandler = require('./controllers/errorController');</i>
-const tourRouter = require('./routes/tourRoutes');
-const userRouter = require('./routes/userRoutes');
-
-const app = express();
-
-app.use('/api/v1/tours', tourRouter);
-app.use('/api/v1/users', userRouter);
-
-<i>app.use(globalErrorHandler);</i>
-
-app.listen(process.env.PORT);
-        </code></pre>`,
-      ],
-    },
-    {
-      sectionTitle:
-        'Globally Handle: Unhandled Promise Rejections & Uncaught Exceptions',
-      sectionSource: '',
-      highlights: {
-        highlight1: ['Unhandled Promise Rejections', 'Uncaught Exceptions'],
-      },
-      tooltips: [
-        `<p>In Node.js and its frameworks like Express.js, handling asynchronous operations and exceptions are crucial parts of building robust applications. Let's break down the concepts of unhandled Promise rejection and catching uncaught exceptions, especially in the context of Express.js.</p>`,
-        `<h3>Handle Globally: Unhandled Promise Rejection</h3>
-        <p>In JavaScript, Promises are used to handle asynchronous operations. <i>When a Promise is rejected due to an error and <u>there is no <code>.catch()</code> block to handle the rejection</u>, it results in an unhandled Promise rejection.</i> This situation is similar to throwing an error in synchronous code without wrapping it in a <code>try/catch</code> block.</p>
-        <p>I want to explain to you how to <i><u>globally</u> handle unhandled rejected Promises</i>, because in a bigger application, it can become a bit more difficult to always keep track of all the Promises that might become rejected at some point. So at some point, you might have some unhandled Promise rejection somewhere I'll show you how to deal with that Promise rejection globally.</p>
-        <p><b>Node.js will emit an <code>unhandledRejection</code> event when a Promise is rejected and no handler is found.</b> If not properly managed, it can lead to memory leaks, inconsistent application state, or application crashes. <i>Starting from Node.js version 15, an unhandled Promise rejection will terminate the Node.js process by default, making it critical to handle them correctly.</i> So each time there is an unhandled rejection (Promise rejection) somewhere in our application, the <code>process</code> object will emit an event called <code>unhandledRejection</code> and so <i>we can subscribe to <code>unhandledRejection</code> event for handling Promise rejection</i>.</p>
-        <pre><code>
-const express = require('express');
-
-const app = express();
-
-const server = app.listen(8000);
-
-process<i>.on('unhandledRejection'</i>, (err) => {
-  console.log(err.name, err.message);
-
-  // First close the server and only then shutdown the app
-  <i>server.close(() => {
-    <b>process.exit(1);</b>
-  });</i>
-});      
-      </code></pre>
-        `,
-        `<h3>Handle Globally: Uncaught Exceptions</h3>
-        <p><i>Uncaught exceptions are errors (bugs) that <u>occur in synchronous code</u> but are <u>not caught by any <code>try/catch</code> block</u>.</i> In a Node.js environment, uncaught exceptions can lead to the program terminating or getting into an <code>undefined</code> state.</p>
-        <p><b>Node.js provides an <code>uncaughtException</code> event that you can listen to for handling uncaught exceptions.</b> However, it's generally recommended to gracefully shut down the process after an uncaught exception, as the application may be in an unknown state.</p>
-        <p>Express.js does not provide built-in handling for uncaught exceptions. You should listen for these at the process level and decide how to handle them, often by logging the error, cleaning up resources, and restarting the application. <i>The <code>uncaughtException</code> handler should be at the very top of our code, or at least before any other code is really executed.</i></p>
-        <pre><code>
-const express = require('express');
-
-process<i>.on('uncaughtException'</i>, (err) => {
-  console.log(err.name, err.message);
-  <b>process.exit(1);</b>
-}); 
-
-const app = express();
-
-const server = app.listen(8000);
-
-process.on('unhandledRejection'</i>, (err) => {
-  console.log(err.name, err.message);
-
-  // First close the server and only then shutdown the app
-  server.close(() => {
-    process.exit(1);
-  });</i>
-});
-      </code></pre>
-      <p>NOTE: While in the Unhandled Rejection crashing the application is optional, when there is an Uncaught Exception, we really, really need to crash our application, because after there was an Uncaught Exception, the entire Node.js process is in a so-called unclean state. So to fix that, the process need to terminate and then to be restarted. In production, we should then have a tool which will restart the application after crashing. And many hosting services already do that out of the box, so completely automatically without us having to do anything.</p>`,
-        `<h3>Why Terminate the Process?</h3>
-      <p>Terminating the process helps to catch and fix issues early in development. Unhandled promise rejections can lead to unpredictable behavior and bugs that are hard to track down. By terminating the process, Node.js ensures developers notice and address these errors promptly.</p>`,
-        `<h3>IMPORTANT: handle errors in the place where it happen</h3>
-      <p><i>In Node.js, it's not really a good practice to just blindly rely on these two error handlers (<code>unhandledRejection</code> & <code>uncaughtException</code>) that we just implemented in the code above. So <b>ideally errors should really be handled right where they occur</b>.</i> Some people even say that we shouldn't use these at all, but I disagree with that. I think that as a safety net, they can be very useful and play a part in our application.</p>
-      <p>While Express.js does not directly handle Promise rejections for you, you can manage them by <i>ensuring that all Promises in your middleware or route handlers have corresponding <code>.catch()</code> blocks or by using async/await with <code>try/catch</code>.</i></p>
-        `,
-        `<h3>Best Practices</h3>
-      <p>1. <i>Do not ignore Promise rejections</i>. Always have a .catch() for each promise chain or use async/await within a try/catch block.</p>
-      <p>2. <i>Centralize error handling</i> in Express.js by using Express's built-in error-handling middleware to manage errors that occur in your routes.</p>
-      <p>3. <i>Gracefully shutdown on <code>uncaughtException</code></i> to ensure that your application does not continue to run in an unstable state.</p>
-      <p>4. Log errors to help with debugging and maintaining the health of your application.</p>
-      <p>5. Consider using tools or libraries that help with error management and automatic restarts of your Node.js application, such as PM2, which can handle process management and help in scenarios where the application crashes.</p>
-        `,
-      ],
-    },
-    {
-      sectionTitle: 'Errors & HTTP Response Status Codes',
-      sectionSource: '',
-      highlights: {
-        highlight1: ['Status Codes'],
-      },
-      tooltips: [
-        `<h3>Which codes do we have and why do we use them?</h3>
-      <p>First of all let's start with what the codes are therefore. The codes are simply <i><u>extra information</u> we pass to the browser which helps the browser understand if an operation succeeded or not</i>. If you're writing an application with a lot of client side JavaScript or a mobile app and you will fetch only data instead of complete HTML pages, status codes also allow you to understand if an error happened and which kind of error, because <i>you typically map certain kinds of errors to certain kinds of status codes</i>.</p>
-      <ul>Status codes:
-        <li>- <b><code>2xx</code> (Success)</b>: these are always success status codes, they indicate that the operation simply succeeded.</li>
-        <li>- <b><code>3xx</code> (Redirect)</b>: indicates that a redirection happened.</li>
-        <li>- <b><code>4xx</code> (Client-side error)</b>: indicates that something happened because an error was done by the client.</li>
-        <li>- <b><code>5xx</code> (Server-side error)</b>: indicate that a server side error occurred.</li>
-      </ul>
-      <p>When returning responses, it can make sense to also set an appropiate HTTP status code - this lets the browser know what went wrong. Setting status code does NOT mean that the response is incomplete or the app crashed!</p>
-      `,
-      ],
-    },
-  ],
-};
-
 const adding_authentication = {
   title: 'Authentication & Authorization',
   titleDescription: 'Restricting Access',
@@ -3724,6 +3251,479 @@ app.listen(process.env.PORT);
       <p><code>csurf</code> is a package for Express.js that allows you to generate a so-called CSRF token. <i>CSRF token is a string value you can embed into your HTML forms into your web pages</i>, for every request that does something on the backend that changes the users state, so anything like ordering something, anything that does something sensitive which you want to protect against. You can include such a CSRF token in your views (pages) and <i>on the server, the <code>csurf</code> package will check if the incoming request does have that valid CSRF token that you include into your HTML forms</i>.</p>`,
         `<h3>How does a CSRF token protect us?</h3>
       <p>The fake sites might send a request to your backend and they could theoretically use your session, but the requests will be missing the CSRF token and they can't guess the CSRF token because it's a random hashed value and only one value is valid, and the <code>csurf</code> package which runs on the server determines whether a CSRF token is valid, so the fake sites can't guess it and they also can steal it, because a new CSRF token is generated for every page you render.</p>
+      `,
+      ],
+    },
+  ],
+};
+
+const error_handling_with_ExpressJS = {
+  title: 'Debugging & Error Handling',
+  titleDescription: 'Fixing Error & Fail Gracefully',
+  sections: [
+    {
+      sectionTitle: 'Setting up ESLint',
+      sectionSource: '',
+      tooltips: [
+        `<p>ESLint is basically a program that constantly scans our code and finds potential coding errors or simply bad coding practices that it thinks are wrong. It's very configurable so that you can really fine tune it to your needs, and coding habits.</p>`,
+      ],
+    },
+    {
+      sectionTitle: 'Debugging errors in Visual Studio Code',
+      sectionSource: '',
+      tooltips: [
+        `<ul>
+        <li>- Use the VS Code debugger to step into your code and go through it step by step;</li>
+        <li>- Analyze variable values at runtime;</li>
+        <li>- Look into (and manipulate) variables at runtime;</li>
+        <li>- Set breakpoints cleverly (i.e. respect the async/event-driven nature).</li>
+      </ul>`,
+      ],
+    },
+    {
+      sectionTitle: 'Debugging Node.js with ndb package',
+      sectionSource: '',
+      highlights: {
+        highlight1: ['ndb'],
+      },
+      tooltips: [
+        `<p>You can debug Node.js code by installing a 3rd party package called <code>ndb</code>: <code>npm install <b>ndb</b> --global</code>.</p>`,
+        `<p>In <code>package.json</code> file, you add a new script for <code>ndb</code>.</p>
+        <pre><code>
+{
+  "scripts": {
+    "start": "nodemon server.js",
+    "start:prod": "NODE_ENV=production nodemon server.js",
+    <b>"debug": "ndb server.js"</b>
+  },
+}       
+        </code></pre>`,
+      ],
+    },
+    {
+      sectionTitle:
+        'An Overview of Error Handling: Operational vs Programming Errors',
+      sectionSource: '',
+      highlights: {
+        highlight2: ['Operational vs Programming Errors'],
+      },
+      tooltips: [
+        `
+      <p>Up until this point we haven't really <i>handled errors in a central place in our application</i>. What we did was to simply send back an error message as JSON in each route handler in case something went wrong.</p>
+      <ul>Let's take a minute to just get a brief overview of error handling in Express.js. There are two types of errors that can occur: 
+        <li>- <i><b>operational</b> errors</i>;</li>
+        <li>- <i><b>programming</b> errors</i>.</li>
+      </ul>
+      <p>Operational errors are problems that we can predict will inevitably happen at some point in the future, so we just need to handle them in advance. <i>They have nothing to do with bugs in our code. Instead, they depend on the user, or the system, or the network.</i> So, things like a user accessing an invalid route, inputting invalid data, or an application failing to connect to the database. All these are operational errors that we will need to handle in order to prepare our application for these cases.</p>
+      <p>On the other hand, we have programming errors. <i>Programming errors are simply bugs that we developers introduce into our code.</i> Like, for example, trying to read properties from an <code>undefined</code> variable, using <code>await</code> without <code>async</code>, accidentally using <code>request.query</code> instead of <code>request.body</code>, or many other errors that we might make. This are really inevitable but also more difficult to find and to handle.</p>
+      <p>It's important that you understand this crucial difference between operational errors and programming errors. <i>When we're talking about error handling with Express.js, we mainly just mean operational errors, because these are the ones that are easy to catch and to handle with our Express.js application.</i></p>
+      <p>Express.js actually comes with error handling out of the box. So, all we have to do is to <i>write a global Express.js error handling middleware which will then catch errors coming from all over the application</i>. So, no matter if it's an error coming from a route handler, or a model validator or really, someplace else, the goal is that <b>all these errors end up in one central error handling middleware</b>. So that we can send a nice response back to the client letting them know what happened.</p>
+      <p>The beauty of having <b>a global error handling middleware</b> is that it allows for a nice separation of concerns. So, we don't have to worry about error handling right in our business logic or our controllers, or really anywhere in our application. We can simply send the errors down to the error handler which will then decide what to do with them next.</p>
+      <p><img src="../../src/img/error_handling_1.jpg"/></p>
+      `,
+      ],
+    },
+    {
+      sectionTitle: 'Handling Unhandled Routes (URL/path)',
+      sectionSource: '',
+      highlights: {
+        highlight1: ['Unhandled Routes'],
+      },
+      tooltips: [
+        `<p>Express.js automatically sends a <code>404 Not Found</code> error code in case that we try to access a route (path or URL) that has not any handler attach to it.</p>
+        <p>We can create a handle function for all the routes that are not cached by other routers handlers, so we can write a middleware function that <i>handle undefined routes, so routes that we didn't assign any handler</i> yet. <b>This middleware function should be the last part after all our other routes</b>, because remember that all middleware functions are executed in the order they are in the code.</p>
+        <pre><code>
+const express = require('express');
+
+const tourRouter = require('./routes/tourRoutes');
+const userRouter = require('./routes/userRoutes');
+
+const app = express();
+
+app.use('/api/v1/tours', tourRouter);
+app.use('/api/v1/users', userRouter);
+
+<i>app<b>.all</b>(<b>'*'</b>, (req, res, next) => {
+  res.status(404).json({
+    status: 'fail',
+    message: "Can't find {req.originalUrl} in this server!"
+  })
+});</i>
+
+app.listen(8080);
+      </code></pre>
+      <p>NOTE: <code>app.use()</code> will only see whether URL starts with specified path. But, <b><code>app.all()</code> will match the complete path</b>.</p>
+      `,
+      ],
+    },
+    {
+      sectionTitle: 'Implementing a Global Error Handling Middleware',
+      sectionSource: '',
+      highlights: {
+        highlight2: ['Global Error Handling Middleware'],
+      },
+      tooltips: [
+        `<h3>Introduction to Error Handling Middleware</h3>
+        <p>Express allows you to <i><b>define error-handling middleware functions</b> that have four arguments instead of three (<code>err, req, res, next</code>)</i>. These are defined in the same way but are designed to handle errors that occur in the preceding middleware/functions.</p>
+        `,
+        `<h3>Global Error Handling Middleware</h3>
+        <p>To define an error handling middleware, all we need to do is to <i><b>give the middleware function 4 arguments</b>, and Express.js will then automatically recognize it as an error handling middleware</i>, and therefore, <b>only call it when there is an error</b>.</p>
+        <p>To pass an error from our routes handlers to the error handling middleware, we need to <b>pass that error as an argument to <code>next()</code> function</b>. <i>If the <code>next()</code> function receives an argument, no matter what it is, Express.js will automatically know that there was an error, so it will assume that whatever we pass into <code>next()</code> is gonna be an error, and that applies to every <code>next()</code> function in every single middleware anywhere in our application</i>.</p>
+        <p>IMPORTANT: <b>Whenever we pass anything into <code>next()</code> function, Express.js will assume that it is an error, and it will then skip all the other middlewares in the middleware stack and sent the error that we passed in to our global error handling middleware, which will then, of course, be executed.</b></p>
+        <pre><code>
+const express = require('express');
+
+const tourRouter = require('./routes/tourRoutes');
+const userRouter = require('./routes/userRoutes');
+
+const app = express();
+
+app.use('/api/v1/tours', tourRouter);
+app.use('/api/v1/users', userRouter);
+
+// Handle all unhandled routes
+app.all('*', (req, res, next) => {
+  const error = new Error('Error message!');
+  error.statusCode = 404;
+  error.status = 'fail';
+  <b>next(error)</b>;
+})
+
+// Handle all errors globally
+<i>app.use((<b>err</b>, req, res, next) => {
+  err.statusCode = err.statusCode || 500;
+  err.status = err.status || 'error;
+
+  res.status(err.statusCode).json({
+    status: err.status,
+    message: err.message
+  })
+});</i>
+      </code></pre>        
+        `,
+        `<h3>Refactoring your Global Error Handling Middleware</h3>
+        <p>You can refactor your code and creating a class for handling building errors. This class will inherit from the <code>Error</code> object.</p>
+        <pre><code>
+class AppError extends Error {
+  constructor(message, statusCode) {
+    <i>super(message);</i>
+
+    <i>this.statusCode</i> = statusCode;
+    <i>this.status</i> = String(statusCode).startsWith('4') ? 'fail' : 'error';
+    <i>this.isOperational</i> = true;
+
+    Error.captureStackTrace(this, this.constructor);
+  }
+}
+
+module.exports = AppError;
+        </code></pre>
+        <p><code>this.isOperational</code> is used to <i>identify only operational errors</i>, not programming errors. We are doing that so later we can then test for <code>this.isOperational</code> property and only send error messages back to the client for only operational errors that we created using the <code>AppError</code> class.</p>
+        <p>This is useful because some other crazy unexpected errors that might happen in our application, for example a programming error, or some bug in one of the packages that we require into our app, and these errors will then of course not have the <code>this.isOperational</code> property on them.</p>
+        <pre><code>
+const express = require('express');
+
+<i>const AppError = require('./utils/AppError');</i>
+
+const tourRouter = require('./routes/tourRoutes');
+const userRouter = require('./routes/userRoutes');
+
+const app = express();
+
+app.use('/api/v1/tours', tourRouter);
+app.use('/api/v1/users', userRouter);
+
+// Handle all unhandled routes
+app.all('*', (req, res, next) => {
+  // const error = new Error('Error message!');
+  // error.statusCode = 404;
+  // error.status = 'fail';
+
+  <i>next(new AppError('Error Message!', 404));</i>
+})
+
+// Handle all errors globally
+app.use((<b>err</b>, req, res, next) => {
+  err.statusCode = err.statusCode || 500;
+  err.status = err.status || 'error;
+
+  res.status(err.statusCode).json({
+    status: err.status,
+    message: err.message
+  })
+});
+      </code></pre>       
+        `,
+      ],
+    },
+    {
+      sectionTitle: 'Handle Synchronous vs Asynchronous Errors',
+      sectionSource: '',
+      tooltips: [
+        `<p>If your server <i>thrown errors</i> and you don't <i>handle them</i>, your server just crashes. Now how can we handle errors?</p>
+        <p>One solution for synchronous code, so code that executes line by line immediately and does not wait for anything (for example where we don't interact with files or where we don't send requests), such code can  be wrapped with try/catch block.</p>
+        <p>We also have async operations that can fail, and such operations when using Promises are handled with <code>then()</code> and <code>catch()</code>.</p>
+        `,
+        `<h3>Synchronous errors: handling errors with <code>try {} catch {}</code> block</h3>
+        <p>To handle errors for synchronous code use <code>try {} catch {}</code> block.</p>
+        <p>With try/catch we <code>try{}</code> a certain code, and then we have to add <code>catch{}</code> where we catch a potential error that might have been thrown, and in <code>catch{}</code> we can handle errors.</p>
+        <pre><code>
+function sum(a, b) {
+    if (a && b) return a + b;
+    throw new Error('Invalid arguments');
+};
+
+// console.log(sum(1));
+
+try {
+    console.log(sum(1));
+} catch (error) {
+    console.log('Error occurred!');
+    console.log(error);
+}
+
+console.log('This works!');
+        </code></pre>
+        <p><i>NOTE: If you don't use try/catch, when a error occurrs, the call stack is blocked and you can't continue after the error line. If you handle errors with try/catch, when a error occurrs, the error is handle in catch block, BUT the call stack can continue to run after the catch block.</i></p>
+        <p>When you use try/catch and handle a error inside of it, the call stack will never be blocked, and it can continue running after the error line.</p>
+        `,
+        `<h3>Asynchronous errors: handling errors with <code>then()</code> and <code>catch()</code></h3>
+        <p>To handle errors for asynchronous code use <code>then()</code> and <code>catch()</code>.</p>`,
+        `<h3>Extra: Catching Errors in Async Functions</h3>
+        <p>By implementing the code below, <i>you get rid of <code>try/catch</code> block</i> in your <u>asynchronous</u> functions.</p>
+        <pre><code>
+module.exports = <i>fn</i> => {
+  return (req, res, next) => {
+    <i>fn(req, res, next)<b>.catch(next)</b>;</i>
+  };
+};      
+      </code></pre>
+      <pre><code>
+<i>const catchAsync = require('./../utils/catchAsync');
+const AppError = require('./../utils/appError');</i>
+
+exports.getAllTours = <b>catchAsync</b>(<i>async (req, res, next)</i> => {
+  const features = new APIFeatures(Tour.find(), req.query)
+    .filter()
+    .sort()
+    .limitFields()
+    .paginate();
+  const tours = await features.query;
+
+  // SEND RESPONSE
+  res.status(200).json({
+    status: 'success',
+    results: tours.length,
+    data: {
+      tours
+    }
+  });
+});
+
+exports.getTour = <b>catchAsync</b>(<i>async (req, res, next)</i> => {
+  const tour = await Tour.findById(req.params.id);
+
+  <i>if (!tour) {
+    return next(new AppError('No tour found with that ID', 404));
+  }</i>
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      tour
+    }
+  });
+});
+
+exports.updateTour = <b>catchAsync</b>(<i>async (req, res, next)</i> => {
+  const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true
+  });
+
+  <i>if (!tour) {
+    return next(new AppError('No tour found with that ID', 404));
+  }</i>
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      tour
+    }
+  });
+});
+
+exports.deleteTour = <b>catchAsync</b>(<i>async (req, res, next)</i> => {
+  const tour = await Tour.findByIdAndDelete(req.params.id);
+
+  <i>if (!tour) {
+    return next(new AppError('No tour found with that ID', 404));
+  }</i>
+
+  res.status(204).json({
+    status: 'success',
+    data: null
+  });
+});
+      </code></pre>
+        `,
+      ],
+    },
+    {
+      sectionTitle:
+        'Environment Variables & Handle Errors in Different Environments: Development vs Production',
+      sectionSource: '',
+      tooltips: [
+        `<p>The idea behind "Errors During Development vs Production" is to <i>send different error messages for the development and production environment</i>. Is not a good practice to send the same response error message to everyone. In production, we want to leak as little information about our errors to the client as possible. So in that case, we only want to send a nice, human-friendly message so that the user knows what's wrong. On the other hand, when written development, we want to get as much information about the error that occurred as possible.</p>`,
+        `<p>We can distinguish between the development and the production environment by setting a <i><code>.env</code> file</i> where we save our informations about development environment, for example, <i><code>NODE_ENV=development</code></i>. Then, we can read that information with <i><code>process.env.NODE_ENV</code></i> and send different errors in development or production environment.</p>
+        <pre><code>
+const <i>sendErrorDev</i> = (err, res) => {
+  res.status(err.statusCode).json({
+    status: err.status,
+    error: err,
+    message: err.message,
+    stack: err.stack
+  });
+};
+
+const <i>sendErrorProd</i> = (err, res) => {
+  // Operational errors, trusted errors: send message to client
+  if (<i>err.isOperational</i>) {
+    res.status(err.statusCode).json({
+      status: err.status,
+      message: err.message
+    });
+
+    // Programming errors or other unknown errors: <b>don't leak errors details to the client</b>
+  } else {
+    // 1) Log error
+    console.error(err);
+
+    // 2) Send generic message
+    res.status(500).json({
+      status: 'error',
+      message: 'Something went very wrong!'
+    });
+  }
+};
+
+module.exports = (err, req, res, next) => {
+  err.statusCode = err.statusCode || 500;
+  err.status = err.status || 'error';
+
+  if (<b>process.env.NODE_ENV === 'development'</b>) {
+    <i>sendErrorDev(err, res);</i>
+  } else if (<b>process.env.NODE_ENV === 'production'</b>) {
+    let error = { ...err };
+    <i>sendErrorProd(error, res);</i>
+  }
+};
+        </code></pre>
+        `,
+        `<pre><code>
+const express = require('express');
+<i>const globalErrorHandler = require('./controllers/errorController');</i>
+const tourRouter = require('./routes/tourRoutes');
+const userRouter = require('./routes/userRoutes');
+
+const app = express();
+
+app.use('/api/v1/tours', tourRouter);
+app.use('/api/v1/users', userRouter);
+
+<i>app.use(globalErrorHandler);</i>
+
+app.listen(process.env.PORT);
+        </code></pre>`,
+      ],
+    },
+    {
+      sectionTitle:
+        'Globally Handle: Unhandled Promise Rejections & Uncaught Exceptions',
+      sectionSource: '',
+      highlights: {
+        highlight1: ['Unhandled Promise Rejections', 'Uncaught Exceptions'],
+      },
+      tooltips: [
+        `<p>In Node.js and its frameworks like Express.js, handling asynchronous operations and exceptions are crucial parts of building robust applications. Let's break down the concepts of unhandled Promise rejection and catching uncaught exceptions, especially in the context of Express.js.</p>`,
+        `<h3>Handle Globally: Unhandled Promise Rejection</h3>
+        <p>In JavaScript, Promises are used to handle asynchronous operations. <i>When a Promise is rejected due to an error and <u>there is no <code>.catch()</code> block to handle the rejection</u>, it results in an unhandled Promise rejection.</i> This situation is similar to throwing an error in synchronous code without wrapping it in a <code>try/catch</code> block.</p>
+        <p>I want to explain to you how to <i><u>globally</u> handle unhandled rejected Promises</i>, because in a bigger application, it can become a bit more difficult to always keep track of all the Promises that might become rejected at some point. So at some point, you might have some unhandled Promise rejection somewhere I'll show you how to deal with that Promise rejection globally.</p>
+        <p><b>Node.js will emit an <code>unhandledRejection</code> event when a Promise is rejected and no handler is found.</b> If not properly managed, it can lead to memory leaks, inconsistent application state, or application crashes. <i>Starting from Node.js version 15, an unhandled Promise rejection will terminate the Node.js process by default, making it critical to handle them correctly.</i> So each time there is an unhandled rejection (Promise rejection) somewhere in our application, the <code>process</code> object will emit an event called <code>unhandledRejection</code> and so <i>we can subscribe to <code>unhandledRejection</code> event for handling Promise rejection</i>.</p>
+        <pre><code>
+const express = require('express');
+
+const app = express();
+
+const server = app.listen(8000);
+
+process<i>.on('unhandledRejection'</i>, (err) => {
+  console.log(err.name, err.message);
+
+  // First close the server and only then shutdown the app
+  <i>server.close(() => {
+    <b>process.exit(1);</b>
+  });</i>
+});      
+      </code></pre>
+        `,
+        `<h3>Handle Globally: Uncaught Exceptions</h3>
+        <p><i>Uncaught exceptions are errors (bugs) that <u>occur in synchronous code</u> but are <u>not caught by any <code>try/catch</code> block</u>.</i> In a Node.js environment, uncaught exceptions can lead to the program terminating or getting into an <code>undefined</code> state.</p>
+        <p><b>Node.js provides an <code>uncaughtException</code> event that you can listen to for handling uncaught exceptions.</b> However, it's generally recommended to gracefully shut down the process after an uncaught exception, as the application may be in an unknown state.</p>
+        <p>Express.js does not provide built-in handling for uncaught exceptions. You should listen for these at the process level and decide how to handle them, often by logging the error, cleaning up resources, and restarting the application. <i>The <code>uncaughtException</code> handler should be at the very top of our code, or at least before any other code is really executed.</i></p>
+        <pre><code>
+const express = require('express');
+
+process<i>.on('uncaughtException'</i>, (err) => {
+  console.log(err.name, err.message);
+  <b>process.exit(1);</b>
+}); 
+
+const app = express();
+
+const server = app.listen(8000);
+
+process.on('unhandledRejection'</i>, (err) => {
+  console.log(err.name, err.message);
+
+  // First close the server and only then shutdown the app
+  server.close(() => {
+    process.exit(1);
+  });</i>
+});
+      </code></pre>
+      <p>NOTE: While in the Unhandled Rejection crashing the application is optional, when there is an Uncaught Exception, we really, really need to crash our application, because after there was an Uncaught Exception, the entire Node.js process is in a so-called unclean state. So to fix that, the process need to terminate and then to be restarted. In production, we should then have a tool which will restart the application after crashing. And many hosting services already do that out of the box, so completely automatically without us having to do anything.</p>`,
+        `<h3>Why Terminate the Process?</h3>
+      <p>Terminating the process helps to catch and fix issues early in development. Unhandled promise rejections can lead to unpredictable behavior and bugs that are hard to track down. By terminating the process, Node.js ensures developers notice and address these errors promptly.</p>`,
+        `<h3>IMPORTANT: handle errors in the place where it happen</h3>
+      <p><i>In Node.js, it's not really a good practice to just blindly rely on these two error handlers (<code>unhandledRejection</code> & <code>uncaughtException</code>) that we just implemented in the code above. So <b>ideally errors should really be handled right where they occur</b>.</i> Some people even say that we shouldn't use these at all, but I disagree with that. I think that as a safety net, they can be very useful and play a part in our application.</p>
+      <p>While Express.js does not directly handle Promise rejections for you, you can manage them by <i>ensuring that all Promises in your middleware or route handlers have corresponding <code>.catch()</code> blocks or by using async/await with <code>try/catch</code>.</i></p>
+        `,
+        `<h3>Best Practices</h3>
+      <p>1. <i>Do not ignore Promise rejections</i>. Always have a .catch() for each promise chain or use async/await within a try/catch block.</p>
+      <p>2. <i>Centralize error handling</i> in Express.js by using Express's built-in error-handling middleware to manage errors that occur in your routes.</p>
+      <p>3. <i>Gracefully shutdown on <code>uncaughtException</code></i> to ensure that your application does not continue to run in an unstable state.</p>
+      <p>4. Log errors to help with debugging and maintaining the health of your application.</p>
+      <p>5. Consider using tools or libraries that help with error management and automatic restarts of your Node.js application, such as PM2, which can handle process management and help in scenarios where the application crashes.</p>
+        `,
+      ],
+    },
+    {
+      sectionTitle: 'Errors & HTTP Response Status Codes',
+      sectionSource: '',
+      highlights: {
+        highlight1: ['Status Codes'],
+      },
+      tooltips: [
+        `<h3>Which codes do we have and why do we use them?</h3>
+      <p>First of all let's start with what the codes are therefore. The codes are simply <i><u>extra information</u> we pass to the browser which helps the browser understand if an operation succeeded or not</i>. If you're writing an application with a lot of client side JavaScript or a mobile app and you will fetch only data instead of complete HTML pages, status codes also allow you to understand if an error happened and which kind of error, because <i>you typically map certain kinds of errors to certain kinds of status codes</i>.</p>
+      <ul>Status codes:
+        <li>- <b><code>2xx</code> (Success)</b>: these are always success status codes, they indicate that the operation simply succeeded.</li>
+        <li>- <b><code>3xx</code> (Redirect)</b>: indicates that a redirection happened.</li>
+        <li>- <b><code>4xx</code> (Client-side error)</b>: indicates that something happened because an error was done by the client.</li>
+        <li>- <b><code>5xx</code> (Server-side error)</b>: indicate that a server side error occurred.</li>
+      </ul>
+      <p>When returning responses, it can make sense to also set an appropiate HTTP status code - this lets the browser know what went wrong. Setting status code does NOT mean that the response is incomplete or the app crashed!</p>
       `,
       ],
     },
@@ -5471,11 +5471,11 @@ export const dataStorage = [
   dynamic_routes_and_advanced_models,
   working_with_files,
   parsing_data,
-  error_handling_with_ExpressJS,
-  understanding_validation,
   adding_authentication,
   sessions_and_cookies,
   security,
+  error_handling_with_ExpressJS,
+  understanding_validation,
   file_upload_and_download,
   sending_emails,
   adding_pagination,
