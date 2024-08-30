@@ -520,41 +520,6 @@ const { add, subtract } = require('./mathFunctions');
       ],
     },
     {
-      sectionTitle: 'Vulnerabilities In Dependencies',
-      sectionSource: '',
-      tooltips: [
-        `<p>When developing Node.js applications, <i>managing dependencies is crucial for maintaining the security of your project</i>. The Node Package Manager (npm) offers tools to help developers identify and fix vulnerabilities in their dependencies. Two essential commands for this purpose are <b><code>npm audit</code></b> and <b><code>npm audit fix</code></b>.</p>
-        <p>NOTE: <i><code>npm audit</code> will only report vulnerabilities that have been reported</i>, and it <i>can only fix them automatically if there's an available update</i>. If there isn't an available updates, it might be worth switching to an alternative library that is more secure.</p>
-        `,
-        `<h3>The <code>npm audit</code> command</h3>
-        <p>The <code>npm audit</code> command <b>analyzes the dependencies in your project to identify known security vulnerabilities</b>. When you run <code>npm audit</code>, npm will perform a security check against your project's dependencies by querying the npm public registry for any known vulnerabilities in the packages you are using. It <i>generates a report that categorizes vulnerabilities by severity (low, moderate, high, critical)</i> and <i>provides information on the affected package version</i>, the vulnerability description, and possible remediation steps.</p>`,
-        `<h3>The <code>npm audit</code> command</h3>
-        <ul>The <code>npm audit fix</code> command <b>automatically applies available patches to resolve vulnerabilities in your project dependencies</b>. <code>npm audit fix</code> attempts to fix the vulnerabilities identified by <code>npm audit</code> by <i>installing patched versions of the affected packages or updating the dependency to a non-vulnerable version</i>:
-          <li>1. It first checks if a fix is available that doesn’t break your existing dependency tree (i.e., doesn’t introduce breaking changes).</li>
-          <li>2. If successful, it updates the package-lock.json and node_modules directory with the new dependency versions.</li>
-          <li>3. If an automatic fix isn’t possible (for example, if the fix involves a major version update), it will inform you and provide instructions for manual resolution.</li>
-        
-        </ul>
-        `,
-        `<h3>Additional Options</h3>
-        <ul><b><code>--force</code></b>: This option <i>forces the application of patches even if they include major version upgrades, which could introduce breaking changes</i>:
-          <li>
-          <pre><code>
-npm audit fix <i>--force</i>
-          </code></pre>
-          </li>
-        </ul>
-        `,
-        `<h3>Best Practices</h3>
-        <p><b>Regular Audits</b>: <i>Regularly running <code>npm audit</code> as part of your development process</i> helps you stay aware of potential vulnerabilities in your dependencies.</p>
-        <p><b>Manual Reviews</b>: While <code>npm audit fix</code> is convenient, <i>some vulnerabilities may require manual intervention, especially if they involve breaking changes or critical fixes</i> that affect the core functionality of your application.</p>
-        <p><b>Dependency Management</b>: Consider using tools like <code>npm-check-updates</code> to keep your dependencies up-to-date regularly, reducing the chances of accumulating security debt.</p>`,
-        `<h3>Limitations</h3>
-        <p><b>False Positives</b>: <i>Occasionally, <code>npm audit</code> might flag vulnerabilities that are not applicable to your use case</i>, especially in development dependencies or optional features you’re not using.</p>
-        <p><b>Outdated Vulnerabilities</b>: <i>Sometimes, the audit report may include vulnerabilities that have already been fixed in the latest versions of packages, but your package-lock.json might still reference older versions</i>.</p>`,
-      ],
-    },
-    {
       sectionTitle: 'Understanding NPM Scripts',
       sectionSource: '',
       highlights: {
@@ -2859,6 +2824,134 @@ const security = {
   titleDescription: 'Secure your REST APIs with best practices',
   sections: [
     {
+      sectionTitle: 'Security Best Practices & Suggestions',
+      sectionSource: '',
+      tooltips: [
+        `<h3>Compromised Database</h3>
+          <p>This means that an attacker gained access to our database. This is an extremely severe problem, but to prevent even bigger problems, we must always <b>encrypt passwords and password reset tokens</b>. This way, the attacker can't at least steal our users passwords and also can't reset them.</p>`,
+        `<h3>Brute Force Attack</h3>
+          <p>The attacker basically tries to guess a password by trying millions and millions of random passwords until they find the right one. To prevent this, we can <i>make the login request really slow, and the <code>bcrypt</code> package actually does just that</i>. Another strategy is to <i>implement <b>rate limiting</b>, which limits the number of requests coming from one single IP</i>. Another strategy is to actually <i>implement a maximum number of login attempts for each user</i>.</p>`,
+        `<h3>Cross-Site Scripting (XSS) Attack</h3>
+          <p><i>The attacker tries to <u>inject scripts</u> into our page to run his malicious code.</i> On the client side, this is especially dangerous because it allows the attacker to read the local storage, which is the reason why <b>we should never ever store the JSON web token in local storage</b>. Instead, <b>JWT should be stored in an HTTPOnly cookie</b> that makes it so that the browser can only receive and send the cookie, but cannot access or modify it in any way. That then makes it impossible for any attacker to steal the JSON Web Token that is stored in the cookie.</p>
+          <p>On the backend side, in order to prevent XSS attacks, we should <b>sanitize user input</b> data and <b>set some special HTTP headers</b> which make these attacks a bit more difficult to happen. Express doesn't come with these best practices out of the box, so we're gonna use middleware to set all of these special headers.</p>`,
+        `<h3>Denial-of-Service (DOS) Attacks</h3>
+          <p>Denial-of-Service (DOS) happens when the attacker sends so many requests to a server that it breaks down and the application becomes unavailable. <i>Implementing rate limiting</i> is a good solution for this. Also, we should <i><b>limit the amount of data</b> that can be sent in a body in a POST or a PATCH request</i>.</p>
+          <p>Also, we should avoid using so-called evil regular expressions to be in our code. These are just regular expressions that take an exponential time to run for non-matching inputs and they can be exploited to bring our entire application down.</p>
+          `,
+        `<h3>NoSQL Query Injection Attack</h3>
+          <p>Query injection happens when an attacker, instead of inputting valid data, injects some query in order to create query expressions that are gonna translate to <code>true</code>.</p>`,
+        `<h3>Other Best Practices & Suggestions</h3>
+          <p>In a production application, <i>all communication between server and client needs to happen over <b>HTTPS</b></i>. Otherwise, anyone can listen into the conversation and steal our JSON Web Token.</p>
+          <p><i><b>Never commit a configuration file (.env file)</b>, like for environment variables, to a version control like Git.</i> In fact, do not upload it anywhere, because this file contains the most sensitive data of the entire application.</p>
+          <p><i>Whenever there is an error, <b>do not send the entire error to the client</b>.</i> So, stuff like the stack trace could give the attacker some valuable insights into your system.</p>
+          `,
+        `<p><img src="../../src/img/security_best_practices.jpg"/></p>`,
+      ],
+    },
+    {
+      sectionTitle: 'Vulnerabilities In <code>package.json</code> Dependencies',
+      sectionSource: '',
+      tooltips: [
+        `<p>When developing Node.js applications, <i>managing dependencies is crucial for maintaining the security of your project</i>. The Node Package Manager (npm) offers tools to help developers identify and fix vulnerabilities in their dependencies. Two essential commands for this purpose are <b><code>npm audit</code></b> and <b><code>npm audit fix</code></b>.</p>
+        <p>NOTE: <i><code>npm audit</code> will only report vulnerabilities that have been reported</i>, and it <i>can only fix them automatically if there's an available update</i>. If there isn't an available updates, it might be worth switching to an alternative library that is more secure.</p>
+        `,
+        `<h3>The <code>npm audit</code> command</h3>
+        <p>The <code>npm audit</code> command <b>analyzes the dependencies in your project to identify known security vulnerabilities</b>. When you run <code>npm audit</code>, npm will perform a security check against your project's dependencies by querying the npm public registry for any known vulnerabilities in the packages you are using. It <i>generates a report that categorizes vulnerabilities by severity (low, moderate, high, critical)</i> and <i>provides information on the affected package version</i>, the vulnerability description, and possible remediation steps.</p>`,
+        `<h3>The <code>npm audit</code> command</h3>
+        <ul>The <code>npm audit fix</code> command <b>automatically applies available patches to resolve vulnerabilities in your project dependencies</b>. <code>npm audit fix</code> attempts to fix the vulnerabilities identified by <code>npm audit</code> by <i>installing patched versions of the affected packages or updating the dependency to a non-vulnerable version</i>:
+          <li>1. It first checks if a fix is available that doesn’t break your existing dependency tree (i.e., doesn’t introduce breaking changes).</li>
+          <li>2. If successful, it updates the package-lock.json and node_modules directory with the new dependency versions.</li>
+          <li>3. If an automatic fix isn’t possible (for example, if the fix involves a major version update), it will inform you and provide instructions for manual resolution.</li>
+        
+        </ul>
+        `,
+        `<h3>Additional Options</h3>
+        <ul><b><code>--force</code></b>: This option <i>forces the application of patches even if they include major version upgrades, which could introduce breaking changes</i>:
+          <li>
+          <pre><code>
+npm audit fix <i>--force</i>
+          </code></pre>
+          </li>
+        </ul>
+        `,
+        `<h3>Best Practices</h3>
+        <p><b>Regular Audits</b>: <i>Regularly running <code>npm audit</code> as part of your development process</i> helps you stay aware of potential vulnerabilities in your dependencies.</p>
+        <p><b>Manual Reviews</b>: While <code>npm audit fix</code> is convenient, <i>some vulnerabilities may require manual intervention, especially if they involve breaking changes or critical fixes</i> that affect the core functionality of your application.</p>
+        <p><b>Dependency Management</b>: Consider using tools like <code>npm-check-updates</code> to keep your dependencies up-to-date regularly, reducing the chances of accumulating security debt.</p>`,
+        `<h3>Limitations</h3>
+        <p><b>False Positives</b>: <i>Occasionally, <code>npm audit</code> might flag vulnerabilities that are not applicable to your use case</i>, especially in development dependencies or optional features you’re not using.</p>
+        <p><b>Outdated Vulnerabilities</b>: <i>Sometimes, the audit report may include vulnerabilities that have already been fixed in the latest versions of packages, but your package-lock.json might still reference older versions</i>.</p>`,
+      ],
+    },
+    {
+      sectionTitle:
+        'Encrypted Connections with SSL and TLS | Digital Certificates and Man In The Middle Attacks',
+      sectionSource: '',
+      tooltips: [
+        `<ul>SSL (Secure Sockets Layer) and TLS (Transport Layer Security) are <i><b>cryptographic protocols</b> designed to provide <b>secure communication over a computer network</b></i>:
+          <li>- SSL was originally developed to <i>secure communications between a client (e.g., a web browser) and a server (e.g., a website)</i>. It ensures that the <b>data transmitted between the two is encrypted</b>, making it difficult for unauthorized parties to intercept or tamper with the data. Due to several vulnerabilities discovered over time (e.g., POODLE attack), SSL has been deprecated in favor of TLS.</li>
+          <li>- TLS is the successor to SSL and provides similar security features but with <i>improved encryption algorithms and enhanced security mechanisms</i>.</li>
+        </ul>
+        `,
+        `<h3>REST APIs build with Express.js are automatically HTTPS?</h3>
+        <ul>No, <i>REST APIs built with Express.js are not automatically HTTPS</i>. By default, Express.js runs over HTTP. To serve your Express.js app over HTTPS, you need to set it up explicitly:
+          <li>1. <b>Obtain an <u>SSL certificate</u></b>: You can get a certificate from a <i>Certificate Authority (CA)</i> like Let's Encrypt, or for development purposes, you can create a <i>self-signed certificate</i>.</li>
+          <li>2. <b><u>Set up HTTPS</u> in your Express.js app</b>:
+            <pre><code>
+const express = require('express');
+<i>const https = require(<b>'https'</b>);</i>
+const fs = require('fs');
+const path = require('path');
+
+const app = express();
+
+//SSL certificate and key files
+<i>const sslOptions = {
+    key: fs.readFileSync(path.resolve(__dirname, 'key.pem')),
+    cert: fs.readFileSync(path.resolve(__dirname, 'cert.pem')),
+};</i>
+
+//Your routes here
+app.get('/', (req, res) => {
+    res.send('Hello, HTTPS!');
+});
+
+//Creating the HTTPS server
+<i><b>https.createServer(sslOptions, app).listen</b>(443, () => {
+    console.log('Server running on https://localhost:443');
+});</i>
+            </code></pre>
+            <p>NOTE: Replace 'key.pem' and 'cert.pem' with the paths to your actual SSL key and certificate files. The server will listen on port 443, which is the default port for HTTPS.</p>
+          </li>
+        </ul>
+        <p>HTTPS requires extra setup, but it's essential for securing communication between your clients and server.</p>
+        `,
+        `<h3>I can establish a HTTPS in production without a SSL certificate?</h3>
+        <ul><b>No, you cannot establish a secure HTTPS connection in production without a valid SSL/TLS certificate.</b> An SSL TLS certificate is necessary for the following reasons:
+          <li>- <i>Encryption: <b>The certificate enables encryption</b>, which secures the data transmitted between the client and server. Without a certificate, data would be transmitted in plain text, making it vulnerable to interception and attacks.</i></li>
+          <li>- <i>Authentication: The certificate also helps verify the identity of your server. When a browser or client connects to your server, <b>the certificate provides proof that the server is legitimate and owned by the entity it claims to represent</b>. This prevents man-in-the-middle attacks.</i></li>
+          <li>- <i>Trust: Browsers and clients trust connections only if they are established over HTTPS with a valid certificate.</i> Without it, users will see warnings that the connection is not secure, which can undermine trust in your service.</li>
+        </ul>
+        <ul>Free and Paid Certificates
+          <li>- <i>Let's Encrypt</i>: If cost is a concern, you can use a free SSL/TLS certificate from Let's Encrypt. These certificates are trusted by most modern browsers and are easy to set up using tools like Certbot.</li>
+          <li>- <i>Self-Signed Certificates</i>: You can create a self-signed certificate, but this is generally only suitable for development environments. In production, browsers will not trust self-signed certificates, and users will see security warnings.</li>
+        </ul>
+        <p><b>To serve your Express.js app over HTTPS <u>in production</u>, you must have a valid SSL/TLS certificate.</b> This is a critical part of securing your web application and ensuring trustworthiness for your users.</p>
+        `,
+        `<h3>If I deploy my Node.js server to Heroku or DigitalOcean, I still need a SSL certificate for HTTPS?</h3>
+        <ul>If you deploy your Node.js application on Heroku, Heroku provides automatic SSL/TLS termination for your application. This means that <i>Heroku will handle HTTPS connections and manage the SSL/TLS certificates for you</i>:
+          <li>- For apps using the Heroku domain (*.herokuapp.com), HTTPS is automatically enabled and free. You don’t need to worry about obtaining or installing a certificate.</li>
+          <li>- If you use a custom domain, Heroku offers automated SSL certificates via Heroku SSL. With a custom domain, you can either use the free "Automated Certificate Management (ACM)" feature or manually upload your own certificates.</li>
+        </ul>
+        <ul>Summary:
+          <li>- Heroku: Automatically manages HTTPS for you, whether you use the default domain or a custom domain with ACM.</li>
+          <li>- DigitalOcean Droplets: Requires you to manually set up and manage SSL/TLS certificates.</li>
+          <li>- DigitalOcean App Platform: Similar to Heroku, it manages HTTPS and SSL certificates for you.</li>
+        </ul>
+        `,
+      ],
+    },
+    {
       sectionTitle: 'Same Origin Policy & CORS Errors',
       sectionSource: '',
       highlights: {
@@ -2944,28 +3037,27 @@ app.listen(process.env.PORT);
       ],
     },
     {
-      sectionTitle: 'Security Best Practices & Suggestions',
+      sectionTitle: 'Setting Security HTTP Headers with Helmet',
       sectionSource: '',
+      highlights: {
+        highlight1: ['Security HTTP Headers'],
+        highlight2: ['Helmet'],
+      },
       tooltips: [
-        `<h3>Compromised Database</h3>
-          <p>This means that an attacker gained access to our database. This is an extremely severe problem, but to prevent even bigger problems, we must always encrypt passwords and password reset tokens. This way, the attacker can't at least steal our users passwords and also can't reset them.</p>`,
-        `<h3>Brute Force Attack</h3>
-          <p>The attacker basically tries to guess a password by trying millions and millions of random passwords until they find the right one. To prevent this, we can make the login request really slow, and the <code>bcrypt</code> package actually does just that. Another strategy is to implement rate limiting, which limits the number of requests coming from one single IP. Another strategy is to actually implement a maximum number of login attempts for each user.</p>`,
-        `<h3>Cross-Site Scripting (XSS) Attack</h3>
-          <p><i>The attacker tries to <b>inject scripts</b> into our page to run his malicious code.</i> On the client side, this is especially dangerous because it allows the attacker to read the local storage, which is the reason why <b>we should never ever store the JSON web token in local storage</b>. Instead, <b>JWT should be stored in an HTTPOnly cookie</b> that makes it so that the browser can only receive and send the cookie, but cannot access or modify it in any way. That then makes it impossible for any attacker to steal the JSON Web Token that is stored in the cookie.</p>
-          <p>On the backend side, in order to prevent XSS attacks, we should sanitize user input data and set some special HTTP headers which make these attacks a bit more difficult to happen. Express doesn't come with these best practices out of the box, so we're gonna use middleware to set all of these special headers.</p>`,
-        `<h3>Denial-of-Service (DOS) Attacks</h3>
-          <p>Denial-of-Service (DOS) happens when the attacker sends so many requests to a server that it breaks down and the application becomes unavailable. implementing rate limiting is a good solution for this. Also, we should limit the amount of data that can be sent in a body in a POST or a PATCH request.</p>
-          <p>Also, we should avoid using so-called evil regular expressions to be in our code. These are just regular expressions that take an exponential time to run for non-matching inputs and they can be exploited to bring our entire application down.</p>
-          `,
-        `<h3>NoSQL Query Injection Attack</h3>
-          <p>Query injection happens when an attacker, instead of inputting valid data, injects some query in order to create query expressions that are gonna translate to <code>true</code>.</p>`,
-        `<h3>Other Best Practices & Suggestions</h3>
-          <p>In a production application, all communication between server and client needs to happen over HTTPS. Otherwise, anyone can listen into the conversation and steal our JSON Web Token.</p>
-          <p>Never commit a configuration file (.env file), like for environment variables, to a version control like Git. In fact, do not upload it anywhere, because this file contains the most sensitive data of the entire application.</p>
-          <p>Whenever there is an error, do not send the entire error to the client. So, stuff like the stack trace could give the attacker some valuable insights into your system.</p>
-          `,
-        `<p><img src="../../src/img/security_best_practices.jpg"/></p>`,
+        `<p>Helmet helps secure Express apps by <b>setting HTTP response headers</b>.</p>
+        <pre><code>
+const express = require('express');
+<i>const helmet = require('helmet');</i>
+
+const app = express();
+
+//Set security HTTP headers
+<b>app.use(helmet());</b>
+
+app.listen(process.env.PORT);
+      </code></pre>
+      <p>It's best to use the <code>helmet</code> package early in the middleware stack, so that these headers are really sure to be set. So don't put it like somewhere at the end, put it right in the beginning.</p>
+      `,
       ],
     },
     {
@@ -3026,29 +3118,6 @@ app.listen(process.env.PORT);
         </code></pre>
         <p>Now when we have a body larger than 10 kilobyte, it will basically not be accepted.</p>
         `,
-      ],
-    },
-    {
-      sectionTitle: 'Setting Security HTTP Headers with Helmet',
-      sectionSource: '',
-      highlights: {
-        highlight1: ['Security HTTP Headers'],
-        highlight2: ['Helmet'],
-      },
-      tooltips: [
-        `<pre><code>
-const express = require('express');
-<i>const helmet = require('helmet');</i>
-
-const app = express();
-
-//Set security HTTP headers
-<b>app.use(helmet());</b>
-
-app.listen(process.env.PORT);
-      </code></pre>
-      <p>It's best to use the <code>helmet</code> package early in the middleware stack, so that these headers are really sure to be set. So don't put it like somewhere at the end, put it right in the beginning.</p>
-      `,
       ],
     },
     {
