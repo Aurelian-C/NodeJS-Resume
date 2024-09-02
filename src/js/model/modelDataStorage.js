@@ -2189,43 +2189,76 @@ const adding_authentication = {
       ],
     },
     {
-      sectionTitle:
-        'Cookie-Based Authentication vs. Token-Based Authentication',
+      sectionTitle: 'Cookie-Based vs. Token-Based Authentication',
       sectionSource: '',
       highlights: {
-        highlight1: ['Token-Based'],
+        highlight1: ['Cookie-Based', 'Token-Based'],
       },
       tooltips: [
-        `<p>Both cookies and tokens provide <i>two different ways of passing authentication data to the server</i>.</p>
+        `<p>Both cookies and tokens provide <i>two different ways of <b>passing authentication data to the server</b></i>.</p>
         <p><img src="../../src/img/sessions_vs_cookies.jpg"/></p>
         `,
         `<h3>What is a Cookie?</h3>
-        <p>In the context of browsers and servers, a "cookie" refers to <i>a small <b>piece of string data</b> sent from a website and stored on the user's device by the user's web browser</i>. Cookies are <i>commonly used to remember information about the user</i>, such as their preferences, login credentials, or items added to a shopping cart.</p>
-        <p>When you visit a website, <u>the server sends a cookie to your browser, which then stores it on your device</u>. The next time you visit the same website, <u>your browser sends the stored cookie back to the server along with your request</u>. This allows the server to recognize you and provide personalized content or functionality based on your previous interactions.</p>
+        <p>In the context of browsers and servers, "cookies" are basically <b>strings of data</b> that are <b>stored in your browser</b>. Cookies are <i>commonly used to remember information about the user</i>, such as their preferences, login credentials, or items added to a shopping cart.</p>
+        <p>Cookies are <b>values that are usually set by the server</b>, which are <b>sent to the server any time your browser makes the request against it</b>. So <i>cookies are <b>a way of storing data in your browser</b> that gets sent to the server whenever you make a request against it. They're sent automatically without you as a developer having to do anything when you make that request.</i></p>
+        <p>NOTE: When you visit a website, <u>the server sends a cookie to your browser, which then stores it on your device</u>. The next time you visit the same website, <u>your browser sends the stored cookie back to the server along with your request</u>. This allows the server to recognize you and provide personalized content or functionality based on your previous interactions.</p>
+        <ul>Cookies have several properties that determine their behavior and how they interact with the browser and server:
+          <li>- <code>Name</code>: The name of the cookie. This is the key that identifies the cookie.</li>
+          <li>- <code>Value</code>: The value associated with the cookie's name. This can be any string of data, such as a session identifier, a user preference, etc.</li>
+          <li>- <code>Domain</code>: Specifies the domain for which the cookie is valid. The browser will only send the cookie to this domain.</li>
+          <li>- <code>Path</code>: The URL path that must exist in the requested URL for the browser to send the cookie. For example, if the path is set to /blog, the cookie will only be sent when accessing URLs under the /blog directory.</li>
+          <li>- <code>Expiration/Max-Age</code>: Expiration: Defines a specific date and time when the cookie will expire. After this time, the browser will delete the cookie. Max-Age: Specifies the maximum duration (in seconds) for which the cookie should exist. After this duration, the cookie will be removed.</li>
+          <li>- <b><code>Secure</code></b>: <i>If this flag is set, the cookie will only be sent over secure HTTPS connections.</i></li>
+          <li>- <b><code>HttpOnly</code></b>: <i>This flag prevents client-side scripts (JavaScript) from accessing the cookie. It's a security feature to prevent XSS (Cross-Site Scripting) attacks.</i></li>
+          <li>- <code>SameSite</code>: This attribute restricts how cookies are sent with cross-site requests.</li>
+          <li>- <code>Priority</code>: Some browsers support a priority attribute that indicates the importance of the cookie (low, medium, or high) in case of resource limits.</li>
+        </ul>
         `,
         `<h3>Cookie-Based Authentication</h3>
         <p>Cookie-based authentication has been the default, tried-and-true method for handling user authentication for a long time.</p>
-        <p><i>Cookie-based authentication is <b>stateful</b>.</i> This means that an authentication record or session must be <i>kept both server and client-side. The server needs to keep track of active sessions in a database, while on the front-end a cookie is created that holds a session identifier</i>, thus the name cookie based authentication.</p>
-        <ul>Let's look at the flow of traditional cookie-based authentication:
-          <li>1. User enters their login credentials.</li>
-          <li>2. Server verifies the credentials are correct and creates a session which is then stored in a database.</li>
-          <li>3. A cookie with the session ID is placed in the users browser.</li>
-          <li>4. On subsequent requests, the session ID is verified against the database and if valid the request processed.</li>
-          <li>5. Once a user logs out of the app, the session is destroyed both client-side and server-side.</li>
+        <p><i>Cookie-based authentication is <b>stateful</b>.</i> This means that an authentication record or session must be <i><b>kept both server and client-side</b>. The server needs to keep track of active sessions in a database, while on the front-end a cookie is created that holds a session identifier</i>, thus the name cookie-based authentication.</p>
+        <ul>How it works:
+          <li>1. <i>Login</i>: The user submits their credentials (e.g., username and password) to the server.</li>
+          <li>2. <i>Session Creation</i>: If the credentials are valid, the server creates a session and stores session data (e.g., user ID) on the server side, typically in a database.</li>
+          <li>3. <i>Cookie Storage</i>: The server sends a cookie containing the session ID back to the client's browser. This cookie is stored on the client side.</li>
+          <li>4. <i>Subsequent Requests</i>: For every subsequent request, the browser automatically sends the cookie to the server. The server retrieves the session data using the session ID from the cookie to authenticate the user.</li>
+        </ul>
+        <ul>Advantages:
+          <li>- Automatic Handling: Cookies are automatically managed and sent by the browser with each request, making the process straightforward.</li>
+          <li>- Secure Storage: Cookies can be flagged as HttpOnly and Secure to prevent JavaScript access and enforce secure transmission over HTTPS.</li>
+        </ul>
+        <ul>Disadvantages:
+          <li>- Stateful: The server must maintain the session state, which can become cumbersome and resource-intensive, especially with a large number of users.</li>
+          <li>- CSRF Vulnerability: Cookies are susceptible to Cross-Site Request Forgery (CSRF) attacks, where malicious sites trick users into submitting unwanted requests.</li>
         </ul>
         `,
         `<h3>Token-Based Authentication</h3>
         <p>Token-based authentication has gained prevalence over the last few years due to the rise of single page applications, web APIs, and the Internet of Things (IoT).<i> When we talk about authentication with tokens, we generally talk about authentication with JSON Web Tokens (JWTs).</i></p>
-        <p><i>Token-based authentication is <b>stateless</b>.</i> The server does not keep a record of which users are logged in or which JWTs have been issued. Instead, <i>every request to the server is accompanied by a token which the server uses to verify the authenticity of the request.</i> The token is generally sent as an addition <code>Authorization</code> header in the form of Bearer {JWT}, but can additionally be sent in the body of a POST request or even as a query parameter.</p>
-        <ul>Let's see how this flow works:
-          <li>1. User enters their login credentials.</li>
-          <li>2. Server verifies the credentials are correct and returns a signed token.</li>
-          <li>3. This token is stored client-side, most commonly in local storage - but can be stored in session storage or a cookie as well.</li>
-          <li>4. Subsequent requests to the server include this token as an additional <code>Authorization</code> header or through one of the other methods mentioned above.</li>
-          <li>5. The server decodes the JWT and if the token is valid processes the request.</li>
-          <li>6. Once a user logs out, the token is destroyed client-side, no interaction with the server is necessary.</li>
+        <p><i>Token-based authentication is <b>stateless</b>.</i> The server does not keep a record of which users are logged in or which JWTs have been issued. Instead, <b>every request to the server is accompanied by a token which the server uses to verify the authenticity of the request.</b> <i>The token is generally sent as an addition <code>Authorization</code> header in the form of <code>Bearer {JWT}</code>, but can additionally be sent in the body of a POST request or even as a query parameter.</i></p>
+        <ul>How it works:
+          <li>1. <i>Login</i>: The user submits their credentials to the server.</li>
+          <li>2. <i>Token Creation</i>: If the credentials are valid, the server generates a token (e.g., JWT - JSON Web Token) containing encoded information (e.g., user ID, roles) and sends it to the client.</li>
+          <li>3. <i>Token Storage</i>: The client stores the token (usually in local storage or session storage).</li>
+          <li>4. <i>Subsequent Requests</i>: The client sends the token in the Authorization header (usually as a Bearer token) with each subsequent request.</li>
+          <li>5. <i>Server Verification</i>: The server verifies the token, typically by checking its signature and possibly decoding it to retrieve the user’s information.</li>
+        </ul>
+        <ul>Advantages:
+          <li>- Stateless: The server doesn’t need to store session information, which can make the application more scalable and efficient, especially in distributed environments.</li>
+          <li>- CSRF Resistance: Since tokens are not automatically sent by the browser with each request, they are less vulnerable to CSRF attacks. Tokens are usually stored in a way that requires explicit inclusion in requests.</li>
+        </ul>
+        <ul>Disadvantages:
+          <li>- Token Management: Clients are responsible for storing tokens securely, which can lead to vulnerabilities if mishandled (e.g., XSS attacks on tokens stored in local storage).</li>
+          <li>- Token Expiration: Handling token expiration and refresh tokens adds complexity.</li>
         </ul>
         <p><img src="../../src/img/token_5.jpg"/></p>
+        `,
+        `<h3>Summary</h3>
+        <p><i>With Token-Based Authentication, the token needs to be sent in the <code>Authorization</code> header by the developer, each time you want to make an authenticated request.</i></p>
+        <p>We could do authentication using cookies instead. The authentication step would work in much the same way, but rather than sending a token in the response, the server sets the cookie value, which can store different bits of information, even an access token or a session identifier. The cookie values are set when the server responds with the <code>Set-Cookie</code> header, which the browser knows that the cookie values need to be stored in the browser's cookies. From now on, <i>that cookie value will automatically be sent by the browser whenever the browser makes a request against the server</i>, so it will set the <code>Set-Cookie</code> header with any of the values that have been set by the server previously. So instead of looking in the <code>Authorization</code> header, the server can now look inside the <code>Set-Cookie</code> header.</p>
+        <ul>When to Use Each:
+          <li>- <i>Cookie-Based Authentication is generally preferred for traditional web applications, especially when the server and client are tightly coupled and managed by the same entity.</i> It’s also a good choice when dealing with sensitive data, given that cookies can be more easily secured.</li>
+          <li>- <i>Token-Based Authentication is well-suited for modern applications, particularly SPAs, mobile applications, and microservices architectures where the client and server are decoupled.</i> It’s also ideal for scenarios requiring scalability, statelessness, and cross-domain access.</li>
+        </ul>
         `,
       ],
     },
@@ -2451,6 +2484,7 @@ app.get('/auth/google',
   })</i>
 );
 
+//The Google servers will call this endpoint so that an authorization code can be exchanged for an access token
 app.get('/auth/google/callback',
   <i>passport.authenticate('google', {
     failureRedirect: '/failure',
@@ -2473,9 +2507,40 @@ app.listen(3000);
     },
     {
       sectionTitle:
+        'Server-Side vs Client-Side Sessions with Cookies | Session Middleware in Express',
+      sectionSource: '',
+      tooltips: [
+        `<h3>Server-Side vs Client-Side Sessions with Cookies</h3>
+        <ul>How do we store session data? We store sessions in one of two ways:
+          <li>1. We can have <b>server-side sessions</b> where user data lives in the server on a database somewhere, and the data would get looked up for each request that the user makes, and potentially deleted if the user logs out or quits their browser.</li>
+          <li>2. The alternative is to have a <b>client-side session</b> where we store session data in the browser, specifically in the browsers cookies.</li>
+        </ul>
+        <ul>In fact, <b>cookies are almost always used to implement sessions</b>, although we do things slightly differently in the cookie depending on if we're using hte client-side session or a server-side session. Depending on if we're doing server-side sessions or client-side sessions, we'll be using cookies in one of two ways:
+          <li>- will either be using <i><u>stateful</u> cookies</i> for server-side sessions;</li>
+          <li>- or <i><u>stateless</u> cookies</i> for client-side sessions.</li>
+        </ul>
+        <p>We handle sessions by installing a third party package called <i><code>express-session</code></i> or <i><code>cookie-session</code></i>. Both packages are actually part of the official Express.js suite, but not baked into Express.js itself, that's why we need to install it.</p>`,
+        `<h3><code>express-session</code> middleware</h3>
+        <p><code>express-session</code> is for <b><u>server-side</u> sessions</b>, and is a middleware that stores session data on the server. It still uses cookies, but it <i><b>only saves the sessionID in the cookie itself</b>, and not the session data, which might include things like the user's ID and their permissions. The session data itself lives in a database on the server</i>, and our <code>express-session</code> middleware plugs-in with many different types of databases.</p>
+        <p><i>By default, <code>express-session</code> middleware uses in memory storage</i>, which will get erased whenever you restart your server process, and it won't be shared if you have a cluster of processes running your server. So the default in-memory storage of the <code>express-session</code> middleware is not intended to be used in a production environment.</p>
+        <p>If security is the absolute most important thing that you're worried about, server-side sessions and the <code>express-session</code> middleware are probably your best bet. But in the majority of cases, it's not a requirement to keep the data from your session a secret. It's enough to sign that data using a key in the server to make sure that it isn't being tampered.</p>
+        `,
+        `<h3><code>cookie-session</code> middleware</h3>
+        <p><i><code>cookie-session</code> is for <b><u>client-side</u> sessions</b>, so <b>it stores the actual session data inside the user's cookie</b> that's being sent back and forth from the browser to the server, whenever you make a request from that browser</i>.</p>
+        <p><i>This cookie <b>stores the entire session</b>, instead of just the session key or the session ID.</i> The benefit is that it's simpler, we don't require a database where we need to look up all of our session data each time a request to our server comes in. Any session data we need is going to be available directly in the cookie, so the server itself can remain stateless, it doesn't need to remember anything.</p>
+        <p>The <code>cookie-session</code> also helps <i>keep our Node.js process stateless</i> so that we can scale it in a cluster using so called load balancing, so we can have multiple instances of our Node.js server running, each handling different requests.</p>
+        <p><i>These client-side sessions need to be small; they can't contain much data because the browser limits the size of your cookies in most cases.</i> And not only does the browser limit the size of your cookie, it's also a good idea to keep this cookies small, because this is data that's going to be sent in every request, so we don't want to waste too much bandwidth, too much network traffic, passing in these large sessions with data that we don't need. Usually, it's enough to just identify which user has been logged in and authenticated; the server can do the rest.</p>
+        <p>Also, we need to be very aware that the data in our cookies is going to be visible to the clients, to the browser. So if there's any reason to keep this data from our session a secret, then the <code>express-session</code> middleware is probably a better choice.</p>
+        <p>The good news is that <code>cookie-session</code> middleware helps us do the right thing by, for example, setting the <code>HTTPonly</code> flag to true by default. So <code>cookie-session</code> is helping us make the right choice by making sure that the data in our cookie won't be available to clients JavaScript, helping to protect us against scripts that try to steal the data in our cookies with those cross-site scripting attacks. And, for example, we can set our cookie to be secure to make sure that the cookie will only ever be sent over the HTTPS protocol, making sure that it's encrypted as it's being sent over the internet.</p>
+        `,
+      ],
+    },
+    {
+      sectionTitle:
         'Setting Up OAuth Cookie Session with Passport.js & cookie-session middleware',
       sectionSource: '',
       highlights: {
+        highlight1: ['OAuth Cookie Session'],
         highlight2: ['Passport.js', 'cookie-session'],
       },
       tooltips: [
@@ -2770,27 +2835,6 @@ app.use(async (req, res, next) => {
 })
       </code></pre>
       `,
-      ],
-    },
-    {
-      sectionTitle: 'Session Middleware in Express',
-      sectionSource: '',
-      tooltips: [
-        `<p>We handle sessions by installing a third party package called <i><code>express-session</code></i> or <i><code>cookie-session</code></i>.</p>
-        <p>Both packages are actually part of the official Express.js suite, but not baked into Express.js itself, that's why we need to install it.</p>`,
-        `<h3><code>express-session</code> middleware</h3>
-        <p><code>express-session</code> is for <b><u>server-side</u> sessions</b>, and is a middleware that stores session data on the server. It still uses cookies, but it <i>only saves the sessionID in the cookie itself</i>, and not the session data, which might include things like the user's ID and their permissions. <i>The session data itself lives in a database on the server</i>, and our <code>express-session</code> middleware plugs-in with many different types of databases.</p>
-        <p><i>By default, <code>express-session</code> middleware uses in memory storage</i>, which will get erased whenever you restart your server process, and it won't be shared if you have a cluster of processes running your server. So the default in-memory storage of the <code>express-session</code> middleware is not intended to be used in a production environment.</p>
-        <p>If security is the absolute most important thing that you're worried about, server-side sessions and the <code>express-session</code> middleware are probably your best bet. But in the majority of cases, it's not a requirement to keep the data from your session a secret. It's enough to sign that data using a key in the server to make sure that it isn't being tampered.</p>
-        `,
-        `<h3><code>cookie-session</code> middleware</h3>
-        <p><code>cookie-session</code> is for <b><u>client-side</u> sessions</b>, sp it stores the actual session data inside the user's cookie that's being sent back and forth from the browser to the server, whenever you make a request from that browser.</p>
-        <p><i>This cookie stores the entire session</i>, instead of just the session key or the session ID. The benefit is that it's simpler, we don't require a database where we need to look up all of our session data each time a request to our server comes in. Any session data we need is going to be available directly in the cookie, so the server itself can remain stateless, it doesn't need to remember anything.</p>
-        <p>The <code>cookie-session</code> also helps <i>keep our Node.js process stateless</i> so that we can scale it in a cluster using so called load balancing, so we can have multiple instances of our Node.js server running, each handling different requests.</p>
-        <p>These client-side sessions need to be small; they can't contain much data because the browser limits the size of your cookies in most cases. And not only does the browser limit the size of your cookie, it's also a good idea to keep this cookies small, because this is data that's going to be sent in every request, so we don't want to waste too much bandwidth, too much network traffic, passing in these large sessions with data that we don't need. Usually, it's enough to just identify which user has been logged in and authenticated; the server can do the rest.</p>
-        <p>Also, we need to be very aware that the data in our cookies is going to be visible to the clients, to the browser. So if there's any reason to keep this data from our session a secret, then the <code>express-session</code> middleware is probably a better choice.</p>
-        <p>The good news is that <code>cookie-session</code> middleware helps us do the right thing by, for example, setting the <code>HTTPonly</code> flag to true by default. So <code>cookie-session</code> is helping us make the right choice by making sure that the data in our cookie won't be available to clients JavaScript, helping to protect us against scripts that try to steal the data in our cookies with those cross-site scripting attacks. And, for example, we can set our cookie to be secure to make sure that the cookie will only ever be sent over the HTTPS protocol, making sure that it's encrypted as it's being sent over the internet.</p>
-        `,
       ],
     },
     {
