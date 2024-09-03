@@ -2295,7 +2295,7 @@ const adding_authentication = {
         `<h3>What's is a JWT Token?</h3>
         <p>A JWT Token is at it's base our credentials, which can grant access to resources. Credentials can include different types of informations.</p>
         <p><i>A JWT Token can be customized and extended by include additional data about the user. The server can then use these informations (data) when it checks the JWT Token and determines which resources it grants access to.</i></p>
-        <p><i>The JWT Token is just <b>a piece of encoded information in base64 format</b> that contains <b>JSON data</b> or JavaScript data in the end, plus a <b>signature</b></i> (this signature is generated on the server with a special private key which is only stored on the server).</p>
+        <p><i>The JWT Token is just <b>a piece of information <u>encoded</u> in base64 format</b> that contains <b>JSON data</b> or JavaScript data in the end, plus a <b>signature</b></i> (this signature is generated on the server with a special private key which is only stored on the server).</p>
         <p><img src="../../src/img/token_2.jpg"/></p>
         <p>Every JWT Token can be broken down into three sections: the <b>header</b>, the <b>payload</b> and the <b>signature</b>.</p>
         <p><img src="../../src/img/token_4.jpg"/></p>
@@ -2563,8 +2563,8 @@ const PORT = 3000;
 const config = {
   CLIENT_ID: process.env.CLIENT_ID,
   CLIENT_SECRET: process.env.CLIENT_SECRET,
-  <i>COOKIE_KEY_1: process.env.COOKIE_KEY_1,
-  COOKIE_KEY_2: process.env.COOKIE_KEY_2,</i>
+  <i><b>COOKIE_KEY_1</b>: process.env.COOKIE_KEY_1,
+  <b>COOKIE_KEY_2</b>: process.env.COOKIE_KEY_2,</i>
 };
 
 const AUTH_OPTIONS = {
@@ -2581,17 +2581,23 @@ function verifyCallback(accessToken, refreshToken, profile, done) {
 passport.use(new Strategy(AUTH_OPTIONS, verifyCallback));
 
 // Save the session to the cookie
-<i>passport.serializeUser</i>((user, done) => {
+// Serializing means saving our user data to a cookie that's going to be passed around to our users browser
+<i><b>passport.serializeUser</b>((user, done) => {
   done(null, user.id);
-});
+});</i>
 
 // Read the session from the cookie
-<i>passport.deserializeUser</i>((id, done) => {
-  // User.findById(id).then(user => {
-  //   done(null, user);
-  // });
+// Deserializing means loading the user data from the cookie into a value that we can read inside of our Express API
+<i><b>passport.deserializeUser</b>((id, done) => {
+  // You can add more code logic here before done() function
+  /* 
+  User.findById(id).then(user => {
+    done(null, user);
+   });
+  */
+
   done(null, id);
-});
+});</i>
 
 const app = express();
 
@@ -2604,8 +2610,8 @@ app.use(helmet());
 })</b>);</i>
 
 app.use((req, res, next) => {
-  // Stub out missing regenerate and save functions.
-  // These don't make sense for client side sessions.
+  // Stub out missing regenerate and save functions
+  // These don't make sense for client side sessions
   if (req.session && !req.session.regenerate) {
     req.session.regenerate = (cb) => {
       cb();
@@ -2620,17 +2626,20 @@ app.use((req, res, next) => {
 });
 
 app.use(passport.initialize());
-<i>app.use(passport.session());</i>
+app.use(<b>passport.session()</b>);
 
-// Passport.js exposes the users on the request object (req.user)
+<i>// Passport.js exposes the user data on the request object (req.user)</i>
 function checkLoggedIn(req, res, next) {
-  console.log('Current user is:', req.user);
-  const isLoggedIn = req.isAuthenticated() && req.user;
+  console.log('Current user is:', <b>req.user</b>);
+
+  // req.isAuthenticated() is built into Passport.js and checks that Passport.js found the user in the session
+  const isLoggedIn = <i>req.isAuthenticated()</i> && req.user;
   if (!isLoggedIn) {
     return res.status(401).json({
       error: 'You must log in!',
     });
   }
+
   next();
 };
 
@@ -2643,7 +2652,7 @@ app.get('/auth/google/callback',
   passport.authenticate('google', {
     failureRedirect: '/failure',
     successRedirect: '/',
-    session: true,
+    <i>session: true</i>,
   }),
   (req, res) => {
     console.log('Google called us back!');
@@ -2729,6 +2738,150 @@ app.get('/logout', (req, res) => {
         </code></pre>
         <p>NOTE: We do not need to set it as <code>secure</code> like in the case of login, because in the logout case there is no sensitive data that anyone can get a hold of.</p>
         `,
+        `<h3>Logout when you use Passport.js</h3>
+        <p>If you use Passport.js to handle your authentication flow, you can use a logout function that Passport.js exposes on the request object; <code>req.logout()</code> can be called on any route.</p>
+        <pre><code>
+const fs = require('fs');
+const path = require('path');
+const https = require('https');
+const express = require('express');
+const helmet = require('helmet');
+const passport = require('passport');
+const { Strategy } = require('passport-google-oauth20');
+const cookieSession = require('cookie-session');
+const { verify } = require('crypto');
+
+require('dotenv').config();
+
+const PORT = 3000;
+
+const config = {
+  CLIENT_ID: process.env.CLIENT_ID,
+  CLIENT_SECRET: process.env.CLIENT_SECRET,
+  COOKIE_KEY_1: process.env.COOKIE_KEY_1,
+  COOKIE_KEY_2: process.env.COOKIE_KEY_2,
+};
+
+const AUTH_OPTIONS = {
+  callbackURL: '/auth/google/callback',
+  clientID: config.CLIENT_ID,
+  clientSecret: config.CLIENT_SECRET,
+};
+
+function verifyCallback(accessToken, refreshToken, profile, done) {
+  console.log('Google profile', profile);
+  done(null, profile);
+}
+
+passport.use(new Strategy(AUTH_OPTIONS, verifyCallback));
+
+// Save the session to the cookie
+// Serializing means saving our user data to a cookie that's going to be passed around to our users browser
+passport.serializeUser((user, done) => {
+  done(null, user.id);
+});
+
+// Read the session from the cookie
+// Deserializing means loading the user data from the cookie into a value that we can read inside of our Express API
+passport.deserializeUser((id, done) => {
+  // You can add more code logic here before done() function
+  /* 
+  User.findById(id).then(user => {
+    done(null, user);
+   });
+  */
+
+  done(null, id);
+});
+
+const app = express();
+
+app.use(helmet());
+
+app.use(cookieSession({
+  name: 'session',
+  maxAge: 24 * 60 * 60 * 1000,
+  keys: [config.COOKIE_KEY_1, config.COOKIE_KEY_2],
+}));
+
+app.use((req, res, next) => {
+  // Stub out missing regenerate and save functions
+  // These don't make sense for client side sessions
+  if (req.session && !req.session.regenerate) {
+    req.session.regenerate = (cb) => {
+      cb();
+    };
+  }
+  if (req.session && !req.session.save) {
+    req.session.save = (cb) => {
+      cb();
+    };
+  }
+  next();
+});
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Passport.js exposes the user data on the request object (req.user)
+function checkLoggedIn(req, res, next) {
+  console.log('Current user is:', req.user);
+  const isLoggedIn = req.isAuthenticated() && req.user;
+  if (!isLoggedIn) {
+    return res.status(401).json({
+      error: 'You must log in!',
+    });
+  }
+  next();
+};
+
+app.get('/auth/google',
+  passport.authenticate('google', {
+    scope: ['email'],
+  }));
+
+app.get('/auth/google/callback',
+  passport.authenticate('google', {
+    failureRedirect: '/failure',
+    successRedirect: '/',
+    session: true,
+  }),
+  (req, res) => {
+    console.log('Google called us back!');
+  }
+);
+
+<i>// Passport.js exposes a logout function on the request object; req.logout() can be called on any route
+// req.logout() removes req.user and clears any logged in session
+app.get('/auth/logout', (req, res, next) => {
+  <b>req.logout</b>((err) => {
+    if (err) {
+      return next(err);
+    }
+    res.redirect('/');
+  });
+});</i>
+
+app.get('/secret', checkLoggedIn, (req, res) => {
+  return res.send('Your personal secret value is 42!');
+});
+
+app.get('/failure', (req, res) => {
+  return res.send('Failed to log in!');
+});
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+https.createServer({
+  key: fs.readFileSync('key.pem'),
+  cert: fs.readFileSync('cert.pem'),
+}, app).listen(PORT, () => {
+  console.log('Listening on port');
+});
+        </code></pre>        
+        `,
       ],
     },
     {
@@ -2793,14 +2946,9 @@ module.exports = router;
         `<p>You can add as many handlers as you want (ex: <code>router.get('/add-product', <i>isAuth, adminController.getAddProduct</i>)</code>), and they will be <i>parsed from left to right</i>, the request made for '/add-product' path will travel through handlers from left to right.<p>
       <p>So the request which reaches "/add-product" goes into that <code>isAuth</code> middleware first, and in the <code>isAuth</code> middleware, if the condition is meet, we will be redirecting and we don't call <code>next()</code>, hence the request would never continue to <code>adminController.getAddProduct</code> middleware.</p>
       <p>But if we make it past the <code>if</code> check in the <code>isAuth</code> middleware, we do call <code>next()</code>, so the next middleware in line will be called, and the next middleware in line would be the <code>adminController.getAddProduct</code> middleware.</p>`,
-      ],
-    },
-    {
-      sectionTitle: 'Protect Routes with JWT Token',
-      sectionSource: '',
-      tooltips: [
-        `<p>To send a JSON Web Token as a header, there's actually a standard for doing that:</p>
-        <pre><code>
+        `<h3>Protect Routes with JWT Token</h3>
+      <p><i>To send a JSON Web Token as a header, there's actually a standard for doing that</i>:</p>
+      <pre><code>
 fetch('http://localhost:8080/protected_route', {
   method: 'POST',
   <b>headers</b>: {
@@ -2839,7 +2987,7 @@ app.use(async (req, res, next) => {
     },
     {
       sectionTitle:
-        'Read & parse Cookies from <code>request</code> object with cookie-parser package',
+        'Read & Parse Cookies From <code>request</code> Object with cookie-parser Package',
       sectionSource: '',
       highlights: {
         highlight1: ['parse Cookies'],
