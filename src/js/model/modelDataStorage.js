@@ -3154,7 +3154,10 @@ app.get('/', (req, res) => {
         `<h3>What are CORS?</h3>
       <p>CORS stands for Cross Origin Resource Sharing and <b>by default, CORS is not allowed by browsers</b>.</p>
       <p>CORS is <b>a mechanism that allows a server to <u>explicitly specify</u> who can access its resources when they are requested from a different origin</b> (i.e., a cross-origin request). <i>CORS relaxes the Same Origin Policy by allowing servers to <u>explicitly permit</u> certain cross-origin requests</i>.</p>
-      <p><img src="../../src/img/cors_1.jpg"/></p>`,
+      <p><img src="../../src/img/cors_1.jpg"/></p>
+      <p><i>In order a request to be considered a cross-origin request, that request might come from a different domain but also a different subdomain, a different protocol, or even a different port.</i></p>
+      <p>NOTE: <b>CORS only applies to requests made from the browser.</b> For example, using the Fetch API or something like the Axios library. <b>From the server, we will always be able to make cross-origin requests without any problems. So there are no restrictions on the server, but only on the browser for security reasons.</b></p>
+      `,
         `<h3>How CORS works?</h3>
       <p>When a web page makes a request to a different origin (e.g., fetching data from an API hosted on a different domain), the browser first sends an <code>OPTIONS</code> request (called a "preflight request") to the server to check if the actual request is allowed. The server responds with appropriate CORS headers, such as <code>Access-Control-Allow-Origin</code>, indicating which origins are permitted.</p>
       <ul>Key Headers:
