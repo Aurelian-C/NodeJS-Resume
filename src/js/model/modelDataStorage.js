@@ -2179,13 +2179,6 @@ const adding_authentication = {
         `<h3>A REST API is stateless</h3>
         <p><i>In REST APIs all state is handled <u>on the client</u>. This means that <b>each request must contain <u>all</u> the information necessary to process a certain request from the server</b>. The server should <u>not</u> have to remember previous requests in order to process the current request.</i></p>
         `,
-        `<h3>How Does Token-Based Authentication Work in REST APIs?</h3>
-        <p>In REST APIs, we still have our client-side and server-side. The client still sends authentication credentials to the server.</p>
-        <p>In the past, without building a REST API, we would have checked that credentials on the server and if it is valid, we would have established a session. Now, <i>we don't use a session anymore because REST APIs are stateless</i>, REST APIs don't care about the client. In REST APIs, server and client are strict decoupling and every request should be treated standalone: that means every request should have all the data it needs to authenticate itself. With a session, the server needs to store data about the client, the server then stores that a client is authenticated, and that's just not how REST APIs work. <i>In REST APIs, the server will not store anything about any client, so <b>we don't store sessions on a REST API</b>.</i></p>
-        <p>Instead of using session like we use to do, <i>in REST APIs we return a so-called <b>token</b> to the client</i>. That token will be <b>generated on the server</b> and will <b>hold some information which can only be <u>validated by the server</u></b>, and this token will then be <b>stored in the client (in storage in the browser)</b>. The client can then attach this token to every subsequent request it sends to the server. <i>So this stored token is then attached to every request that targets a resource on the server which requires authentication.</i></p>
-        <p>That token can only be validated by the server, which created the token, and if you change that token on the frontend or you try to create it to fake that you are authenticated, that will be detected, because the server used a certain algorithm for generating the token which you can't fake, because you don't know the private key used by that server for generating the token.</p>
-        <p><img src="../../src/img/token_1.jpg"/></p>
-        `,
       ],
     },
     {
@@ -2199,12 +2192,11 @@ const adding_authentication = {
         <p><img src="../../src/img/sessions_vs_cookies.jpg"/></p>
         `,
         `<h3>What is a Cookie?</h3>
-        <p>In the context of browsers and servers, "cookies" are basically <b>strings of data</b> that are <b>stored in your browser</b>. Cookies are <i>commonly used to remember information about the user</i>, such as their preferences, login credentials, or items added to a shopping cart.</p>
+        <p>In the context of browsers and servers, <i>"cookies" are basically <b>strings of data</b> that are <b>stored in your browser</b></i>. Cookies are <i>commonly used to remember information about the user</i>, such as their preferences, login credentials, or items added to a shopping cart.</p>
         <p>Cookies are <b>values that are usually set by the server</b>, which are <b>sent to the server any time your browser makes the request against it</b>. So <i>cookies are <b>a way of storing data in your browser</b> that gets sent to the server whenever you make a request against it. They're sent automatically without you as a developer having to do anything when you make that request.</i></p>
-        <p>NOTE: When you visit a website, <u>the server sends a cookie to your browser, which then stores it on your device</u>. The next time you visit the same website, <u>your browser sends the stored cookie back to the server along with your request</u>. This allows the server to recognize you and provide personalized content or functionality based on your previous interactions.</p>
         <ul>Cookies have several properties that determine their behavior and how they interact with the browser and server:
-          <li>- <code>Name</code>: The name of the cookie. This is the key that identifies the cookie.</li>
-          <li>- <code>Value</code>: The value associated with the cookie's name. This can be any string of data, such as a session identifier, a user preference, etc.</li>
+          <li>- <b><code>Name</code></b>: The name of the cookie. This is the key that identifies the cookie.</li>
+          <li>- <b><code>Value</code></b>: The value associated with the cookie's name. This <i>can be any <u>string</u> of data</i>, such as a session identifier, a user preference, etc.</li>
           <li>- <code>Domain</code>: Specifies the domain for which the cookie is valid. The browser will only send the cookie to this domain.</li>
           <li>- <code>Path</code>: The URL path that must exist in the requested URL for the browser to send the cookie. For example, if the path is set to /blog, the cookie will only be sent when accessing URLs under the /blog directory.</li>
           <li>- <code>Expiration/Max-Age</code>: Expiration: Defines a specific date and time when the cookie will expire. After this time, the browser will delete the cookie. Max-Age: Specifies the maximum duration (in seconds) for which the cookie should exist. After this duration, the cookie will be removed.</li>
@@ -2225,7 +2217,7 @@ const adding_authentication = {
         </ul>
         <ul>Advantages:
           <li>- Automatic Handling: Cookies are automatically managed and sent by the browser with each request, making the process straightforward.</li>
-          <li>- Secure Storage: Cookies can be flagged as HttpOnly and Secure to prevent JavaScript access and enforce secure transmission over HTTPS.</li>
+          <li>- Secure Storage: Cookies can be flagged as <code>HttpOnly</code> and <code>Secure</code> to prevent JavaScript access and enforce secure transmission over HTTPS.</li>
         </ul>
         <ul>Disadvantages:
           <li>- Stateful: The server must maintain the session state, which can become cumbersome and resource-intensive, especially with a large number of users.</li>
@@ -2237,14 +2229,14 @@ const adding_authentication = {
         <p><i>Token-based authentication is <b>stateless</b>.</i> The server does not keep a record of which users are logged in or which JWTs have been issued. Instead, <b>every request to the server is accompanied by a token which the server uses to verify the authenticity of the request.</b> <i>The token is generally sent as an addition <code>Authorization</code> header in the form of <code>Bearer {JWT}</code>, but can additionally be sent in the body of a POST request or even as a query parameter.</i></p>
         <ul>How it works:
           <li>1. <i>Login</i>: The user submits their credentials to the server.</li>
-          <li>2. <i>Token Creation</i>: If the credentials are valid, the server generates a token (e.g., JWT - JSON Web Token) containing encoded information (e.g., user ID, roles) and sends it to the client.</li>
+          <li>2. <i>Token Creation</i>: If the credentials are valid, <i>the server generates a token (e.g., JWT - JSON Web Token) containing <u>encoded information</u> (e.g., user ID, roles)</i> and sends it to the client.</li>
           <li>3. <i>Token Storage</i>: The client stores the token (usually in local storage or session storage).</li>
-          <li>4. <i>Subsequent Requests</i>: The client sends the token in the Authorization header (usually as a Bearer token) with each subsequent request.</li>
-          <li>5. <i>Server Verification</i>: The server verifies the token, typically by checking its signature and possibly decoding it to retrieve the user’s information.</li>
+          <li>4. <i>Subsequent Requests</i>: The client sends the token in the <code>Authorization</code> header (usually as a Bearer token) with each subsequent request.</li>
+          <li>5. <i>Server Verification</i>: The server verifies the token, typically by <i>checking its signature</i> and possibly <i>decoding it to retrieve the user’s information</i>.</li>
         </ul>
         <ul>Advantages:
           <li>- Stateless: The server doesn’t need to store session information, which can make the application more scalable and efficient, especially in distributed environments.</li>
-          <li>- CSRF Resistance: Since tokens are not automatically sent by the browser with each request, they are less vulnerable to CSRF attacks. Tokens are usually stored in a way that requires explicit inclusion in requests.</li>
+          <li>- CSRF Resistance: Since tokens are not automatically sent by the browser with each request, they are less vulnerable to CSRF attacks. <i>Tokens are usually stored in a way that requires <u>explicit inclusion in requests</u>.</i></li>
         </ul>
         <ul>Disadvantages:
           <li>- Token Management: Clients are responsible for storing tokens securely, which can lead to vulnerabilities if mishandled (e.g., XSS attacks on tokens stored in local storage).</li>
@@ -2254,7 +2246,7 @@ const adding_authentication = {
         `,
         `<h3>Summary</h3>
         <p><i>With Token-Based Authentication, the token needs to be sent in the <code>Authorization</code> header by the developer, each time you want to make an authenticated request.</i></p>
-        <p>We could do authentication using cookies instead. The authentication step would work in much the same way, but rather than sending a token in the response, the server sets the cookie value, which can store different bits of information, even an access token or a session identifier. The cookie values are set when the server responds with the <code>Set-Cookie</code> header, which the browser knows that the cookie values need to be stored in the browser's cookies. From now on, <i>that cookie value will automatically be sent by the browser whenever the browser makes a request against the server</i>, so it will set the <code>Set-Cookie</code> header with any of the values that have been set by the server previously. So instead of looking in the <code>Authorization</code> header, the server can now look inside the <code>Set-Cookie</code> header.</p>
+        <p>We could do authentication using cookies instead. The authentication step would work in much the same way, but rather than sending a token in the response, the server sets the cookie value, which can store different bits of information, even an access token or a session identifier. <b>The cookie values are set when the server responds with the <code>Set-Cookie</code> header, which the browser knows that the cookie values need to be stored in the browser's cookies.</b> From now on, <i>that cookie value will automatically be sent by the browser whenever the browser makes a request against the server</i>, so it will set the <code>Set-Cookie</code> header with any of the values that have been set by the server previously. So instead of looking in the <code>Authorization</code> header, the server can now look inside the <code>Set-Cookie</code> header.</p>
         <ul>When to Use Each:
           <li>- <i>Cookie-Based Authentication is generally preferred for traditional web applications, especially when the server and client are tightly coupled and managed by the same entity.</i> It’s also a good choice when dealing with sensitive data, given that cookies can be more easily secured.</li>
           <li>- <i>Token-Based Authentication is well-suited for modern applications, particularly SPAs, mobile applications, and microservices architectures where the client and server are decoupled.</i> It’s also ideal for scenarios requiring scalability, statelessness, and cross-domain access.</li>
@@ -2294,15 +2286,15 @@ const adding_authentication = {
       tooltips: [
         `<h3>What's is a JWT Token?</h3>
         <p>A JWT Token is at it's base our credentials, which can grant access to resources. Credentials can include different types of informations.</p>
-        <p><i>A JWT Token can be customized and extended by include additional data about the user. The server can then use these informations (data) when it checks the JWT Token and determines which resources it grants access to.</i></p>
-        <p><i>The JWT Token is just <b>a piece of information <u>encoded</u> in base64 format</b> that contains <b>JSON data</b> or JavaScript data in the end, plus a <b>signature</b></i> (this signature is generated on the server with a special private key which is only stored on the server).</p>
+        <p><i><b>A JWT Token can be customized and extended by include additional data about the user.</b> The server can then use these informations (data) when it checks the JWT Token and determines which resources it grants access to.</i></p>
+        <p><i>The JWT Token is just <b>a piece of information <u>encoded</u> in base64 format</b> that contains <b>JSON data</b> or JavaScript data in the end, plus a <b>signature</b> (this signature is generated on the server with a special private key which is only stored on the server).</i></p>
         <p><img src="../../src/img/token_2.jpg"/></p>
         <p>Every JWT Token can be broken down into three sections: the <b>header</b>, the <b>payload</b> and the <b>signature</b>.</p>
         <p><img src="../../src/img/token_4.jpg"/></p>
 
-        <p>IMPORTANT: It's important to understand that <i>JWT Tokens are <b>encoded</b> and signed with their signature, but <b>not encrypted</b>. All JWT Tokens can be encoded and decoded by everyone to get the plain JavaScript object, by using what's called a decoding function</i>. <b>The signature only prevents manipulation of existing tokens</b> or the creation of fake credentials (fake tokens) by malicious users who are trying to get access to our data. <i>The token can't be tampered, but <b>it can be publicly read by anyone who gets access to the token</b>.</i> Because of this, <i>JWT is rely on the secure network communication that HTTPS and TLS</i> give us, to make sure that hackers can't steal our token and re-use it for their own requests. <b>JWT Token based authentication only works when you're using HTTPS, otherwise it's not very secure.</b></p>
+        <p>IMPORTANT: It's important to understand that <i>JWT Tokens are <b>encoded</b> and signed with their signature, but <b>not encrypted</b>. All JWT Tokens can be decoded by everyone to get the JSON data that stores the user informations, by using what's called a decoding function</i>. <b>The signature only prevents manipulation of existing tokens</b> or the creation of fake credentials (fake tokens) by malicious users who are trying to get access to our data. <i>The token can't be tampered, but <b>it can be publicly read by anyone who gets access to the token</b>.</i> Because of this, <i>JWT is rely on the secure network communication that HTTPS and TLS</i> give us, to make sure that hackers can't steal our token and re-use it for their own requests. <b>JWT Token based authentication only works when you're using HTTPS, otherwise it's not very secure.</b></p>
         <p>Because tokens are associated with individual users and they allow us to pass around additional data, which can be verified on the server side, they give us more flexibility with which permissions to grant individual users than a general application API Key might allow. And with token based authentication, possession by a user of a valid token gives them access to an API for as long as they have that token, rather than having to log in over and over.</p>
-        <p><i>The JWT Token signature can only be verified by the server</i>, so you can't edit or create the JWT on the client (well, you can edit it, but then the server will detect this and will treat the token as invalid). <i>JWTs are signed by the server and can only be validated by the server.</i></p>
+        <p><i>The JWT Token signature can only be verified by the server</i>, so you can't edit or create the JWT on the client (well, you can edit it, but then the server will detect this and will treat the token as invalid). <b>JWTs are signed by the server and can only be validated by the server.</b></p>
         `,
         `<h3>How authentication with JWT works: step by step</h3>
         <ul>Assuming we already have a registered user in our database, this is how a user logs into the app:
@@ -2311,7 +2303,7 @@ const adding_authentication = {
           <li>3. The server then sends that JWT back to the client which will store it either in a cookie or in local storage. And just like this the user is authenticated and basically logged into our application <i>without leaving any state on the server</i>;</li>
           <li>4. Each time a user wants to access a protected route, he sends his JWT along with a request. Once the request hits the server, our app will verify if the JWT is actually valid. If the token is actually valid, then the requested data will be sent to the client and if not, then there will be an error telling the user that he's not allowed to access that resource.</li>
         </ul>
-        <p>What's very important to note is that all this communication must happen over HTTPS, so secure encrypted HTTP, in order to prevent that anyone can get access to our JWT Token.</p>
+        <p>What's very important to note is that all this communication must happen over secure encrypted HTTPS, in order to prevent that anyone can get access to our JWT Token.</p>
         <p><img src="../../src/img/token_3.jpg"/></p>
         <p><img src="../../src/img/token_5.jpg"/></p>
         `,
@@ -2347,16 +2339,16 @@ res.status(201).json({
         `,
         `<h3>Using & Validating the Token: How you attach a JWT when you send an async request from the client</h3>
         <p>Now that we're generating a token and we're passing it to the client, we need to make sure that the client can pass back the token to the backend, to the REST API, and we then check for it's existence and it's validity, before we allow the request to continue. So <i>with JWT validation, we can block access to specific API Endpoints</i>.</p>
-        <p>When you make a async request from the client to your REST API, you can <i>attach your JWT to the <code>fetch()</code> request headers</i>:</p>
+        <p>When you make a async request from the client to your REST API, you can <i>attach your JWT to the <code>fetch()</code> request <code>Authorization</code> header</i>:</p>
         <pre><code>
 fetch('https://rest-api/auth', {
   <i>headers: {
     <b>Authorization: 'Bearer ' + token</b>
   }</i>
 });
-    </code></pre>`,
-        `<p>On your server, you can read the Authorization header:</p>
-    <pre><code>
+        </code></pre>`,
+        `<p>On your server, you can read the <code>Authorization</code> header:</p>
+        <pre><code>
 const jwt = require('jsonwebtoken');
 
 module.exports = (req, res, next) => {
@@ -2388,13 +2380,12 @@ module.exports = (req, res, next) => {
   next();
 };
         </code></pre>
-        <p><code>jwt.verify()</code> will both decode and verify your JWT. You also have a <code>jwt.decode()</code>, but this will only decode your JWT and not check if it's valid.</p>
+        <p><i><code>jwt.verify()</code> will both decode and verify your JWT.</i> You also have a <code>jwt.decode()</code>, but this will only decode your JWT and not check if it's valid.</p>
         `,
         `<h3>Sending JWT via HTTPOnly Cookie</h3>
-        <p>JSON Web Token should be stored in a secure HTTPOnly cookie.</p>
-        <p>A Cookie is basically just a small piece of text that a server can send to client. Then when the client receives a Cookie, it will automatically store it and then automatically send it back along with all future requests to the same server. So a browser automatically stores a Cookie that it receives and sends it back in all future requests to that server where it came from.</p>
-        <p>In order to send a Cookie, it's actually very easy. All we have to do is to basically attach it to the response object.</p>
-        <p>Testing for Secure HTTPS Connections when you have an app deploy to Heroku:</p>
+        <p><b>JSON Web Token should be stored in a secure HTTPOnly cookie.</b></p>
+        <p>A cookie is basically just a small piece of text that a server can send to client. Then when the client receives a cookie, it will automatically store it and then automatically send it back along with all future requests to the same server. So a browser automatically stores a cookie that it receives and sends it back in all future requests to that server where it came from.</p>
+        <p>In order to send a cookie, it's actually very easy. All we have to do is to basically attach it to the response object. Testing for Secure HTTPS Connections when you have an app deploy to Heroku:</p>
         <pre><code>
 const express = require('express');
 
