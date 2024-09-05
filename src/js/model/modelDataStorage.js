@@ -3037,7 +3037,7 @@ const security = {
       ],
     },
     {
-      sectionTitle: 'Vulnerabilities In <code>package.json</code> Dependencies',
+      sectionTitle: 'Vulnerabilities in <code>package.json</code> Dependencies',
       sectionSource: '',
       tooltips: [
         `<p>When developing Node.js applications, <i>managing dependencies is crucial for maintaining the security of your project</i>. The Node Package Manager (npm) offers tools to help developers identify and fix vulnerabilities in their dependencies. Two essential commands for this purpose are <b><code>npm audit</code></b> and <b><code>npm audit fix</code></b>.</p>
@@ -3259,7 +3259,7 @@ app.listen(process.env.PORT);
         highlight2: ['express-rate-limit'],
       },
       tooltips: [
-        `<p>In this article we will implement rate limiting, in order to <i>prevent the same IP from making too many requests to our API</i>. This will then help us preventing attacks like Denial-of-Service or Brute Force Attacks.</p>
+        `<p>In this article we will implement rate limiting, in order to <i>prevent the same IP from making too many requests to our API</i>. This will then help us <i>preventing attacks like Denial-of-Service or Brute Force Attacks</i>.</p>
         <p><b>The rate limiter will be implemented as a global middleware function.</b> The rate limiter will count the number of requests coming from one IP and then, when there are too many requests, block these requests.</p>
         <p>The rate limiter that we're going to use is a third party package called <code>express-rate-limit</code>.</p>
         <pre><code>
@@ -3319,9 +3319,8 @@ app.listen(process.env.PORT);
         highlight2: ['xss-clean'],
       },
       tooltips: [
-        `<p>Data sanitization means to clean all the data that comes into the application from malicious code.</p>
-        <p>We will do data sanitization against NoSQL Query Injection, and also data sanitization against Cross-Site Scripting Attacks.</p>
-        <p>With NoSQL Query Injection, we were able to log in, without knowing the email address, only the password:</p>
+        `<p>Data sanitization means to <i>clean all the data that comes into the application from malicious code</i>.</p>
+        <p>We will do data sanitization against NoSQL Query Injection, and also data sanitization against Cross-Site Scripting Attacks. With NoSQL Query Injection, we were able to log in, without knowing the email address, only the password:</p>
         <pre><code>
 fetch('http://localhost:8080/users/login', {
   method</b>: 'POST',
@@ -3354,8 +3353,8 @@ app.use(<b>xss()</b>);
 
 app.listen(process.env.PORT);
       </code></pre>
-      <p>What <code>mongoSanitize()</code> middleware does is to look at the request body, the request query string, and also at request params, and then it will filter out all of the dollar signs and dots, because that's how MongoDB operators are written. By removing that, well, these operators are then no longer going to work.</p>
-      <p><code>xss()</code> will clean any user input from malicious HTML code. Imagine that an attacker would try to insert some malicious HTML code with some JavaScript code attached to it. If that would then later be injected into our HTML site, it could really create some damage then. The <code>xss()</code> middleware will <i>convert all the HTML tags/symbols</i>.</p>
+      <p>What <code>mongoSanitize()</code> middleware does is to look at the request body, the request query string, and also at request params, and then it will<i> filter out all of the dollar signs and dots, because that's how MongoDB operators are written</i>. By removing that, well, these operators are then no longer going to work.</p>
+      <p><b><code>xss()</code> will clean any user input from malicious HTML code.</b> Imagine that an attacker would try to insert some malicious HTML code with some JavaScript code attached to it. If that would then later be injected into our HTML site, it could really create some damage then. The <code>xss()</code> middleware will <i>convert all the HTML tags/symbols</i>.</p>
         `,
       ],
     },
